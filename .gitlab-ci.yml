@@ -1,0 +1,56 @@
+stages:
+  - install
+  - test
+  - prebuild
+  - build
+
+image: node:6.10.3
+cache:
+  paths:
+  - node_modules/
+
+install_dependencies:
+  stage: install
+  script:
+  - npm install
+  artifacts:
+    paths:
+    - node_modules/
+
+unit_test:
+  stage: test
+  dependencies:
+  - install_dependencies
+  script:
+  - npm test
+  # when: on_success
+
+key_build:
+  stage: prebuild
+  script:
+  - npm install -g envsub
+  - envsub android/app/src/main/res/values/strings.xml android/app/src/main/res/values/strings.xml --system
+  - envsub src/components/login.js src/components/login.js --system
+  - envsub android/app/google-services.json android/app/google-services.json --system
+  - cat android/app/google-services.json
+  artifacts:
+    paths:
+    - android/
+    - src/
+  when: always
+
+build_apk:
+  stage: build
+  image: docker.io/vibhavagarwal5/react-native-ci:latest
+  # before_script:
+  #   - export GRADLE_USER_HOME=$(pwd)/.gradle
+  #   - chmod +x ./android/gradlew
+  dependencies:
+  - key_build
+  - install_dependencies
+  script:
+  - cd android && ./gradlew assembleDebug
+  artifacts:
+    paths:
+    - android/app/build/outputs/apk/debug/app-debug.apk
+  when: always

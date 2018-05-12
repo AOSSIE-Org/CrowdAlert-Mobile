@@ -31,8 +31,7 @@ class Login extends Component {
 
 	componentDidMount() {
 		GoogleSignin.configure({
-			webClientId:
-				'530975451806-suk2eiug3eoksre10db2dqceo1mdnemh.apps.googleusercontent.com'
+			webClientId: '${GOOGLE_WEBID_KEY}'
 		});
 	}
 
