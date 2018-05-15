@@ -10,7 +10,7 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "RNFirebaseStarter";
+        return "CrowdAlert";
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
