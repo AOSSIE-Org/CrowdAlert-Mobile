@@ -3,8 +3,10 @@ import {Provider, connect} from "react-redux";
 import {Router} from 'react-native-router-flux';
 import {Actions, Scene, Drawer} from "react-native-router-flux";
 import { PersistGate } from 'redux-persist/lib/integration/react'
-import Login from './src/components/login'
-
+import Signin from './src/components/signin'
+import Signup from './src/components/signup'
+import login from './src/components/login';
+import Forgot from './src/components/forgot';
 import configureStore from './src/store/store'
 let { store, persistor } = configureStore()
 
@@ -23,10 +25,23 @@ export default class App extends Component {
 	          <ConnectedRouter backAndroidHandler={this.onBackPress}>
                   <Scene key='root'>
 	                  <Scene
+						  key='signin'
+                          title="SignIn"
+	                      component={Signin}/>
+                    <Scene
+						  key='signup'
+                          title="SingnUp"
+	                      component={Signup}/>
+                    <Scene
 						  key='login'
-	                      hideNavBar
-	                      component={Login}/>
-                      </Scene>
+                          title="Welcome"
+	                      component={login}
+                          initial={true}/>
+                    <Scene
+						  key='forgot'
+                          title="Reset Password"
+	                      component={Forgot}/>
+                  </Scene>
                   </ConnectedRouter>
               </PersistGate>
           </Provider>

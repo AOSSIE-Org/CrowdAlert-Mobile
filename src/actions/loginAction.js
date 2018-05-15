@@ -15,24 +15,49 @@ export const onPressSignIn = (email,password) => {
             console.log(data.user);
             alert("Login done")
         })
-        .catch(() => {
-            firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(email, password)
-            .then((data) => {
-                console.log(data.user.email);
-                dispatch(saveUser(data.user,'email'));
-                dispatch(signInLoading(false));
-                alert('Signup done');
-            })
-            .catch((error) => {
-                dispatch(signInLoading(false));
-                dispatch(handleError(error));
-                console.log(error);
-                alert('Signup error');
-            });
+        .catch((error) => {
+            // if (code == "auth/wrong-password")
+            //     Alert.alert("Wrong Password");
+            // if (code == "auth/user-not-found")
+            //     Alert.alert("You are not registered.")
+            console.log(error);
         });
     }
 }
-
+export const onPressSignUp = (email,password) => {
+    return (dispatch) => {
+        dispatch(signInLoading(true));
+        firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(email, password)
+        .then((data) => {
+            console.log(data.user.email);
+            dispatch(saveUser(data.user,'email'));
+            dispatch(signInLoading(false));
+            alert('Signup done');
+        })
+        .catch((error) => {
+            dispatch(signInLoading(false));
+            dispatch(handleError(error));
+            console.log(error);
+            // if (code  == "auth/email-already-in-use")
+            //     Alert.alert("User Already Registered with the same email");
+            // else
+            //     Alert.alert("Error");
+        });
+    }
+}
+export const onforget = (email) => {
+    return (dispatch) => {
+        dispatch(signInLoading(true));
+        var auth = firebase.auth();
+        auth.sendPasswordResetEmail(email)
+        .then(function() {
+            Alert.alert('Email Sent');
+        })
+        .catch(function(error) {
+            Alert.alert('You are not registered')
+        });
+    }
+}
 export const fbSignIn = () => {
     return (dispatch) => {
         LoginManager.logInWithReadPermissions(['public_profile', 'email'])
@@ -66,6 +91,9 @@ export const fbSignIn = () => {
             alert('FB Signup error');
         });
     }
+}
+export const googleSignin = () => {
+
 }
 
 function signInLoading(bool){

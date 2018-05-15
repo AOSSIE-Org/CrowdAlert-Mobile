@@ -15,7 +15,8 @@ import firebase from 'react-native-firebase';
 import {AccessToken, LoginManager, LoginButton} from 'react-native-fbsdk';
 import {bindActionCreators} from 'redux';
 import {connect} from "react-redux";
-import {onPressSignIn, fbSignIn} from '../actions/loginAction'
+import {fbSignIn, googleSignin} from '../actions/loginAction'
+import { Actions } from 'react-native-router-flux';
 
 class Login extends Component {
     constructor(props){
@@ -36,30 +37,30 @@ class Login extends Component {
                 <Text style={styles.welcome}>
                     Crowd Alert
                 </Text>
-                <TextInput
-                    placeholder="Email"
-                    style={styles.field_Email}
-                    value={this.state.email}
-                    onChangeText={email => this.setState({email})}
-                    autoCapitalize='none'/>
-                <TextInput
-                    placeholder="Password"
-                    style={styles.field_Pass}
-                    secureTextEntry={true}
-                    autoCapitalize='none'
-                    value={this.state.password}
-                    onChangeText={password => this.setState({password})}/>
-                <View style={styles.button}>
-                    <Button
-                        onPress={() => this.props.onPressSignIn(this.state.email, this.state.password)}
-                        title="Login"
-                        color="#000"/>
+                <View style={styles.button_container}>
+                <TouchableOpacity
+                    style={styles.button_1}
+                    onPress={() => Actions.signin()}>
+                    <Text style = {styles.button_text}> SignIn </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.button_2}
+                    onPress={() => Actions.signup()}>
+                    <Text style = {styles.button_text}> Register </Text>
+                </TouchableOpacity>
                 </View>
-                <View style={styles.fb}>
-                    <Button
-                        onPress={() => this.props.fbSignIn()}
-                        title="Connect with Facebbok"
-                        color="#3b5998"/>
+                <View><Text style = {styles.Text}>More login options :</Text></View>
+                <View style={styles.button_container_social}>
+                <TouchableOpacity
+                    style={styles.button_fb}
+                    onPress={() => this.props.fbSignIn()}>
+                    <Text style = {styles.button_text_social}> Facebook </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.button_google}
+                    onPress={() => Actions.signup()}>
+                    <Text style = {styles.button_text_social}> Google </Text>
+                </TouchableOpacity>
                 </View>
             </View>
         );
@@ -69,10 +70,11 @@ class Login extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF'
+        backgroundColor: '#F5FCFF',
+        marginTop : -40
     },
     logo: {
+        marginLeft: 140,
         height: 100,
         width: 100,
         marginTop: 30,
@@ -110,13 +112,70 @@ const styles = StyleSheet.create({
     },
     fb: {
         marginTop: 30
-    }
+    },
+      button_container:{
+        flexDirection:'row',
+        justifyContent: 'space-between',
+        padding:10,
+        marginBottom : 15
+      },
+      button_container_social:{
+        flexDirection:'row',
+        justifyContent: 'space-between',
+        padding:10,
+        marginTop : 33
+      },
+      button_1:{
+        marginLeft : 80,
+        height : 40,
+        width : 80,
+        borderRadius : 3,
+        borderColor : 'black',
+        borderWidth:1.5
+      },
+      button_2:{
+        marginRight:80,
+        height : 40,
+        width : 80,
+        borderRadius : 3,
+        borderColor : 'black',
+        borderWidth:1.5
+      },
+      Text:{
+          marginTop:10,
+          marginLeft:30,
+          fontSize : 17,
+          color : '#000'
+      },
+      button_text : {
+          marginLeft:13,
+          marginTop:10,
+          color : '#000'
+      },
+      button_text_social : {
+          marginLeft:15,
+          marginTop:5,
+          color : 'white'
+      },
+      button_fb:{
+        backgroundColor : '#3B5998',
+        borderRadius : 2,
+        height : 30,
+        width : 90,
+        marginLeft : 60
+      },
+      button_google:{
+        backgroundColor : '#d34836',
+        borderRadius : 2,
+        height:30,
+        width:90,
+        marginRight : 55
+      }
 });
 
 
 function matchDispatchToProps(dispatch){
     return bindActionCreators({
-        onPressSignIn: onPressSignIn,
         fbSignIn: fbSignIn,
     },dispatch);
 }
