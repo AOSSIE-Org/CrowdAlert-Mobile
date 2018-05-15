@@ -9,7 +9,7 @@ import {
     Alert,
     TextInput,
     Button,
-    ActivityIndicator
+    Keyboard
 } from 'react-native';
 import firebase from 'react-native-firebase';
 import {AccessToken, LoginManager, LoginButton} from 'react-native-fbsdk';
@@ -27,25 +27,37 @@ class Signin extends Component {
         }
     }
 
+    handleSignIn(){
+        Keyboard.dismiss();
+        this.props.onPressSignIn(this.state.email, this.state.password);
+    }
+
     render() {
         return (
             <View style={styles.container}>
             <View style = {styles.field}>
                 <TextInput
-                    placeholder="Email"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    ref={(input) => this.emailInput = input}
+                    onChangeText={email => this.setState({email})}
+                    onSubmitEditing={() => this.passwordInput.focus()}
+                    keyboardType='email-address'
+                    returnKeyType="next"
                     style={styles.field_Pass}
-                    autoCapitalize='none'
-                    onChangeText={(email) => this.setState({email})}/>
+                    placeholder="Email" />
                 <TextInput
-                    placeholder="Password"
+                    ref={(input) => this.passwordInput = input}
                     style={styles.field_Pass}
+                    onChangeText={password => this.setState({password})}
+                    // onSubmitEditing={() => this.passwordConfirmInput.focus()}
+                    returnKeyType="next"
                     secureTextEntry={true}
-                    autoCapitalize='none'
-                    onChangeText={(password) => this.setState({password})}/>
+                    placeholder="Password" />
               </View>
               <TouchableOpacity
                     style={styles.button}
-                    onPress={() => this.props.onPressSignIn(this.state.email, this.state.password)}>
+                    onPress={() => this.handleSignIn()}>
                     <Text style = {styles.button_text}> Login </Text>
               </TouchableOpacity>
               <View>

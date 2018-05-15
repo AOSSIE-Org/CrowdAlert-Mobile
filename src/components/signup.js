@@ -9,7 +9,7 @@ import {
     Alert,
     TextInput,
     Button,
-    ActivityIndicator
+    Keyboard
 } from 'react-native';
 import {bindActionCreators} from 'redux';
 import {connect} from "react-redux";
@@ -21,7 +21,13 @@ class Signup extends Component {
         this.state={
             email: '',
             password: '',
+            name: ''
         }
+    }
+
+    handleSignUp(){
+        Keyboard.dismiss();
+        this.props.onPressSignUp(this.state.email, this.state.password);
     }
 
     render() {
@@ -29,27 +35,36 @@ class Signup extends Component {
             <View style={styles.container}>
             <View style = {styles.field}>
                 <TextInput
-                    placeholder="Name"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    ref={(input) => this.nameInput = input}
+                    onChangeText={name => this.setState({name})}
+                    onSubmitEditing={() => this.emailInput.focus()}
+                    returnKeyType="next"
                     style={styles.field_Pass}
-                    autoCapitalize='none'/>
+                    placeholder={'Name'}/>
                 <TextInput
-                    placeholder="Email"
+                    autoCapitalize="none"
+                    autoCorrect={false}
+                    ref={(input) => this.emailInput = input}
+                    onChangeText={email => this.setState({email})}
+                    onSubmitEditing={() => this.passwordInput.focus()}
+                    keyboardType='email-address'
+                    returnKeyType="next"
                     style={styles.field_Pass}
-                    autoCapitalize='none'
-                    onSubmitEditing={email => this.setState({email})}/>
+                    placeholder="Email" />
                 <TextInput
-                    placeholder="Password"
+                    ref={(input) => this.passwordInput = input}
                     style={styles.field_Pass}
+                    onChangeText={password => this.setState({password})}
+                    // onSubmitEditing={() => this.passwordConfirmInput.focus()}
+                    returnKeyType="next"
                     secureTextEntry={true}
-                    autoCapitalize='none'
-                    onSubmitEditing={password => this.setState({password})}/>
+                    placeholder="Password" />
               </View>
               <TouchableOpacity
                     style={styles.button}
-                    onPress={() => {
-                        console.log('1');
-                        this.props.onPressSignUp(this.state.email, this.state.password);
-                    }}>
+                    onPress={() => this.handleSignUp()}>
                     <Text style = {styles.button_text}> Register </Text>
                 </TouchableOpacity>
             </View>

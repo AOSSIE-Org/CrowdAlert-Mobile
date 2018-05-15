@@ -1,5 +1,5 @@
 import {
-    SIGN_IN_LOADING,
+    LOGIN_LOADING,
     USER_SIGN_IN,
     ERROR_HANDLING
 } from '../actions/types'
@@ -15,7 +15,7 @@ const INITIAL_STATE = {
 export default function(state = INITIAL_STATE, action) {
     let result = Object.assign({}, state);
     switch (action.type) {
-        case SIGN_IN_LOADING:
+        case LOGIN_LOADING:
             return {
                 ...result,
                 loading: action.loading,

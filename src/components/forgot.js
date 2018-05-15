@@ -15,7 +15,7 @@ import firebase from 'react-native-firebase';
 import {AccessToken, LoginManager, LoginButton} from 'react-native-fbsdk';
 import {bindActionCreators} from 'redux';
 import {connect} from "react-redux";
-import {onPressSignIn,onforget} from '../actions/loginAction'
+import {onforget} from '../actions/loginAction'
 import { Actions } from 'react-native-router-flux';
 
 class Login extends Component {
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
 
 function matchDispatchToProps(dispatch){
     return bindActionCreators({
-        onPressSignIn: onPressSignIn,
+        onforget: onforget,
     },dispatch);
 }
 

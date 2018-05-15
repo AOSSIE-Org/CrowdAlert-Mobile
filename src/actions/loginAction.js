@@ -1,5 +1,5 @@
 import {
-    SIGN_IN_LOADING,
+    LOGIN_LOADING,
     USER_SIGN_IN,
     ERROR_HANDLING
 } from './types'
@@ -12,19 +12,21 @@ export const onPressSignIn = (email,password) => {
         firebase.auth().signInAndRetrieveDataWithEmailAndPassword(email, password)
         .then((data) => {
             dispatch(signInLoading(false));
+            dispatch(saveUser(data.user,'email'));
             console.log(data.user);
             alert("Login done")
         })
         .catch((error) => {
             // if (code == "auth/wrong-password")
-            //     Alert.alert("Wrong Password");
+            //     alert("Wrong Password");
             // if (code == "auth/user-not-found")
-            //     Alert.alert("You are not registered.")
+            //     alert("You are not registered.")
             console.log(error);
         });
     }
 }
 export const onPressSignUp = (email,password) => {
+    console.log(email,password);
     return (dispatch) => {
         dispatch(signInLoading(true));
         firebase.auth().createUserAndRetrieveDataWithEmailAndPassword(email, password)
@@ -39,9 +41,9 @@ export const onPressSignUp = (email,password) => {
             dispatch(handleError(error));
             console.log(error);
             // if (code  == "auth/email-already-in-use")
-            //     Alert.alert("User Already Registered with the same email");
+            //     alert("User Already Registered with the same email");
             // else
-            //     Alert.alert("Error");
+            //     alert("Error");
         });
     }
 }
@@ -51,10 +53,12 @@ export const onforget = (email) => {
         var auth = firebase.auth();
         auth.sendPasswordResetEmail(email)
         .then(function() {
-            Alert.alert('Email Sent');
+            dispatch(signInLoading(true));
+            alert('Email Sent');
         })
         .catch(function(error) {
-            Alert.alert('You are not registered')
+            dispatch(signInLoading(true));
+            alert('You are not registered')
         });
     }
 }
@@ -98,7 +102,7 @@ export const googleSignin = () => {
 
 function signInLoading(bool){
     return {
-        type: SIGN_IN_LOADING,
+        type: LOGIN_LOADING,
         loading: bool,
     }
 }
