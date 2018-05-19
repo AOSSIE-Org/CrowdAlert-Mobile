@@ -5,7 +5,15 @@ import {
 } from './types'
 import firebase from 'react-native-firebase';
 import {AccessToken, LoginManager, LoginButton} from 'react-native-fbsdk';
+import { GoogleSignin } from 'react-native-google-signin';
 
+/**
+ * 
+ * Functions checks if a user is registered in firebase and los him in.
+ * @param {email} string
+ * @param {password} string
+ * @returns 
+ */
 export const onPressSignIn = (email,password) => {
     return (dispatch) => {
         dispatch(signInLoading(true));
@@ -17,6 +25,7 @@ export const onPressSignIn = (email,password) => {
             alert("Login done")
         })
         .catch((error) => {
+            alert('Please register first')
             // if (code == "auth/wrong-password")
             //     alert("Wrong Password");
             // if (code == "auth/user-not-found")
@@ -25,6 +34,13 @@ export const onPressSignIn = (email,password) => {
         });
     }
 }
+/**
+ * 
+ * Function creates user account on firebase.
+ * @param {email} string
+ * @param {password} string
+ * @returns 
+ */
 export const onPressSignUp = (email,password) => {
     console.log(email,password);
     return (dispatch) => {
@@ -47,6 +63,12 @@ export const onPressSignUp = (email,password) => {
         });
     }
 }
+/**
+ * 
+ * Implement forget password functionality . It sends email to user for changing password.
+ * @param {email} string
+ * @returns 
+ */
 export const onforget = (email) => {
     return (dispatch) => {
         dispatch(signInLoading(true));
@@ -62,6 +84,11 @@ export const onforget = (email) => {
         });
     }
 }
+/**
+ * 
+ * Function implementing facebook signin and authenticating with firebase.
+ * @returns 
+ */
 export const fbSignIn = () => {
     return (dispatch) => {
         LoginManager.logInWithReadPermissions(['public_profile', 'email'])
@@ -84,9 +111,6 @@ export const fbSignIn = () => {
             console.log(user);
             dispatch(saveUser(user.user,'facebook'));
             dispatch(signInLoading(false));
-            // If you need to do anything with the user, do it here
-            // The user will be logged in automatically by the
-            // `onAuthStateChanged` listener we set up in Login.js earlier
         })
         .catch((error) => {
             dispatch(signInLoading(false));
@@ -96,8 +120,34 @@ export const fbSignIn = () => {
         });
     }
 }
+/**
+ * 
+ * Function implementing google signin and authenticating with firebase.
+ * @returns 
+ */
 export const googleSignin = () => {
-
+    GoogleSignin.configure({
+        webClientId:'530975451806-suk2eiug3eoksre10db2dqceo1mdnemh.apps.googleusercontent.com' // only for iOS
+      })
+    return (dispatch) => {
+            GoogleSignin.signIn()
+            .then((data) => {
+                // Retrieve the access token
+                // Create a new Firebase credential with the token
+                const credential = firebase.auth.GoogleAuthProvider.credential(data.idToken, data.accessToken);
+                // Login with the credential
+                return firebase.auth().signInWithCredential(credential);
+                Alert("User added")
+            })
+            .then((user) => {
+    
+            })
+            .catch((error) => {
+                const { code, message } = error;
+                console.log('a');
+                alert(message.toString());
+            });
+    }
 }
 
 function signInLoading(bool){
