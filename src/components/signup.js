@@ -17,6 +17,13 @@ import { connect } from 'react-redux';
 import { onPressSignUp } from '../actions/loginAction';
 import { styles } from '../assets/styles/signin_styles';
 
+/**
+ * This class defines UI of the signup screen.
+ * The styling used has been imported from ../assets/signup_styles.js
+ *
+ * @class Signup
+ * @extends {Component}
+ */
 class Signup extends Component {
 	constructor(props) {
 		super(props);
@@ -73,11 +80,9 @@ class Signup extends Component {
 				>
 					<Text style={styles.button_text}> Register </Text>
 				</TouchableOpacity>
-				{
-					this.props.login.loading
-				 	? <ActivityIndicator size={'large'}/>
-					: null
-			  }
+				{this.props.login.loading ? (
+					<ActivityIndicator size={'large'} />
+				) : null}
 			</View>
 		);
 	}
