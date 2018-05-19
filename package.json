@@ -26,6 +26,8 @@
     "react-native": "0.51.0",
     "react-native-fbsdk": "^0.7.0",
     "react-native-firebase": "^4.1.0",
+    "react-native-google-sign-in": "^1.0.16",
+    "react-native-google-signin": "^0.12.0",
     "react-native-rename": "^2.2.2",
     "react-native-router-flux": "^4.0.0-beta.31",
     "react-redux": "^5.0.7",
