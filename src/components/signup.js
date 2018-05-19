@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
 	StyleSheet,
 	Image,
@@ -11,19 +11,26 @@ import {
 	Button,
 	Keyboard,
 	ActivityIndicator
-} from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { onPressSignUp } from '../actions/loginAction';
-import { styles } from '../assets/styles/signin_styles';
+} from "react-native";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { onPressSignUp } from "../actions/loginAction";
+import { styles } from "../assets/styles/signin_styles";
 
+/**
+ * This class defines UI of the signup screen.
+ * The styling used has been imported from ../assets/signup_styles.js
+ *
+ * @class Signup
+ * @extends {Component}
+ */
 class Signup extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			email: '',
-			password: '',
-			name: ''
+			email: "",
+			password: "",
+			name: ""
 		};
 	}
 
@@ -44,7 +51,7 @@ class Signup extends Component {
 						onSubmitEditing={() => this.emailInput.focus()}
 						returnKeyType="next"
 						style={styles.field_Pass}
-						placeholder={'Name'}
+						placeholder={"Name"}
 					/>
 					<TextInput
 						autoCapitalize="none"
@@ -73,11 +80,9 @@ class Signup extends Component {
 				>
 					<Text style={styles.button_text}> Register </Text>
 				</TouchableOpacity>
-				{
-					this.props.login.loading
-				 	? <ActivityIndicator size={'large'}/>
-					: null
-			  }
+				{this.props.login.loading ? (
+					<ActivityIndicator size={"large"} />
+				) : null}
 			</View>
 		);
 	}
