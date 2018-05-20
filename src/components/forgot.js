@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
 	Image,
 	Text,
@@ -9,21 +9,21 @@ import {
 	TextInput,
 	Button,
 	ActivityIndicator
-} from 'react-native';
-import firebase from 'react-native-firebase';
-import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { onForget } from '../actions/loginAction';
-import { Actions } from 'react-native-router-flux';
-import { styles } from '../assets/styles/signin_styles';
+} from "react-native";
+import firebase from "react-native-firebase";
+import { AccessToken, LoginManager, LoginButton } from "react-native-fbsdk";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { onForget } from "../actions/loginAction";
+import { Actions } from "react-native-router-flux";
+import { styles } from "../assets/styles/signin_styles";
 
 class Login extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			email: '',
-			password: ''
+			email: "",
+			password: ""
 		};
 	}
 	render() {
@@ -45,7 +45,7 @@ class Login extends Component {
 				</TouchableOpacity>
 				<View>
 					{this.props.login.loading ? (
-						<ActivityIndicator size={'large'} />
+						<ActivityIndicator size={"large"} />
 					) : null}
 				</View>
 			</View>

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
 	StyleSheet,
 	Image,
@@ -11,14 +11,14 @@ import {
 	Button,
 	Keyboard,
 	ActivityIndicator
-} from 'react-native';
-import firebase from 'react-native-firebase';
-import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { onPressSignIn } from '../actions/loginAction';
-import { Actions } from 'react-native-router-flux';
-import { styles } from '../assets/styles/signin_styles';
+} from "react-native";
+import firebase from "react-native-firebase";
+import { AccessToken, LoginManager, LoginButton } from "react-native-fbsdk";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { onPressSignIn } from "../actions/loginAction";
+import { Actions } from "react-native-router-flux";
+import { styles } from "../assets/styles/signin_styles";
 
 /**
  *
@@ -31,8 +31,8 @@ class Signin extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			email: '',
-			password: ''
+			email: "",
+			password: ""
 		};
 	}
 
@@ -77,15 +77,13 @@ class Signin extends Component {
 					onPress={() => Actions.forgot()}
 				>
 					<Text style={styles.button_text_forgot}>
-						{' '}
-						Forgot password ?{' '}
+						{" "}
+						Forgot password ?{" "}
 					</Text>
 				</TouchableOpacity>
-				{
-					this.props.login.loading
-				 	? <ActivityIndicator size={'large'}/>
-					: null
-			  }
+				{this.props.login.loading ? (
+					<ActivityIndicator size={"large"} />
+				) : null}
 			</View>
 		);
 	}
