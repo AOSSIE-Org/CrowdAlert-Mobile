@@ -20,13 +20,6 @@ import { onPressSignIn } from '../actions/loginAction';
 import { Actions } from 'react-native-router-flux';
 import { styles } from '../assets/styles/signin_styles';
 
-/**
- *
- * This class defines UI of the signin screen.
- * The styling used has been imported from ../assets/signin_styles.js
- * @class Signin
- * @extends {Component}
- */
 class Signin extends Component {
 	constructor(props) {
 		super(props);
