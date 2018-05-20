@@ -17,10 +17,10 @@ import {bindActionCreators} from 'redux';
 import {connect} from "react-redux";
 import {onPressSignIn} from '../actions/loginAction'
 import { Actions } from 'react-native-router-flux';
-import {styles} from '../assets/signin_styles';
+import {styles} from '../assets/styles/signin_styles';
 
 /**
- * 
+ *
  * This class defines UI of the signin screen.
  * The styling used has been imported from ../assets/signin_styles.js
  * @class Signin
@@ -43,38 +43,36 @@ class Signin extends Component {
     render() {
         return (
             <View style={styles.container}>
-            <View style = {styles.field}>
-                <TextInput
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    ref={(input) => this.emailInput = input}
-                    onChangeText={email => this.setState({email})}
-                    onSubmitEditing={() => this.passwordInput.focus()}
-                    keyboardType='email-address'
-                    returnKeyType="next"
-                    style={styles.field_Pass}
-                    placeholder="Email" />
-                <TextInput
-                    ref={(input) => this.passwordInput = input}
-                    style={styles.field_Pass}
-                    onChangeText={password => this.setState({password})}
-                    // onSubmitEditing={() => this.passwordConfirmInput.focus()}
-                    returnKeyType="next"
-                    secureTextEntry={true}
-                    placeholder="Password" />
-              </View>
-              <TouchableOpacity
-                    style={styles.button_login}
+                <View style = {styles.field}>
+                    <TextInput
+                        style={styles.field_Pass}
+                        ref={(input) => this.emailInput = input}
+                        onChangeText={email => this.setState({email})}
+                        onSubmitEditing={() => this.passwordInput.focus()}
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        keyboardType='email-address'
+                        returnKeyType="next"
+                        placeholder="Email" />
+                    <TextInput
+                        ref={(input) => this.passwordInput = input}
+                        style={styles.field_Pass}
+                        onChangeText={password => this.setState({password})}
+                        // onSubmitEditing={() => this.passwordConfirmInput.focus()}
+                        returnKeyType="next"
+                        secureTextEntry={true}
+                        placeholder="Password" />
+                </View>
+                <TouchableOpacity
+                    style={styles.button_send}
                     onPress={() => this.handleSignIn()}>
                     <Text style = {styles.button_text}> Login </Text>
-              </TouchableOpacity>
-              <View>
-              <TouchableOpacity
+                </TouchableOpacity>
+                <TouchableOpacity
                     style={styles.button_forgot}
                     onPress={() => Actions.forgot()}>
                     <Text style = {styles.button_text_forgot}> Forgot password ? </Text>
-              </TouchableOpacity>
-              </View>
+                </TouchableOpacity>
             </View>
         );
     }

@@ -14,12 +14,12 @@ import {
 import {bindActionCreators} from 'redux';
 import {connect} from "react-redux";
 import {onPressSignUp} from '../actions/loginAction'
-import {styles} from '../assets/signup_styles';
+import {styles} from '../assets/styles/signin_styles';
 
 /**
  * This class defines UI of the signup screen.
  * The styling used has been imported from ../assets/signup_styles.js
- * 
+ *
  * @class Signup
  * @extends {Component}
  */
@@ -71,7 +71,7 @@ class Signup extends Component {
                     placeholder="Password" />
               </View>
               <TouchableOpacity
-                    style={styles.button_register}
+                    style={styles.button_send}
                     onPress={() => this.handleSignUp()}>
                     <Text style = {styles.button_text}> Register </Text>
                 </TouchableOpacity>
