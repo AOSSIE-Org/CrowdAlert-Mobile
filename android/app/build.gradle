@@ -148,13 +148,10 @@ android {
 
 dependencies {
     compile project(':react-native-google-signin')
-    compile 'com.facebook.android:facebook-android-sdk:[4,5)' 
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile project(':react-native-fbsdk')
     implementation(project(':react-native-firebase')) {
         transitive = false
-    }
-         compile(project(":react-native-google-sign-in")) { // ADD this
-        exclude group: "com.google.android.gms"
     }
     compile "com.google.android.gms:play-services-auth:15.0.0" 
     // RNFirebase required dependencies
@@ -171,7 +168,7 @@ dependencies {
     implementation "com.google.firebase:firebase-messaging:15.0.2"
     implementation "com.google.firebase:firebase-perf:15.1.0"
     implementation "com.google.firebase:firebase-storage:15.0.2"
-    
+
     implementation('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
         transitive = true
     }
