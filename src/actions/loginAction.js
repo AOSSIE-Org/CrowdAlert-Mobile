@@ -167,21 +167,34 @@ export const googleSignin = () => {
 			});
 	};
 };
-
+/**
+ * Action creater for storing the load state to be used in the container
+ * @param bool Setting the loading state as a boolean
+ * @return {Object} Action storing the state and the TYPE used by the reducers
+ */
 function loginLoading(bool) {
 	return {
 		type: LOGIN_LOADING,
 		loading: bool
 	};
 }
-
+/**
+ * Action creater for error handling
+ * @param  {JSON} error JSON error received upon API failure
+ * @return {Object} Action storing the state and the TYPE used by the reducers
+ */
 function handleError(error) {
 	return {
 		type: ERROR_HANDLING,
 		error: error
 	};
 }
-
+/**
+ * Action creator for a common login pipeline storing all OAuths return 'USER' values.
+ * @param  {JSON} user Returned upon successful login: Stores details like email/name etc.
+ * @param  {String} type Type of auth whether google/facebook/email
+ * @return {Object} Action storing the state and the TYPE used by the reducers
+ */
 function saveUser(user, type) {
 	return {
 		type: USER_SIGN_IN,
