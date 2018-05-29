@@ -56,37 +56,4 @@ export default class App extends Component {
 			</Provider>
 		);
 	}
-	render() {
-		return (
-			<Provider store={store}>
-				<PersistGate loading={null} persistor={persistor}>
-					<ConnectedRouter backAndroidHandler={this.onBackPress}>
-						<Scene key="root">
-							<Scene
-								key="signin"
-								title="Log in"
-								component={Signin}
-							/>
-							<Scene
-								key="signup"
-								title="Register"
-								component={Signup}
-							/>
-							<Scene
-								key="login"
-								title="Welcome"
-								component={login}
-								initial={true}
-							/>
-							<Scene
-								key="forgot"
-								title="Reset Password"
-								component={Forgot}
-							/>
-						</Scene>
-					</ConnectedRouter>
-				</PersistGate>
-			</Provider>
-		);
-	}
 }

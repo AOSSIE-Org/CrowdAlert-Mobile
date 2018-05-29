@@ -8,8 +8,10 @@ const INITIAL_STATE = {
 	error: null
 };
 /**
- * Login Reducer handling all types of login states. This would maintain the state of the login in the Redux store.
- * @param  {JSON} [state=INITIAL_STATE] State to be maintained by this reducer in the redux store.
+ * Login Reducer handling all types of login states.
+ * This would maintain the state of the login in the Redux store.
+ * @param  {JSON} state=INITIAL_STATE State to be maintained by this
+ * reducer in the redux store.
  * @param  {JSON} action Tells the reducer to perform certain actions and make changes
  * @return {state} Based on action the function changes the state and rerenders
  */

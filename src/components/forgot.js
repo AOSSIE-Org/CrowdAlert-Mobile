@@ -54,7 +54,8 @@ class Login extends Component {
 }
 
 /**
- * Mapping dispatchable actions to props so that actions can be used through props in children components.
+ * Mapping dispatchable actions to props so that actions can be used
+ * through props in children components.
  * @param dispatch Dispatches an action to trigger a state change.
  * @return Turns action creator objects into an objects with the same keys.
  */
@@ -67,7 +68,8 @@ function matchDispatchToProps(dispatch) {
 	);
 }
 /**
- * Mapping state to props so that state variables can be used through props in children components.
+ * Mapping state to props so that state variables can be used
+ * through props in children components.
  * @param state Current state in the store.
  * @return Returns states as props.
  */

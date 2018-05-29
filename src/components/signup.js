@@ -17,6 +17,10 @@ import { connect } from 'react-redux';
 import { onPressSignUp } from '../actions/loginAction';
 import { styles } from '../assets/styles/signin_styles';
 
+/**
+ * Screen for signup.
+ * @extends Component
+ */
 class Signup extends Component {
 	constructor(props) {
 		super(props);
@@ -26,7 +30,9 @@ class Signup extends Component {
 			name: ''
 		};
 	}
-
+	/**
+	 * Hides the Keyboard and calls onPressSignUp function in loginAction screen.
+	 */
 	handleSignUp() {
 		Keyboard.dismiss();
 		this.props.onPressSignUp(this.state.email, this.state.password);
@@ -81,7 +87,8 @@ class Signup extends Component {
 	}
 }
 /**
- * Mapping dispatchable actions to props so that actions can be used through props in children components.
+ * Mapping dispatchable actions to props so that actions can be used
+ * through props in children components.
  * @param dispatch Dispatches an action to trigger a state change.
  * @return Turns action creator objects into an objects with the same keys.
  */
@@ -94,7 +101,8 @@ function matchDispatchToProps(dispatch) {
 	);
 }
 /**
- * Mapping state to props so that state variables can be used through props in children components.
+ * Mapping state to props so that state variables can be used
+ * through props in children components.
  * @param state Current state in the store.
  * @return Returns states as props.
  */

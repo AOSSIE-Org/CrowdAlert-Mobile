@@ -4,12 +4,18 @@ import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
 import { GoogleSignin } from 'react-native-google-signin';
 import { ToastAndroid, ActivityIndicator } from 'react-native';
 
+/**
+ * This function signs in the user into app using firebase authentication.
+ * @param  {string} email carries email entered by the user on signin screen.
+ * @param  {string} password carries password entered by the user on signin screen.
+ * @return signs in the user successfully or triggers an error.
+ */
 export const onPressSignIn = (email, password) => {
 	return dispatch => {
 		dispatch(loginLoading(true));
 		firebase
 			.auth()
-			.signInAndRetrieveDataWithEmailAndPassword(email, password)
+			.signInAndRetrieveDataWithEmailAndPassword(email, password) //signs in to firebase
 			.then(data => {
 				dispatch(loginLoading(false));
 				dispatch(saveUser(data.user, 'email'));
@@ -39,15 +45,21 @@ export const onPressSignIn = (email, password) => {
 			});
 	};
 };
-
+/**
+ * This function is used for registering a user in firebase.
+ * @param  {string} email carries email entered by the user on signin screen.
+ * @param  {string} password carries password entered by the user on signin screen.
+ * @return signs up in the user successfully or triggers an error.
+ */
 export const onPressSignUp = (email, password) => {
 	console.log(email, password);
 	return dispatch => {
 		dispatch(loginLoading(true));
 		firebase
 			.auth()
-			.createUserAndRetrieveDataWithEmailAndPassword(email, password)
+			.createUserAndRetrieveDataWithEmailAndPassword(email, password) //signs up a User
 			.then(data => {
+				//on success
 				console.log(data.user.email);
 				dispatch(saveUser(data.user, 'email'));
 				dispatch(loginLoading(false));
@@ -76,10 +88,15 @@ export const onPressSignUp = (email, password) => {
 	};
 };
 
+/**
+ * This function implements forget password functionality by sending a password reset email.
+ * @param  {string} email carries email entered by user.
+ * @return sends password reset email or trigger an error that user is not registered.
+ */
 export const onForget = email => {
 	return dispatch => {
 		dispatch(loginLoading(true));
-		var auth = firebase.auth();
+		var auth = firebase.auth(); //for firebase authentication
 		auth
 			.sendPasswordResetEmail(email)
 			.then(function() {
@@ -92,9 +109,13 @@ export const onForget = email => {
 			});
 	};
 };
-
+/**
+ * This function logs in the user using facebook login and stores the user in firebase.
+ * @return on success fb signin, else will trigger alerts.
+ */
 export const fbSignIn = () => {
 	return dispatch => {
+		// We specify in an array what we want to access from a user profile.
 		LoginManager.logInWithReadPermissions(['public_profile', 'email'])
 			.then(result => {
 				dispatch(loginLoading(true));
@@ -111,7 +132,7 @@ export const fbSignIn = () => {
 				const credential = firebase.auth.FacebookAuthProvider.credential(
 					data.accessToken
 				);
-				// Login with the credential
+				// Login with the fb credential
 				return firebase
 					.auth()
 					.signInAndRetrieveDataWithCredential(credential);
@@ -133,7 +154,10 @@ export const fbSignIn = () => {
 			});
 	};
 };
-
+/**
+ * This function is used for google login and storing the user in firebase.
+ * @return If success, log in with google else trigger alerts.
+ */
 export const googleSignin = () => {
 	return dispatch => {
 		GoogleSignin.signIn()
@@ -168,9 +192,9 @@ export const googleSignin = () => {
 	};
 };
 /**
- * Action creater for storing the load state to be used in the container
- * @param bool Setting the loading state as a boolean
- * @return {Object} Action storing the state and the TYPE used by the reducers
+ * It checks if loading is complete.
+ * @param  {boolean} bool.
+ * @return returns type and status of loading.
  */
 function loginLoading(bool) {
 	return {
@@ -179,9 +203,9 @@ function loginLoading(bool) {
 	};
 }
 /**
- * Action creater for error handling
- * @param  {JSON} error JSON error received upon API failure
- * @return {Object} Action storing the state and the TYPE used by the reducers
+ * Hanles error.
+ * @param  {object} error
+ * @return returns type and error.
  */
 function handleError(error) {
 	return {
@@ -190,10 +214,10 @@ function handleError(error) {
 	};
 }
 /**
- * Action creator for a common login pipeline storing all OAuths return 'USER' values.
- * @param  {JSON} user Returned upon successful login: Stores details like email/name etc.
- * @param  {String} type Type of auth whether google/facebook/email
- * @return {Object} Action storing the state and the TYPE used by the reducers
+ * Saves user
+ * @param  {object} user
+ * @param  {string} type of signin
+ * @return returns user object and type of signin.
  */
 function saveUser(user, type) {
 	return {
