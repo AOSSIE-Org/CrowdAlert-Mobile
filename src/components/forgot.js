@@ -7,18 +7,18 @@ import {
 	TouchableOpacity,
 	Alert,
 	TextInput,
-	Button,
-	ActivityIndicator
+	ActivityIndicator,
+	Button
 } from "react-native";
 import firebase from "react-native-firebase";
 import { AccessToken, LoginManager, LoginButton } from "react-native-fbsdk";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { onForget } from "../actions/loginAction";
+import { onforget } from "../actions/loginAction";
 import { Actions } from "react-native-router-flux";
 import { styles } from "../assets/styles/signin_styles";
-
-class Login extends Component {
+import PropTypes from "prop-types";
+class Forgot extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -39,7 +39,7 @@ class Login extends Component {
 				</View>
 				<TouchableOpacity
 					style={styles.button_send}
-					onPress={() => this.props.onForget(this.state.email)}
+					onPress={() => this.props.onforget(this.state.email)}
 				>
 					<Text style={styles.button_text}> Send email </Text>
 				</TouchableOpacity>
@@ -52,11 +52,14 @@ class Login extends Component {
 		);
 	}
 }
-
+Forgot.propTypes = {
+	onforget: PropTypes.func.isRequired,
+	login: PropTypes.object
+};
 function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{
-			onForget: onForget
+			onforget: onforget
 		},
 		dispatch
 	);
@@ -66,4 +69,4 @@ const mapStateToProps = state => ({
 	login: state.login
 });
 
-export default connect(mapStateToProps, matchDispatchToProps)(Login);
+export default connect(mapStateToProps, matchDispatchToProps)(Forgot);

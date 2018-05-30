@@ -1,14 +1,14 @@
-import React, { Component } from 'react';
-import { Provider, connect } from 'react-redux';
-import { Router } from 'react-native-router-flux';
-import { Actions, Scene, Drawer } from 'react-native-router-flux';
-import { PersistGate } from 'redux-persist/lib/integration/react';
-import Signin from './src/components/signin';
-import Signup from './src/components/signup';
-import HomeLogin from './src/components/homeLogin';
-import Forgot from './src/components/forgot';
+import React, { Component } from "react";
+import { Provider, connect } from "react-redux";
+import { Router } from "react-native-router-flux";
+import { Actions, Scene, Drawer } from "react-native-router-flux";
+import { PersistGate } from "redux-persist/lib/integration/react";
+import Signin from "./src/components/signin";
+import Signup from "./src/components/signup";
+import HomeLogin from "./src/components/homeLogin";
+import Forgot from "./src/components/forgot";
 
-import configureStore from './src/store/store';
+import configureStore from "./src/store/store";
 let { store, persistor } = configureStore();
 
 const ConnectedRouter = connect()(Router);
