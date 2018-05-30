@@ -9,7 +9,8 @@ import {
 	Alert,
 	TextInput,
 	Button,
-	Keyboard
+	Keyboard,
+	ActivityIndicator
 } from 'react-native';
 import firebase from 'react-native-firebase';
 import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
@@ -73,6 +74,11 @@ class Signin extends Component {
 						Forgot password ?{' '}
 					</Text>
 				</TouchableOpacity>
+				{
+					this.props.login.loading
+				 	? <ActivityIndicator size={'large'}/>
+					: null
+			  }
 			</View>
 		);
 	}
