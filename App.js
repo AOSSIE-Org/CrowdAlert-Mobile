@@ -26,11 +26,11 @@ export default class App extends Component {
                   <Scene key='root'>
 	                  <Scene
 						  key='signin'
-                          title="SignIn"
+                          title="Log in"
 	                      component={Signin}/>
                     <Scene
 						  key='signup'
-                          title="SingnUp"
+                          title="Register"
 	                      component={Signup}/>
                     <Scene
 						  key='login'

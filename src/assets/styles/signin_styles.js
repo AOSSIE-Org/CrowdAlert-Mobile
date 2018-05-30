@@ -19,6 +19,7 @@ export const styles = StyleSheet.create({
         width: width/3,
         marginHorizontal: width/3,
         marginTop: height/50,
+        marginBottom : height/20,
         borderRadius: 10
     },
     field: {

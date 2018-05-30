@@ -2,7 +2,7 @@ import { LOGIN_LOADING, USER_SIGN_IN, ERROR_HANDLING } from './types';
 import firebase from 'react-native-firebase';
 import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
 import { GoogleSignin } from 'react-native-google-signin';
-
+import {ToastAndroid,ActivityIndicator} from 'react-native';
 export const onPressSignIn = (email, password) => {
 	return dispatch => {
 		dispatch(signInLoading(true));
@@ -13,10 +13,17 @@ export const onPressSignIn = (email, password) => {
 				dispatch(signInLoading(false));
 				dispatch(saveUser(data.user, 'email'));
 				console.log(data.user);
-				alert('Login done');
+				ToastAndroid.show('You are logged in',ToastAndroid.SHORT);
 			})
 			.catch(error => {
-				alert('Please register first');
+				dispatch(signInLoading(false));
+				const {code,message} = error;
+				if (code == "auth/wrong-password")
+					ToastAndroid.show('Wrong Password',ToastAndroid.SHORT);
+				else if (code == "auth/user-not-found")
+					ToastAndroid.show('Please register first',ToastAndroid.SHORT);
+				else
+					ToastAndroid.show('Could not complete signin',ToastAndroid.SHORT);
 				console.log(error);
 			});
 	};
@@ -33,12 +40,17 @@ export const onPressSignUp = (email, password) => {
 				console.log(data.user.email);
 				dispatch(saveUser(data.user, 'email'));
 				dispatch(signInLoading(false));
-				alert('Signup done');
+				ToastAndroid.show('Registration successful',ToastAndroid.SHORT);
 			})
 			.catch(error => {
 				dispatch(signInLoading(false));
 				dispatch(handleError(error));
 				console.log(error);
+				const {code,message} = error;
+				if (code  == "auth/email-already-in-use")
+        	ToastAndroid.show('Email in use',ToastAndroid.SHORT);
+				else
+					ToastAndroid.show('Could not sign you up!',ToastAndroid.SHORT);
 			});
 	};
 };
@@ -50,12 +62,12 @@ export const onforget = email => {
 		auth
 			.sendPasswordResetEmail(email)
 			.then(function() {
-				dispatch(signInLoading(true));
-				alert('Email Sent');
+				dispatch(signInLoading(false));
+				ToastAndroid.show('Email sent',ToastAndroid.SHORT);
 			})
 			.catch(function(error) {
-				dispatch(signInLoading(true));
-				alert('You are not registered');
+				dispatch(signInLoading(false));
+				ToastAndroid.show('Email not registered',ToastAndroid.SHORT);
 			});
 	};
 };
@@ -79,7 +91,7 @@ export const fbSignIn = () => {
 					data.accessToken
 				);
 				// Login with the credential
-				alert('FB Login done');
+				ToastAndroid.show('Login successful',ToastAndroid.SHORT);
 				return firebase
 					.auth()
 					.signInAndRetrieveDataWithCredential(credential);
@@ -93,7 +105,7 @@ export const fbSignIn = () => {
 				dispatch(signInLoading(false));
 				dispatch(handleError(error));
 				console.log(error);
-				alert('FB Signup error');
+				ToastAndroid.show('Could not complete signin',ToastAndroid.SHORT);
 			});
 	};
 };
@@ -113,7 +125,7 @@ export const googleSignin = () => {
 				return firebase
 					.auth()
 					.signInAndRetrieveDataWithCredential(credential);
-				alert('User added');
+				ToastAndroid.show('Login successful',ToastAndroid.SHORT);
 			})
 			.then(user => {
 				console.log(user);
@@ -124,6 +136,7 @@ export const googleSignin = () => {
 				dispatch(signInLoading(false));
 				dispatch(handleError(error));
 				console.log(error);
+				ToastAndroid.show('Could not complete login',ToastAndroid.SHORT);
 			});
 	};
 };

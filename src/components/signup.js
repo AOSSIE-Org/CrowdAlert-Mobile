@@ -9,7 +9,8 @@ import {
 	Alert,
 	TextInput,
 	Button,
-	Keyboard
+	Keyboard,
+	ActivityIndicator
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -72,6 +73,11 @@ class Signup extends Component {
 				>
 					<Text style={styles.button_text}> Register </Text>
 				</TouchableOpacity>
+				{
+					this.props.login.loading
+				 	? <ActivityIndicator size={'large'}/>
+					: null
+			  }
 			</View>
 		);
 	}
