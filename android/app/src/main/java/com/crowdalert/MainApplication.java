@@ -1,7 +1,9 @@
 package com.crowdalert;
-
+import com.airbnb.android.react.maps.MapsPackage;
 import android.app.Application;
 import com.facebook.react.ReactApplication;
+import com.showlocationservicesdialogbox.LocationServicesDialogBoxPackage;
+import com.arttitude360.reactnative.rngoogleplaces.RNGooglePlacesPackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.react.ReactNativeHost;
@@ -48,7 +50,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
 	new MainReactPackage(),
-            new RNGoogleSigninPackage(),
+            new LocationServicesDialogBoxPackage(),
+            new RNGooglePlacesPackage(),
+	new MapsPackage(),
+        new RNGoogleSigninPackage(),
         new FBSDKPackage(mCallbackManager),
         new RNFirebasePackage(),
         new RNFirebaseAdMobPackage(),

@@ -1,7 +1,8 @@
 import {
     LOGIN_LOADING,
     USER_SIGN_IN,
-    ERROR_HANDLING
+    ERROR_HANDLING,
+    LOCATION
 } from '../actions/types'
 
 const INITIAL_STATE = {
