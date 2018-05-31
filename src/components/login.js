@@ -18,6 +18,7 @@ import { connect } from 'react-redux';
 import { fbSignIn, googleSignin } from '../actions/loginAction';
 import { Actions } from 'react-native-router-flux';
 import { styles } from '../assets/styles/login_styles';
+import { styles1 } from '../assets/styles/signin_styles';
 import { GoogleSignin } from 'react-native-google-signin';
 
 class Login extends Component {
@@ -78,6 +79,17 @@ class Login extends Component {
 					>
 						<Text style={styles.button_text_social}> Google </Text>
 					</TouchableOpacity>
+				</View>
+				<View>
+				<TouchableOpacity
+					style={styles.button_forgot}
+					onPress={() => Actions.map()}
+				>
+					<Text style={styles.button_text_forgot}>
+						{' '}
+						Continue as a guest {' '}
+					</Text>
+				</TouchableOpacity>
 				</View>
 			</View>
 		);

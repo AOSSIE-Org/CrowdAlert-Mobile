@@ -5,6 +5,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
       android:name=".MainApplication"
@@ -34,6 +36,9 @@
           <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
         </intent-filter>
       </service>
+	 <meta-data
+      android:name="com.google.android.geo.API_KEY"
+      android:value="AIzaSyDyuB4CvK5jFuavN2FyPJKp3lDkgK2cLPA"/>
     </application>
 
 </manifest>
