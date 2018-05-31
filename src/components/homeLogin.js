@@ -20,7 +20,7 @@ import { Actions } from 'react-native-router-flux';
 import { styles } from '../assets/styles/login_styles';
 import { GoogleSignin } from 'react-native-google-signin';
 
-class Login extends Component {
+class HomeLogin extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -49,13 +49,13 @@ class Login extends Component {
 				<Text style={styles.welcome}>Crowd Alert</Text>
 				<View style={styles.button_container}>
 					<TouchableOpacity
-						style={styles.button_1}
+						style={styles.button_signin}
 						onPress={() => Actions.signin()}
 					>
 						<Text style={styles.button_text}> SignIn </Text>
 					</TouchableOpacity>
 					<TouchableOpacity
-						style={styles.button_2}
+						style={styles.button_register}
 						onPress={() => Actions.signup()}
 					>
 						<Text style={styles.button_text}> Register </Text>
@@ -97,4 +97,4 @@ const mapStateToProps = state => ({
 	login: state.login
 });
 
-export default connect(mapStateToProps, matchDispatchToProps)(Login);
+export default connect(mapStateToProps, matchDispatchToProps)(HomeLogin);
