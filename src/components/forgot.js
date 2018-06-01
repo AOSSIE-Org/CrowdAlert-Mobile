@@ -17,8 +17,9 @@ import { connect } from 'react-redux';
 import { onForget } from '../actions/loginAction';
 import { Actions } from 'react-native-router-flux';
 import { styles } from '../assets/styles/signin_styles';
+import PropTypes from 'prop-types';
 
-class Login extends Component {
+class Forgot extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -52,6 +53,10 @@ class Login extends Component {
 		);
 	}
 }
+Forgot.propTypes = {
+	onforget: PropTypes.func.isRequired,
+	login: PropTypes.object
+};
 
 /**
  * Mapping dispatchable actions to props so that actions can be used
@@ -77,4 +82,4 @@ const mapStateToProps = state => ({
 	login: state.login
 });
 
-export default connect(mapStateToProps, matchDispatchToProps)(Login);
+export default connect(mapStateToProps, matchDispatchToProps)(Forgot);
