@@ -16,6 +16,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { onPressSignUp } from '../actions/loginAction';
 import { styles } from '../assets/styles/signin_styles';
+import PropTypes from 'prop-types';
 
 /**
  * Screen for signup.
@@ -86,6 +87,11 @@ class Signup extends Component {
 		);
 	}
 }
+Signup.propTypes = {
+	onPressSignUp: PropTypes.func.isRequired,
+	login: PropTypes.object
+};
+
 /**
  * Mapping dispatchable actions to props so that actions can be used
  * through props in children components.

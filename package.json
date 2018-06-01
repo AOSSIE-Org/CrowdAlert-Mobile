@@ -26,6 +26,7 @@
 	},
 	"dependencies": {
 		"fbjs": "^0.8.16",
+		"prop-types": "^15.6.1",
 		"react": "16.0.0",
 		"react-native": "0.51.0",
 		"react-native-android-location-services-dialog-box": "^2.5.0",

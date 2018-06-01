@@ -19,6 +19,7 @@ import { connect } from 'react-redux';
 import { onPressSignIn } from '../actions/loginAction';
 import { Actions } from 'react-native-router-flux';
 import { styles } from '../assets/styles/signin_styles';
+import PropTypes from 'prop-types';
 
 /**
  * Screen for login using login id and password.
@@ -87,6 +88,11 @@ class Signin extends Component {
 		);
 	}
 }
+Signin.propTypes = {
+	onPressSignIn: PropTypes.func.isRequired,
+	login: PropTypes.object
+};
+
 /**
  * Mapping dispatchable actions to props so that actions can be used
  * through props in children components.
