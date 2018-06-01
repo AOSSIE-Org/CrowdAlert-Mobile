@@ -7,7 +7,8 @@ import Signin from "./src/components/signin";
 import Signup from "./src/components/signup";
 import login from "./src/components/login";
 import Forgot from "./src/components/forgot";
-import map from "./src/components/map";
+import MapScreen from "./src/components/map";
+
 import configureStore from "./src/store/store";
 let { store, persistor } = configureStore();
 
@@ -49,7 +50,7 @@ export default class App extends Component {
 							<Scene
 								key="map"
 								hideNavBar={true}
-								component={map}
+								component={MapScreen}
 							/>
 						</Scene>
 					</ConnectedRouter>
