@@ -105,7 +105,6 @@ export const onForget = email => {
 			})
 			.catch(function(error) {
 				dispatch(loginLoading(false));
-				ToastAndroid.show('Email not registered', ToastAndroid.SHORT);
 			});
 	};
 };
