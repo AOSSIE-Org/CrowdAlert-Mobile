@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
 	StyleSheet,
 	Image,
@@ -10,30 +10,30 @@ import {
 	TextInput,
 	Button,
 	ActivityIndicator
-} from 'react-native';
-import firebase from 'react-native-firebase';
-import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { fbSignIn, googleSignin } from '../actions/loginAction';
-import { Actions } from 'react-native-router-flux';
-import { styles } from '../assets/styles/login_styles';
-import { styles1 } from '../assets/styles/signin_styles';
-import { GoogleSignin } from 'react-native-google-signin';
-
+} from "react-native";
+import firebase from "react-native-firebase";
+import { AccessToken, LoginManager, LoginButton } from "react-native-fbsdk";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { fbSignIn, googleSignin } from "../actions/loginAction";
+import { Actions } from "react-native-router-flux";
+import { styles } from "../assets/styles/login_styles";
+import { styles1 } from "../assets/styles/signin_styles";
+import { GoogleSignin } from "react-native-google-signin";
+import PropTypes from "prop-types";
 class HomeLogin extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			email: '',
-			password: ''
+			email: "",
+			password: ""
 		};
 	}
 
 	componentDidMount() {
 		GoogleSignin.configure({
 			webClientId:
-				'530975451806-suk2eiug3eoksre10db2dqceo1mdnemh.apps.googleusercontent.com'
+				"443270569292-mc2fn435n291r3b9gqk8bjhr42j0tjva.apps.googleusercontent.com"
 		});
 	}
 
@@ -43,7 +43,7 @@ class HomeLogin extends Component {
 				{/* <ActivityIndicator animating={this.props.login.loading} size={'large'}/> */}
 				<View style={styles.headerImage}>
 					<Image
-						source={require('../assets/earthquake-30-512.png')}
+						source={require("../assets/earthquake-30-512.png")}
 						style={styles.logo}
 					/>
 				</View>
@@ -69,8 +69,8 @@ class HomeLogin extends Component {
 						onPress={() => this.props.fbSignIn()}
 					>
 						<Text style={styles.button_text_social}>
-							{' '}
-							Facebook{' '}
+							{" "}
+							Facebook{" "}
 						</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
@@ -81,20 +81,24 @@ class HomeLogin extends Component {
 					</TouchableOpacity>
 				</View>
 				<View>
-				<TouchableOpacity
-					style={styles.button_forgot}
-					onPress={() => Actions.map()}
-				>
-					<Text style={styles.button_text_forgot}>
-						{' '}
-						Continue as a guest {' '}
-					</Text>
-				</TouchableOpacity>
+					<TouchableOpacity
+						style={styles.button_forgot}
+						onPress={() => Actions.map()}
+					>
+						<Text style={styles.button_text_forgot}>
+							{" "}
+							Continue as a guest{" "}
+						</Text>
+					</TouchableOpacity>
 				</View>
 			</View>
 		);
 	}
 }
+HomeLogin.propTypes = {
+	fbSignIn: PropTypes.func.isRequired,
+	googleSignin: PropTypes.func.isRequired
+};
 function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{

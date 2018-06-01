@@ -19,7 +19,7 @@ import { connect } from "react-redux";
 import { onPressSignIn } from "../actions/loginAction";
 import { Actions } from "react-native-router-flux";
 import { styles } from "../assets/styles/signin_styles";
-
+import PropTypes from "prop-types";
 class Signin extends Component {
 	constructor(props) {
 		super(props);
@@ -81,6 +81,11 @@ class Signin extends Component {
 		);
 	}
 }
+Signin.propTypes = {
+	onPressSignIn: PropTypes.func.isRequired,
+	login: PropTypes.object
+};
+
 function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{

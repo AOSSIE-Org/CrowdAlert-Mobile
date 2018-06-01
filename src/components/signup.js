@@ -16,13 +16,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { onPressSignUp } from "../actions/loginAction";
 import { styles } from "../assets/styles/signin_styles";
-/**
- * This class defines UI of the signup screen.
- * The styling used has been imported from ../assets/signup_styles.js
- *
- * @class Signup
- * @extends {Component}
- */
+import PropTypes from "prop-types";
 class Signup extends Component {
 	constructor(props) {
 		super(props);
@@ -86,6 +80,10 @@ class Signup extends Component {
 		);
 	}
 }
+Signup.propTypes = {
+	onPressSignUp: PropTypes.func.isRequired,
+	login: PropTypes.object
+};
 function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{

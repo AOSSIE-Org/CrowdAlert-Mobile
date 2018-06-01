@@ -3,38 +3,34 @@ import firebase from "react-native-firebase";
 import { AccessToken, LoginManager, LoginButton } from "react-native-fbsdk";
 import { GoogleSignin } from "react-native-google-signin";
 import { ToastAndroid, ActivityIndicator } from "react-native";
-
+import PropTypes from "prop-types";
 export const onPressSignIn = (email, password) => {
 	return dispatch => {
-		dispatch(loginLoading(true));
+		dispatch(signInLoading(true));
 		firebase
 			.auth()
 			.signInAndRetrieveDataWithEmailAndPassword(email, password)
 			.then(data => {
-				dispatch(loginLoading(false));
+				dispatch(signInLoading(false));
 				dispatch(saveUser(data.user, "email"));
 				console.log(data.user);
 				ToastAndroid.show("You are logged in", ToastAndroid.SHORT);
 			})
 			.catch(error => {
-				dispatch(loginLoading(false));
+				dispatch(signInLoading(false));
 				const { code, message } = error;
-				if (code == "auth/wrong-password") {
+				if (code == "auth/wrong-password")
+					ToastAndroid.show("Wrong Password", ToastAndroid.SHORT);
+				else if (code == "auth/user-not-found")
 					ToastAndroid.show(
-						"Wrong Password " + message,
+						"Please register first",
 						ToastAndroid.SHORT
 					);
-				} else if (code == "auth/user-not-found") {
+				else
 					ToastAndroid.show(
-						"Please register first " + message,
+						"Could not complete signin",
 						ToastAndroid.SHORT
 					);
-				} else {
-					ToastAndroid.show(
-						"Could not complete signin " + message,
-						ToastAndroid.SHORT
-					);
-				}
 				console.log(error);
 			});
 	};
@@ -43,51 +39,47 @@ export const onPressSignIn = (email, password) => {
 export const onPressSignUp = (email, password) => {
 	console.log(email, password);
 	return dispatch => {
-		dispatch(loginLoading(true));
+		dispatch(signInLoading(true));
 		firebase
 			.auth()
 			.createUserAndRetrieveDataWithEmailAndPassword(email, password)
 			.then(data => {
 				console.log(data.user.email);
 				dispatch(saveUser(data.user, "email"));
-				dispatch(loginLoading(false));
+				dispatch(signInLoading(false));
 				ToastAndroid.show(
 					"Registration successful",
 					ToastAndroid.SHORT
 				);
 			})
 			.catch(error => {
-				dispatch(loginLoading(false));
+				dispatch(signInLoading(false));
 				dispatch(handleError(error));
 				console.log(error);
 				const { code, message } = error;
-				if (code == "auth/email-already-in-use") {
+				if (code == "auth/email-already-in-use")
+					ToastAndroid.show("Email in use", ToastAndroid.SHORT);
+				else
 					ToastAndroid.show(
-						"Email in use " + message,
+						"Could not sign you up!",
 						ToastAndroid.SHORT
 					);
-				} else {
-					ToastAndroid.show(
-						"Could not sign you up! " + message,
-						ToastAndroid.SHORT
-					);
-				}
 			});
 	};
 };
 
-export const onForget = email => {
+export const onforget = email => {
 	return dispatch => {
-		dispatch(loginLoading(true));
+		dispatch(signInLoading(true));
 		var auth = firebase.auth();
 		auth
 			.sendPasswordResetEmail(email)
 			.then(function() {
-				dispatch(loginLoading(false));
+				dispatch(signInLoading(false));
 				ToastAndroid.show("Email sent", ToastAndroid.SHORT);
 			})
 			.catch(function(error) {
-				dispatch(loginLoading(false));
+				dispatch(signInLoading(false));
 				ToastAndroid.show("Email not registered", ToastAndroid.SHORT);
 			});
 	};
@@ -97,7 +89,7 @@ export const fbSignIn = () => {
 	return dispatch => {
 		LoginManager.logInWithReadPermissions(["public_profile", "email"])
 			.then(result => {
-				dispatch(loginLoading(true));
+				dispatch(signInLoading(true));
 				if (result.isCancelled) {
 					return Promise.reject(
 						new Error("The user cancelled the request")
@@ -112,6 +104,7 @@ export const fbSignIn = () => {
 					data.accessToken
 				);
 				// Login with the credential
+				ToastAndroid.show("Login successful", ToastAndroid.SHORT);
 				return firebase
 					.auth()
 					.signInAndRetrieveDataWithCredential(credential);
@@ -119,11 +112,10 @@ export const fbSignIn = () => {
 			.then(user => {
 				console.log(user);
 				dispatch(saveUser(user.user, "facebook"));
-				dispatch(loginLoading(false));
-				ToastAndroid.show("Login successful", ToastAndroid.SHORT);
+				dispatch(signInLoading(false));
 			})
 			.catch(error => {
-				dispatch(loginLoading(false));
+				dispatch(signInLoading(false));
 				dispatch(handleError(error));
 				console.log(error);
 				ToastAndroid.show(
@@ -138,7 +130,7 @@ export const googleSignin = () => {
 	return dispatch => {
 		GoogleSignin.signIn()
 			.then(data => {
-				dispatch(loginLoading(true));
+				dispatch(signInLoading(true));
 				// Retrieve the access token
 				// Create a new Firebase credential with the token
 				const credential = firebase.auth.GoogleAuthProvider.credential(
@@ -153,22 +145,22 @@ export const googleSignin = () => {
 			.then(user => {
 				console.log(user);
 				dispatch(saveUser(user.user, "google"));
-				dispatch(loginLoading(false));
+				dispatch(signInLoading(false));
 				ToastAndroid.show("Login successful", ToastAndroid.SHORT);
 			})
 			.catch(error => {
-				dispatch(loginLoading(false));
+				dispatch(signInLoading(false));
 				dispatch(handleError(error));
 				console.log(error);
 				ToastAndroid.show(
-					"Could not complete login",
+					"Could not complete login" + error.message.toString(),
 					ToastAndroid.SHORT
 				);
 			});
 	};
 };
 
-function loginLoading(bool) {
+function signInLoading(bool) {
 	return {
 		type: LOGIN_LOADING,
 		loading: bool

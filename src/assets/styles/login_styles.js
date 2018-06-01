@@ -25,7 +25,7 @@ export const styles = StyleSheet.create({
 		padding: width / 25,
 		marginVertical: height / 80
 	},
-	button_signin: {
+	button_1: {
 		marginLeft: width / 6,
 		width: width / 4,
 		justifyContent: "center",
@@ -36,7 +36,7 @@ export const styles = StyleSheet.create({
 		borderColor: "black",
 		borderWidth: 1.5
 	},
-	button_register: {
+	button_2: {
 		marginRight: width / 6,
 		width: width / 4,
 		justifyContent: "center",
@@ -75,5 +75,13 @@ export const styles = StyleSheet.create({
 		alignItems: "center",
 		borderRadius: 2,
 		marginRight: width / 6
+	},
+	button_text_forgot: {
+		color: "grey",
+		fontSize: 12
+	},
+	button_forgot: {
+		marginHorizontal: width / 20,
+		marginTop: height / 30
 	}
 });
