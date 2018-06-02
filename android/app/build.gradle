@@ -148,13 +148,6 @@ android {
 
 dependencies {
     compile project(':react-native-android-location-services-dialog-box')
-    compile(project(':react-native-google-places')){
-          exclude group: 'com.google.android.gms', module: 'play-services-base'
-          exclude group: 'com.google.android.gms', module: 'play-services-places'
-          exclude group: 'com.google.android.gms', module: 'play-services-location'
-      }
-      compile 'com.google.android.gms:play-services-places:15.0.0'
-      compile 'com.google.android.gms:play-services-location:15.0.0'
     compile(project(':react-native-maps')){
       exclude group: 'com.google.android.gms', module: 'play-services-base'
       exclude group: 'com.google.android.gms', module: 'play-services-maps'
@@ -166,7 +159,7 @@ dependencies {
     implementation(project(':react-native-firebase')) {
         transitive = false
     }
-    compile "com.google.android.gms:play-services-auth:15.0.0" 
+    compile "com.google.android.gms:play-services-auth:15.0.0"
     // RNFirebase required dependencies
     implementation "com.google.firebase:firebase-core:15.0.2"
     implementation "com.google.android.gms:play-services-base:15.0.0"
