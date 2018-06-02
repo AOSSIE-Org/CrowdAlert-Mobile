@@ -4,9 +4,7 @@ import android.app.Application;
 import com.facebook.react.ReactApplication;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.showlocationservicesdialogbox.LocationServicesDialogBoxPackage;
-import com.arttitude360.reactnative.rngoogleplaces.RNGooglePlacesPackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
-import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
@@ -53,7 +51,6 @@ public class MainApplication extends Application implements ReactApplication {
 		new MainReactPackage(),
         new ReactNativeConfigPackage(),
         new LocationServicesDialogBoxPackage(),
-        new RNGooglePlacesPackage(),
 		new MapsPackage(),
         new RNGoogleSigninPackage(),
         new FBSDKPackage(mCallbackManager),

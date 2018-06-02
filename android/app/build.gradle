@@ -150,13 +150,6 @@ android {
 dependencies {
     compile project(':react-native-config')
     compile project(':react-native-android-location-services-dialog-box')
-    compile(project(':react-native-google-places')){
-          exclude group: 'com.google.android.gms', module: 'play-services-base'
-          exclude group: 'com.google.android.gms', module: 'play-services-places'
-          exclude group: 'com.google.android.gms', module: 'play-services-location'
-      }
-      compile 'com.google.android.gms:play-services-places:15.0.0'
-      compile 'com.google.android.gms:play-services-location:15.0.0'
     compile(project(':react-native-maps')){
       exclude group: 'com.google.android.gms', module: 'play-services-base'
       exclude group: 'com.google.android.gms', module: 'play-services-maps'
