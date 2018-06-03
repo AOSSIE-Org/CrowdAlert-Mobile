@@ -7,8 +7,8 @@ import {
 	TouchableOpacity,
 	Alert,
 	TextInput,
-	Button,
-	ActivityIndicator
+	ActivityIndicator,
+	Button
 } from 'react-native';
 import firebase from 'react-native-firebase';
 import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
