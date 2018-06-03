@@ -18,6 +18,7 @@ import { onforget } from "../actions/loginAction";
 import { Actions } from "react-native-router-flux";
 import { styles } from "../assets/styles/signin_styles";
 import PropTypes from "prop-types";
+
 class Forgot extends Component {
 	constructor(props) {
 		super(props);

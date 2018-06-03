@@ -32,18 +32,15 @@ export const getLocation = () => {
 /**
  * This function is called to update the location co-ordinates of
  * custom location by communicating changes to redux via set_location.
- * @param {float} latitude  the latitude of the location entered by the user in the search bar.
- * @param {float} longitude the longitude of the location entered by the user in the search bar.
- * @param {string} name      nameo of the location entered by the user in the search bar.
+ * @param {float} latitude  The latitude of the location entered by the user in the search bar.
+ * @param {float} longitude The longitude of the location entered by the user in the search bar.
+ * @param {string} name      Name of the location entered by the user in the search bar.
  */
 export const SetLocationOnCustomSearch = (latitude, longitude, name) => {
 	return dispatch => {
 		let data = {};
 		data.latitude = latitude;
 		data.longitude = longitude;
-		console.log("in action");
-		console.log(data);
-		console.log(name);
 		dispatch(set_location(data, name));
 	};
 };

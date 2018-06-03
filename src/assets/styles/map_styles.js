@@ -1,3 +1,6 @@
+import { StyleSheet, Dimensions } from "react-native";
+const { width, height } = Dimensions.get("window");
+
 //styling used in map.js
 const searchBarStyle = {
 	container: {
@@ -29,21 +32,25 @@ const searchBarStyle = {
 	}
 };
 
-const styles = {
+const styles = StyleSheet.create({
 	container: {
-		flex: 1,
-		backgroundColor: "#fff",
-		alignItems: "center",
-		justifyContent: "center"
+		...StyleSheet.absoluteFillObject,
+		justifyContent: "flex-end",
+		alignItems: "center"
 	},
 	map: {
-		flex: 1,
-		height: 1000,
-		width: 1000
+		...StyleSheet.absoluteFillObject
+	},
+	repositionButton: {
+		width: width / 10,
+		height: width / 10,
+		position: "absolute",
+		left: width / 50,
+		bottom: height / 50,
+		backgroundColor: "white",
+		borderRadius: 30,
+		justifyContent: "center"
 	}
-};
-const MyLocationButton = {
-	marginBottom: 0
-};
+});
 
-export { searchBarStyle, styles, MyLocationButton };
+export { searchBarStyle, styles };
