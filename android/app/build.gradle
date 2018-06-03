@@ -1,5 +1,6 @@
 apply plugin: "com.android.application"
 apply plugin: "io.fabric"
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 import com.android.build.OutputFile
 
@@ -147,13 +148,14 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-config')
     compile project(':react-native-google-signin')
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile project(':react-native-fbsdk')
     implementation(project(':react-native-firebase')) {
         transitive = false
     }
-    compile "com.google.android.gms:play-services-auth:15.0.0" 
+    compile "com.google.android.gms:play-services-auth:15.0.0"
     // RNFirebase required dependencies
     implementation "com.google.firebase:firebase-core:15.0.2"
     implementation "com.google.android.gms:play-services-base:15.0.0"

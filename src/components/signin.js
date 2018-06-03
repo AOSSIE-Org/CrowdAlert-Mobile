@@ -74,11 +74,9 @@ class Signin extends Component {
 						Forgot password ?{' '}
 					</Text>
 				</TouchableOpacity>
-				{
-					this.props.login.loading
-				 	? <ActivityIndicator size={'large'}/>
-					: null
-			  }
+				{this.props.login.loading ? (
+					<ActivityIndicator size={'large'} />
+				) : null}
 			</View>
 		);
 	}

@@ -1,0 +1,58 @@
+stages:
+  - install
+  - test
+  - prebuild
+  - build
+
+image: node:6.10.3
+cache:
+  paths:
+  - node_modules/
+
+install_dependencies:
+  stage: install
+  script:
+  - npm install
+  artifacts:
+    paths:
+    - node_modules/
+
+unit_test:
+  stage: test
+  dependencies:
+  - install_dependencies
+  script:
+  - npm test
+  when: on_success
+
+key_build:
+  stage: prebuild
+  script:
+  - npm install -g envsub
+  - bash createKeys-CI.sh
+  artifacts:
+    paths:
+    - android/
+    - src/
+  when: always
+
+build_apk:
+  stage: build
+  image: docker.io/vibhavagarwal5/react-native-ci:version1.2
+  # before_script:
+  #   - export GRADLE_USER_HOME=$(pwd)/.gradle
+  #   - chmod +x ./android/gradlew
+  dependencies:
+  - key_build
+  - install_dependencies
+  script:
+  - mkdir -p android/app/src/main/assets
+  - react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res
+  # - react-native bundle --dev false --platform android --entry-file index.js --bundle-output ./android/app/build/intermediates/assets/debug/index.android.bundle --assets-dest ./android/app/build/intermediates/res/merged/debug
+  - cd android && ./gradlew assembleDebug
+  - cd ..
+  - mv android/app/build/outputs/apk/debug/app-debug.apk app-debug.apk
+  artifacts:
+    paths:
+    - app-debug.apk
+  when: always

@@ -1,0 +1,59 @@
+{
+	"project_info": {
+		"project_number": "530975451806",
+		"firebase_url": "https://crowd-alert-ff472.firebaseio.com",
+		"project_id": "crowd-alert-ff472",
+		"storage_bucket": "crowd-alert-ff472.appspot.com"
+	},
+	"client": [
+		{
+			"client_info": {
+				"mobilesdk_app_id": "1:530975451806:android:8c5cb588f80dcbc1",
+				"android_client_info": {
+					"package_name": "com.crowdalert"
+				}
+			},
+			"oauth_client": [
+				{
+					"client_id": "${GOOGLE_WEBID_KEY}",
+					"client_type": 3
+				},
+				{
+					"client_id": "${OAUTH_CLIENT_GOOGLE_SERVICE_KEY1}",
+					"client_type": 1,
+					"android_info": {
+						"package_name": "com.crowdalert",
+						"certificate_hash": "${CERTIFICATE_HASH}"
+					}
+				},
+				{
+					"client_id": "${OAUTH_CLIENT_GOOGLE_SERVICE_KEY3}",
+					"client_type": 3
+				}
+			],
+			"api_key": [
+				{
+					"current_key": "${API_KEY_GOOGLE_SERVICE}"
+				}
+			],
+			"services": {
+				"analytics_service": {
+					"status": 1
+				},
+				"appinvite_service": {
+					"status": 2,
+					"other_platform_oauth_client": [
+						{
+							"client_id": "${GOOGLE_WEBID_KEY}",
+							"client_type": 3
+						}
+					]
+				},
+				"ads_service": {
+					"status": 2
+				}
+			}
+		}
+	],
+	"configuration_version": "1"
+}
