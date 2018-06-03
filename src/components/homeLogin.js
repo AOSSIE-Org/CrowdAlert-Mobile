@@ -19,6 +19,7 @@ import { fbSignIn, googleSignin } from '../actions/loginAction';
 import { Actions } from 'react-native-router-flux';
 import { styles } from '../assets/styles/login_styles';
 import { GoogleSignin } from 'react-native-google-signin';
+import Config from 'react-native-config';
 
 /**
  * Screen showing all login options.
@@ -35,8 +36,8 @@ class HomeLogin extends Component {
 
 	componentDidMount() {
 		GoogleSignin.configure({
-			webClientId:
-				'530975451806-suk2eiug3eoksre10db2dqceo1mdnemh.apps.googleusercontent.com'
+			webClientId: Config.GOOGLE_WEBID_KEY,
+			iosClientId: Config.IOS_GOOGLE_CLIENT_ID // only for iOS
 		});
 	}
 
