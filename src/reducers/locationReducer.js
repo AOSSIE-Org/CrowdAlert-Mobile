@@ -1,14 +1,11 @@
-import { LOCATION, CURR_LOCATION } from "../actions/types";
-/**
- * Defination of initial state for location object.
- * @type {json}
- */
+import { LOCATION, CURR_LOCATION } from '../actions/types';
+
 const INITIAL_STATE = {
 	coordinates: {
 		latitude: 30,
 		longitude: 40
 	},
-	location_name: "Search"
+	location_name: null
 };
 /**
  * [description]
@@ -28,8 +25,6 @@ export default function(state = INITIAL_STATE, action) {
 				coordinates: action.coordinates,
 				location_name: action.location_name
 			};
-			console.log(coordinates);
-			console.log(location_name);
 		default:
 			return state;
 	}
