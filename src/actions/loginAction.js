@@ -206,7 +206,7 @@ function loginLoading(bool) {
  * @param  {object} error
  * @return returns type and error.
  */
-function handleError(error) {
+export function handleError(error) {
 	return {
 		type: ERROR_HANDLING,
 		error: error

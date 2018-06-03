@@ -36,7 +36,7 @@ class HomeLogin extends Component {
 
 	componentDidMount() {
 		GoogleSignin.configure({
-			webClientId: Config.GOOGLE_WEBID_KEY,
+			webClientId: Config.GOOGLE_WEB_CLIENT_ID,
 			iosClientId: Config.IOS_GOOGLE_CLIENT_ID // only for iOS
 		});
 	}
@@ -72,18 +72,23 @@ class HomeLogin extends Component {
 						style={styles.button_fb}
 						onPress={() => this.props.fbSignIn()}
 					>
-						<Text style={styles.button_text_social}>
-							{' '}
-							Facebook{' '}
-						</Text>
+						<Text style={styles.button_text_social}>Facebook</Text>
 					</TouchableOpacity>
 					<TouchableOpacity
 						style={styles.button_google}
 						onPress={() => this.props.googleSignin()}
 					>
-						<Text style={styles.button_text_social}> Google </Text>
+						<Text style={styles.button_text_social}>Google</Text>
 					</TouchableOpacity>
 				</View>
+				<TouchableOpacity
+					style={styles.button_forgot}
+					onPress={() => Actions.map()}
+				>
+					<Text style={styles.button_text_forgot}>
+						Continue as a guest
+					</Text>
+				</TouchableOpacity>
 			</View>
 		);
 	}

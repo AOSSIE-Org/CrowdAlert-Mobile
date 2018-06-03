@@ -39,11 +39,13 @@ Create a `.env` file add your keys like following:
 
 ```
 FB_KEY=
-GOOGLE_WEBID_KEY=
-OAUTH_CLIENT_GOOGLE_SERVICE_KEY1=
-OAUTH_CLIENT_GOOGLE_SERVICE_KEY3=
+GOOGLE_MAPS_KEY=
+
+GOOGLE_WEB_CLIENT_ID=
+GOOGLE_SERVICES_OAUTH_CLIENT_TYPE1=
+GOOGLE_SERVICES_OAUTH_CLIENT_TYPE1_CERTIFICATE_HASH=
 API_KEY_GOOGLE_SERVICE=
-CERTIFICATE_HASH=
+GOOGLE_SERVICES_SERVICES_CLIENT_TYPE2=
 ```
 
 After adding this `.env` file run:
@@ -56,21 +58,24 @@ bash createKeys.sh
 This will sync your keys with the project.
 
 You will find these keys in the following files,
+
 *   `android/app/src/main/res/values/strings.xml`
-*   `src/components/login.js`
-*   `android/app/google-services.json.template`
+*   `src/components/homeLogin.js`
+*   `android/app/google-services.json.template` >> `android/app/google-services.json`
 
-#### **_Note1:_**
-Make sure that when you download your  `google-services.json` file, you rename it to `google-services.json.template` with the proper env tags. Check the current `android/app/google-services.json.template` for more help.
+### **_Note:_**
 
-#### **_Note2:_**
-Ensure that before you run `react-native run-android` or `react-native run-ios` or `any other build command`, you should setup your environment keys using the above method, otherwise your build won't work.
+*   Make sure that when you download your `google-services.json` file, you rename it to `google-services.json.template` with the proper env tags. Check the current `android/app/google-services.json.template` for more help.
+
+*   Whenever you are starting on this for the first time ensure that when u download your `google-services.json` file, its in the same format with the `google-services.json.template` file. Otherwise change the `.template` file according to the lastest file.
+
+*   Ensure that before you run `react-native run-android` or `react-native run-ios` or `any other build command`, you should setup your environment keys using the above method, otherwise your build won't work.
 
 ### On your Forked repository for CI pipeline
 
 Add the above keys with the same name in the secret variables section in the **Settings -> CI/CD -> Secret Variables** section of your forked repository. <br>
 Example:
-![alt text](Gitlab CI settings.png)
+![alt text](CI secret variables settings.png)
 
 ## Install Other Dependencies
 

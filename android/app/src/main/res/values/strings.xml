@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">CrowdAlert</string>
-	<string name="facebook_app_id">@string/FB_KEY</string>
+    <string name="facebook_app_id">@string/FB_KEY</string>
+	<string name="google_map_key">@string/GOOGLE_MAPS_KEY</string>
 </resources>
