@@ -13,6 +13,10 @@ let { store, persistor } = configureStore();
 
 const ConnectedRouter = connect()(Router);
 
+/**
+ * Navigator using React-Native-Router-Flux
+ * @extends Component
+ */
 export default class App extends Component {
 	onBackPress() {
 		Actions.pop();

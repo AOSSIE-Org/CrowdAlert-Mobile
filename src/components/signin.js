@@ -20,6 +20,10 @@ import { onPressSignIn } from '../actions/loginAction';
 import { Actions } from 'react-native-router-flux';
 import { styles } from '../assets/styles/signin_styles';
 
+/**
+ * Screen for login using login id and password.
+ * @extends Component
+ */
 class Signin extends Component {
 	constructor(props) {
 		super(props);
@@ -28,7 +32,9 @@ class Signin extends Component {
 			password: ''
 		};
 	}
-
+	/**
+	 * Hides Keyboard and calls onPressSignIn function in loginAction screen.
+	 */
 	handleSignIn() {
 		Keyboard.dismiss();
 		this.props.onPressSignIn(this.state.email, this.state.password);
@@ -74,15 +80,19 @@ class Signin extends Component {
 						Forgot password ?{' '}
 					</Text>
 				</TouchableOpacity>
-				{
-					this.props.login.loading
-				 	? <ActivityIndicator size={'large'}/>
-					: null
-			  }
+				{this.props.login.loading ? (
+					<ActivityIndicator size={'large'} />
+				) : null}
 			</View>
 		);
 	}
 }
+/**
+ * Mapping dispatchable actions to props so that actions can be used
+ * through props in children components.
+ * @param dispatch Dispatches an action to trigger a state change.
+ * @return Turns action creator objects into an objects with the same keys.
+ */
 function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{
@@ -91,7 +101,12 @@ function matchDispatchToProps(dispatch) {
 		dispatch
 	);
 }
-
+/**
+ * Mapping state to props so that state variables can be used
+ * through props in children components.
+ * @param state Current state in the store.
+ * @return Returns states as props.
+ */
 const mapStateToProps = state => ({
 	login: state.login
 });
