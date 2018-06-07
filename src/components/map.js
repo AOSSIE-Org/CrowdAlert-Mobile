@@ -5,11 +5,14 @@ import {
 	Platform,
 	Dimensions,
 	TouchableOpacity,
-	Keyboard
+	Keyboard,
+	Picker
 } from 'react-native';
 import LocationServicesDialogBox from 'react-native-android-location-services-dialog-box';
 import MapView from 'react-native-maps';
+import { Marker } from 'react-native-maps';
 import { bindActionCreators } from 'redux';
+import { getMarkerImage } from '../utility/categoryUtil.js';
 import { connect } from 'react-redux';
 import {
 	setLocationOnCustomSearch,
@@ -21,6 +24,7 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { styles, searchBarStyle } from '../assets/styles/map_styles.js';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Config from 'react-native-config';
+import { GetIncidentFirebase } from '../utility/firebaseUtil';
 
 class MapScreen extends Component {
 	constructor(props) {
@@ -35,11 +39,18 @@ class MapScreen extends Component {
 			marker: {
 				latitude: this.props.curr_location.latitude,
 				longitude: this.props.curr_location.longitude
-			}
+			},
+			markers: []
 		};
 	}
 
 	componentDidMount() {
+		GetIncidentFirebase().then(result => {
+			this.setState({ markers: result });
+			console.log(this.state.markers);
+			//this.setState({ loading: false });
+		});
+		//this.setState({ loading: true });
 		//Used to check if location services are enabled and
 		//if not than asks to enables them by redirecting to location settings.
 		if (Platform.OS === 'android') {
@@ -125,6 +136,24 @@ class MapScreen extends Component {
 					region={this.state.curr_region}
 				>
 					<MapView.Marker coordinate={this.state.marker} />
+					{this.state.markers.map(marker => {
+						return (
+							<MapView.Marker
+								key={marker.key}
+								coordinate={{
+									latitude:
+										marker.value.location.coordinates
+											.latitude,
+									longitude:
+										marker.value.location.coordinates
+											.longitude
+								}}
+								title={marker.value.title}
+								description={marker.value.details}
+								image={getMarkerImage(marker.value.category)}
+							/>
+						);
+					})}
 				</MapView>
 				<GooglePlacesAutocomplete
 					minLength={2}
@@ -169,6 +198,16 @@ class MapScreen extends Component {
 					}}
 				>
 					<Icon name="crosshairs" size={30} style={styles.icon} />
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.addIncidentButton}
+					onPress={() => Actions.addIncident()}
+				>
+					<Icon
+						name="plus"
+						size={30}
+						style={{ alignSelf: 'center', color: '#000000' }}
+					/>
 				</TouchableOpacity>
 			</View>
 		);

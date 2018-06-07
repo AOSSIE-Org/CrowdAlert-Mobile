@@ -8,3 +8,5 @@ export const ERROR_HANDLING = 'ERROR_HANDLING';
 //Map
 export const LOCATION = 'LOCATION';
 export const CURR_LOCATION = 'CURR_LOCATION';
+//ADD INCIDENT
+export const INCIDENT = 'INCIDENt';
