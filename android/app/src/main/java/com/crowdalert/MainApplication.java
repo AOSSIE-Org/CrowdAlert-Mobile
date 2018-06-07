@@ -1,6 +1,7 @@
 package com.crowdalert;
 import com.airbnb.android.react.maps.MapsPackage;
 import android.app.Application;
+import com.imagepicker.ImagePickerPackage;
 import com.facebook.react.ReactApplication;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.showlocationservicesdialogbox.LocationServicesDialogBoxPackage;
@@ -52,6 +53,7 @@ public class MainApplication extends Application implements ReactApplication {
         new ReactNativeConfigPackage(),
         new LocationServicesDialogBoxPackage(),
 		new MapsPackage(),
+	new ImagePickerPackage(),
         new RNGoogleSigninPackage(),
         new FBSDKPackage(mCallbackManager),
         new RNFirebasePackage(),

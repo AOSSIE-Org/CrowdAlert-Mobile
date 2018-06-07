@@ -56,6 +56,18 @@ const styles = StyleSheet.create({
 	},
 	icon: {
 		alignSelf: 'center'
+	},
+	addIncidentButton: {
+		backgroundColor: 'transparent',
+		width: width / 10,
+		height: width / 10,
+		position: 'absolute',
+		left: width / 40,
+		bottom: height / 40,
+		backgroundColor: 'white',
+		borderRadius: 30,
+		justifyContent: 'center',
+		marginLeft: width / 1.2
 	}
 });
 
