@@ -54,9 +54,6 @@ const styles = StyleSheet.create({
 		top: 13.5,
 		right: width / 30
 	},
-	icon: {
-		alignSelf: 'center'
-	},
 	addIncidentButton: {
 		backgroundColor: 'transparent',
 		width: width / 10,
@@ -68,6 +65,10 @@ const styles = StyleSheet.create({
 		borderRadius: 30,
 		justifyContent: 'center',
 		marginLeft: width / 1.2
+	},
+	fabButton: {
+		alignSelf: 'center',
+		color: '#000000'
 	}
 });
 
