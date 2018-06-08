@@ -96,8 +96,7 @@ class HomeLogin extends Component {
 							onPress={() => Actions.map()}
 						>
 							<Text style={styles.button_text_forgot}>
-								{' '}
-								Continue as a guest{' '}
+								Continue as a guest
 							</Text>
 						</TouchableOpacity>
 					</View>
