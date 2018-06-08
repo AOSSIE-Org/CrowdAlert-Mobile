@@ -1,19 +1,14 @@
-import { INCIDENT } from '../actions/types';
+import {
+	LATEST_INCIDENT_ADDED,
+	ALL_INCIDENTS,
+	INCIDENTS_LOADING
+} from '../actions/types';
+
 const INITIAL_STATE = {
-	incident: {
-		title: null,
-		details: null,
-		visible: true,
-		category: null,
-		latitude: null,
-		longitude: null,
-		email: null,
-		location_name: null,
-		timestamp: null,
-		upvotes: 0,
-		image: null
-	}
+	all_incidents: null,
+	loading: false
 };
+
 /**
  * Incident Reducer handling all types of incident being added.
  * Whenever a new incident gets added than the redux state gets updated.
@@ -23,13 +18,21 @@ const INITIAL_STATE = {
  * @return {state} Based on action the function changes the state and rerenders
  */
 export default function(state = INITIAL_STATE, action) {
-	console.log('AT REDUX');
-	console.log(action.incident);
 	let result = Object.assign({}, state);
 	switch (action.type) {
-		case INCIDENT:
+		case LATEST_INCIDENT_ADDED:
 			return {
-				incident: action.incident
+				...result
+			};
+		case ALL_INCIDENTS:
+			return {
+				...result,
+				all_incidents: action.all_incidents
+			};
+		case INCIDENTS_LOADING:
+			return {
+				...result,
+				loading: action.loading
 			};
 		default:
 			return state;

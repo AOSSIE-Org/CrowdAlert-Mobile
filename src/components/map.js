@@ -6,18 +6,19 @@ import {
 	Dimensions,
 	TouchableOpacity,
 	Keyboard,
+	ActivityIndicator,
 	Picker
 } from 'react-native';
 import LocationServicesDialogBox from 'react-native-android-location-services-dialog-box';
-import MapView from 'react-native-maps';
-import { Marker } from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import { bindActionCreators } from 'redux';
-import { getMarkerImage } from '../utility/categoryUtil.js';
+import { getMarkerImage } from '../utils/categoryUtil.js';
 import { connect } from 'react-redux';
 import {
 	setLocationOnCustomSearch,
 	getCurrLocation
 } from '../actions/locationAction';
+import { getAllIncidents } from '../actions/incidentsAction';
 import { Actions } from 'react-native-router-flux';
 import PropTypes from 'prop-types';
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
@@ -26,6 +27,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Config from 'react-native-config';
 import { GetIncidentFirebase } from '../utility/firebaseUtil';
 
+/**
+ * Map screen showing google maps with search location and add incident feature
+ * @extends Component
+ */
 class MapScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -44,13 +49,8 @@ class MapScreen extends Component {
 		};
 	}
 
-	componentDidMount() {
-		GetIncidentFirebase().then(result => {
-			this.setState({ markers: result });
-			console.log(this.state.markers);
-			//this.setState({ loading: false });
-		});
-		//this.setState({ loading: true });
+	componentWillMount() {
+		this.props.getAllIncidents();
 		//Used to check if location services are enabled and
 		//if not than asks to enables them by redirecting to location settings.
 		if (Platform.OS === 'android') {
@@ -63,7 +63,6 @@ class MapScreen extends Component {
 				cancel: 'NO',
 				providerListener: true
 			}).then(success => {
-				console.log(success);
 				this.props.getCurrLocation().then(() => {
 					this.setState({
 						curr_region: {
@@ -136,24 +135,28 @@ class MapScreen extends Component {
 					region={this.state.curr_region}
 				>
 					<MapView.Marker coordinate={this.state.marker} />
-					{this.state.markers.map(marker => {
-						return (
-							<MapView.Marker
-								key={marker.key}
-								coordinate={{
-									latitude:
-										marker.value.location.coordinates
-											.latitude,
-									longitude:
-										marker.value.location.coordinates
-											.longitude
-								}}
-								title={marker.value.title}
-								description={marker.value.details}
-								image={getMarkerImage(marker.value.category)}
-							/>
-						);
-					})}
+					{this.props.incident.all_incidents !== null
+						? this.props.incident.all_incidents.map(marker => {
+								return (
+									<MapView.Marker
+										key={marker.key}
+										coordinate={{
+											latitude:
+												marker.value.location
+													.coordinates.latitude,
+											longitude:
+												marker.value.location
+													.coordinates.longitude
+										}}
+										title={marker.value.title}
+										description={marker.value.details}
+										image={getMarkerImage(
+											marker.value.category
+										)}
+									/>
+								);
+						  })
+						: null}
 				</MapView>
 				<GooglePlacesAutocomplete
 					minLength={2}
@@ -187,7 +190,11 @@ class MapScreen extends Component {
 								this.textInput.clear();
 							}}
 						>
-							<Icon name="remove" size={15} style={styles.icon} />
+							<Icon
+								name="remove"
+								size={15}
+								style={styles.fabButton}
+							/>
 						</TouchableOpacity>
 					)}
 				/>
@@ -197,18 +204,21 @@ class MapScreen extends Component {
 						this.handleRelocation(null, 'curr_location');
 					}}
 				>
-					<Icon name="crosshairs" size={30} style={styles.icon} />
+					<Icon
+						name="map-marker"
+						size={30}
+						style={styles.fabButton}
+					/>
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.addIncidentButton}
 					onPress={() => Actions.addIncident()}
 				>
-					<Icon
-						name="plus"
-						size={30}
-						style={{ alignSelf: 'center', color: '#000000' }}
-					/>
+					<Icon name="plus" size={30} style={styles.fabButton} />
 				</TouchableOpacity>
+				{this.props.incident.loading ? (
+					<ActivityIndicator size={'large'} />
+				) : null}
 			</View>
 		);
 	}
@@ -219,7 +229,8 @@ MapScreen.propTypes = {
 	setLocationOnCustomSearch: PropTypes.func.isRequired,
 	getCurrLocation: PropTypes.func.isRequired,
 	location: PropTypes.object,
-	curr_location: PropTypes.object
+	curr_location: PropTypes.object,
+	getAllIncidents: PropTypes.func.isRequired
 };
 
 /**
@@ -232,7 +243,8 @@ function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{
 			setLocationOnCustomSearch: setLocationOnCustomSearch,
-			getCurrLocation: getCurrLocation
+			getCurrLocation: getCurrLocation,
+			getAllIncidents: getAllIncidents
 		},
 		dispatch
 	);
@@ -246,7 +258,8 @@ function matchDispatchToProps(dispatch) {
  */
 const mapStateToProps = state => ({
 	location: state.location.coordinates,
-	curr_location: state.location.curr_coordinates
+	curr_location: state.location.curr_coordinates,
+	incident: state.incident
 });
 
 export default connect(mapStateToProps, matchDispatchToProps)(MapScreen);

@@ -48,7 +48,7 @@ class HomeLogin extends Component {
 				{/* <ActivityIndicator animating={this.props.login.loading} size={'large'}/> */}
 				<View style={styles.headerImage}>
 					<Image
-						source={require('../assets/earthquake-30-512.png')}
+						source={require('../assets/images/earthquake-30-512.png')}
 						style={styles.logo}
 					/>
 				</View>
@@ -87,8 +87,7 @@ class HomeLogin extends Component {
 							onPress={() => Actions.map()}
 						>
 							<Text style={styles.button_text_forgot}>
-								{' '}
-								Continue as a guest{' '}
+								Continue as a guest
 							</Text>
 						</TouchableOpacity>
 					</View>

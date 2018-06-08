@@ -1,5 +1,6 @@
 import { StyleSheet, Dimensions } from 'react-native';
 const { width, height } = Dimensions.get('window');
+
 //styling used in Add incident page.
 export const styles = StyleSheet.create({
 	container: {
@@ -39,10 +40,6 @@ export const styles = StyleSheet.create({
 		marginTop: height / 72,
 		marginLeft: width / 20
 	},
-	cammera: {
-		marginLeft: width / 20,
-		marginTop: height / 45
-	},
 	field_title: {
 		marginHorizontal: width / 20,
 		width: width * 0.9,
@@ -70,13 +67,5 @@ export const styles = StyleSheet.create({
 	},
 	button_text: {
 		color: 'white'
-	},
-	button_text_forgot: {
-		color: 'grey',
-		fontSize: 12
-	},
-	button_forgot: {
-		marginHorizontal: width / 20,
-		marginTop: height / 30
 	}
 });
