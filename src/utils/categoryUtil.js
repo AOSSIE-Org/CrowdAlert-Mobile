@@ -4,9 +4,13 @@ const health_marker = require('../assets/images/health_marker_100.png');
 const fire_marker = require('../assets/images/fire_marker_100.png');
 const flood_marker = require('../assets/images/floods_marker_100.png');
 const electric_marker = require('../assets/images/electric_marker_100.png');
+const logo = require('../assets/images/earthquake-30-512.png');
 
 // Defing properties for the categories of incidents
 const categories = {
+	all: {
+		image: logo
+	},
 	road: {
 		title: 'Road',
 		category: 'road',

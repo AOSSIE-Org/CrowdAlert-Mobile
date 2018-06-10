@@ -7,7 +7,9 @@ import {
 	TouchableOpacity,
 	Keyboard,
 	ActivityIndicator,
-	Picker
+	Picker,
+	Modal,
+	Image
 } from 'react-native';
 import LocationServicesDialogBox from 'react-native-android-location-services-dialog-box';
 import MapView, { Marker } from 'react-native-maps';
@@ -45,7 +47,9 @@ class MapScreen extends Component {
 				latitude: this.props.curr_location.latitude,
 				longitude: this.props.curr_location.longitude
 			},
-			markers: []
+			domain: 'all',
+			markers: null,
+			visibleModal: false
 		};
 	}
 
@@ -123,7 +127,53 @@ class MapScreen extends Component {
 		}
 	}
 
+	alertItemName = item => {
+		this.setState({ domain: item.id });
+		this.setState({ visibleModal: false });
+	};
+	//Modal to be displayed for filter menu.
+	_renderModalContent = () => (
+		<View>
+			<TouchableOpacity
+				onPress={() => this.setState({ visibleModal: false })}
+			>
+				<Icon name="close" size={20} style={styles.modalIcon} />
+			</TouchableOpacity>
+			<Text style={styles.modalHeadText}>
+				Select category from below :{' '}
+			</Text>
+			<View style={styles.modalContainer}>
+				{this.state.names.map((item, index) => (
+					<TouchableOpacity
+						key={item.id}
+						style={styles.modalField}
+						onPress={() => this.alertItemName(item)}
+					>
+						<Image
+							style={styles.modalImage}
+							source={getMarkerImage(item.id)}
+						/>
+						<Text style={styles.modalText}>{item.name}</Text>
+					</TouchableOpacity>
+				))}
+			</View>
+		</View>
+	);
+
 	render() {
+		//logic for filter
+		var state = this.state;
+		if (this.props.incident.all_incidents !== null) {
+			var markers = this.props.incident.all_incidents.filter(function(
+				item
+			) {
+				if (state.domain === 'all') {
+					return true;
+				} else {
+					return item.value.category === state.domain;
+				}
+			});
+		}
 		return (
 			<View style={styles.container}>
 				<MapView
@@ -136,7 +186,7 @@ class MapScreen extends Component {
 				>
 					<MapView.Marker coordinate={this.state.marker} />
 					{this.props.incident.all_incidents !== null
-						? this.props.incident.all_incidents.map(marker => {
+						? markers.map(marker => {
 								return (
 									<MapView.Marker
 										key={marker.key}
@@ -199,6 +249,12 @@ class MapScreen extends Component {
 					)}
 				/>
 				<TouchableOpacity
+					style={styles.filterButton}
+					onPress={() => this.setState({ visibleModal: true })}
+				>
+					<Icon name="filter" size={30} style={styles.fabButton} />
+				</TouchableOpacity>
+				<TouchableOpacity
 					style={styles.repositionButton}
 					onPress={() => {
 						this.handleRelocation(null, 'curr_location');
@@ -216,6 +272,14 @@ class MapScreen extends Component {
 				>
 					<Icon name="plus" size={30} style={styles.fabButton} />
 				</TouchableOpacity>
+				<Modal
+					visible={this.state.visibleModal}
+					onRequestClose={() => {
+						alert('Modal has been closed.');
+					}}
+				>
+					{this._renderModalContent()}
+				</Modal>
 				{this.props.incident.loading ? (
 					<ActivityIndicator size={'large'} />
 				) : null}

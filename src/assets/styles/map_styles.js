@@ -66,9 +66,50 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		marginLeft: width / 1.2
 	},
+	filterButton: {
+		width: width / 10,
+		height: width / 10,
+		position: 'absolute',
+		left: width / 50,
+		bottom: height / 50,
+		backgroundColor: 'white',
+		borderRadius: 30,
+		justifyContent: 'center',
+		marginBottom: height / 8
+	},
 	fabButton: {
 		alignSelf: 'center',
 		color: '#000000'
+	},
+	modalField: {
+		padding: 7,
+		marginTop: height / 200,
+		backgroundColor: '#eeeeee',
+		height: height / 10,
+		flexDirection: 'row'
+	},
+	modalContainer: {
+		marginTop: height / 20,
+		marginBottom: height / 20
+	},
+	modalText: {
+		color: '#000',
+		marginLeft: width / 20,
+		justifyContent: 'center',
+		marginTop: height / 50
+	},
+	modalHeadText: {
+		fontSize: 20,
+		marginLeft: width / 20,
+		marginTop: height / 35
+	},
+	modalHeadContainer: {
+		flexDirection: 'row'
+	},
+	modalImage: { height: 40, width: 40, marginLeft: width / 20 },
+	modalIcon: {
+		marginTop: height / 90,
+		marginLeft: width / 1.1
 	}
 });
 
