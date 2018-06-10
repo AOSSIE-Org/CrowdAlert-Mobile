@@ -73,9 +73,9 @@ You will find these keys in the following files,
 
 ### On your Forked repository for CI pipeline
 
-Add the above keys with the same name in the secret variables section in the **Settings -> CI/CD -> Secret Variables** section of your forked repository. <br>
+Add the above keys with the same name in the secret variables section in the **Settings -> CI/CD -> Variables** section of your forked repository. <br>
 Example:
-![alt text](CI secret variables settings.png)
+![alt text](CI CD variables settings.png)
 
 ## Install Other Dependencies
 

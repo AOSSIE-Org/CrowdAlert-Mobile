@@ -1,42 +1,45 @@
 import { LOCATION, CURR_LOCATION } from './types';
-import { handleError } from './loginAction';
+import { handleError } from './errorAction';
+
 /**
  * This function is called to update the location co-ordinates to user's current location
- * by communicating changes to redux via set_geoLocation.
- * @return dispatches location updates to set_geoLocation.
+ * by communicating changes to redux via set_currLocation.
+ * @return dispatches location updates to set_currLocation.
  */
-export const getLocation = () => {
+export const getCurrLocation = () => {
 	return dispatch => {
-		navigator.geolocation.getCurrentPosition(
-			position => {
-				console.log(position);
-				let data = {};
-				data.latitude = parseFloat(position.coords.latitude);
-				data.longitude = parseFloat(position.coords.longitude);
-				console.log(data);
-				dispatch(set_geoLocation(data));
-			},
-			error => {
-				dispatch(handleError(error));
-				console.log(error.message);
-			}
-			// {
-			// 	enableHighAccuracy: true,
-			// 	timeout: 20000,
-			// 	maximumAge: 1000,
-			// 	distanceFilter: 10
-			// }
-		);
+		return new Promise((resolve, reject) => {
+			navigator.geolocation.getCurrentPosition(
+				position => {
+					let data = {};
+					data.latitude = parseFloat(position.coords.latitude);
+					data.longitude = parseFloat(position.coords.longitude);
+					console.log(data);
+					resolve(dispatch(set_currLocation(data)));
+				},
+				error => {
+					reject(dispatch(handleError(error)));
+					console.log(error.message);
+				}
+				// {
+				// 	enableHighAccuracy: true,
+				// 	timeout: 20000,
+				// 	maximumAge: 1000,
+				// 	distanceFilter: 10
+				// }
+			);
+		});
 	};
 };
+
 /**
  * This function is called to update the location co-ordinates of
  * custom location by communicating changes to redux via set_location.
  * @param {float} latitude  The latitude of the location entered by the user in the search bar.
  * @param {float} longitude The longitude of the location entered by the user in the search bar.
- * @param {string} name      Name of the location entered by the user in the search bar.
+ * @param {string} name     Name of the location entered by the user in the search bar.
  */
-export const SetLocationOnCustomSearch = (latitude, longitude, name) => {
+export const setLocationOnCustomSearch = (latitude, longitude, name) => {
 	return dispatch => {
 		let data = {};
 		data.latitude = latitude;
@@ -44,10 +47,11 @@ export const SetLocationOnCustomSearch = (latitude, longitude, name) => {
 		dispatch(set_location(data, name));
 	};
 };
+
 /**
- * Updtes the custom location co-ordinates .
- * @param {json} location The json object containing latitude and longitude of a location.
- * @param {string} name     [description]
+ * Updates the custom location co-ordinates .
+ * @param {JSON} location The json object containing latitude and longitude of a location.
+ * @param {string} name
  */
 function set_location(location, name) {
 	return {
@@ -56,13 +60,14 @@ function set_location(location, name) {
 		location_name: name
 	};
 }
+
 /**
  * Updates the current location co-ordinates.
- * @param {json} location json object containing latitude and longitude
+ * @param {JSON} location json object containing latitude and longitude
  */
-function set_geoLocation(location) {
+function set_currLocation(location) {
 	return {
 		type: CURR_LOCATION,
-		coordinates: location
+		curr_coordinates: location
 	};
 }

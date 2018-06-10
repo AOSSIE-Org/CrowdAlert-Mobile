@@ -4,15 +4,16 @@ import {
 	View,
 	Platform,
 	Dimensions,
-	TouchableOpacity
+	TouchableOpacity,
+	Keyboard
 } from 'react-native';
 import LocationServicesDialogBox from 'react-native-android-location-services-dialog-box';
 import MapView from 'react-native-maps';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
-	SetLocationOnCustomSearch,
-	getLocation
+	setLocationOnCustomSearch,
+	getCurrLocation
 } from '../actions/locationAction';
 import { Actions } from 'react-native-router-flux';
 import PropTypes from 'prop-types';
@@ -21,14 +22,26 @@ import { styles, searchBarStyle } from '../assets/styles/map_styles.js';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Config from 'react-native-config';
 
-const { width, height } = Dimensions.get('window');
-const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.18;
-const LONGITUDE_DELTA = LATITUDE_DELTA + ASPECT_RATIO;
-
 class MapScreen extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			curr_region: {
+				latitude: this.props.curr_location.latitude,
+				longitude: this.props.curr_location.longitude,
+				latitudeDelta: 0.0052,
+				longitudeDelta: 0.0052
+			},
+			marker: {
+				latitude: this.props.curr_location.latitude,
+				longitude: this.props.curr_location.longitude
+			}
+		};
+	}
+
 	componentDidMount() {
-		//Used to check if location services are enabled , if not than asks to enables them by redirecting to location settings.
+		//Used to check if location services are enabled and
+		//if not than asks to enables them by redirecting to location settings.
 		if (Platform.OS === 'android') {
 			LocationServicesDialogBox.checkLocationServicesIsEnabled({
 				message:
@@ -40,7 +53,19 @@ class MapScreen extends Component {
 				providerListener: true
 			}).then(success => {
 				console.log(success);
-				this.props.getLocation();
+				this.props.getCurrLocation().then(() => {
+					this.setState({
+						curr_region: {
+							...this.state.curr_region,
+							latitude: this.props.curr_location.latitude,
+							longitude: this.props.curr_location.longitude
+						},
+						marker: {
+							latitude: this.props.curr_location.latitude,
+							longitude: this.props.curr_location.longitude
+						}
+					});
+				});
 			});
 		}
 	}
@@ -51,58 +76,99 @@ class MapScreen extends Component {
 		}
 	}
 
+	handleRelocation(coordinates, type) {
+		const mapRef = this.map;
+
+		if (type === 'search') {
+			this.props.setLocationOnCustomSearch(
+				coordinates['lat'],
+				coordinates['lng'],
+				coordinates['name']
+			);
+			this.setState({
+				marker: {
+					latitude: this.props.location.latitude,
+					longitude: this.props.location.longitude
+				}
+			});
+			Keyboard.dismiss();
+			mapRef.animateToRegion({
+				...this.state.curr_region,
+				latitude: this.props.location.latitude,
+				longitude: this.props.location.longitude
+			});
+		} else if (type === 'curr_location') {
+			var self = this;
+			mapRef.animateToRegion(self.state.curr_region);
+			setTimeout(function() {
+				self.setState({
+					marker: {
+						latitude: self.props.curr_location.latitude,
+						longitude: self.props.curr_location.longitude
+					}
+				});
+				self.textInput.clear();
+			}, 5);
+			self.textInput.clear();
+		}
+	}
+
 	render() {
 		return (
-			<View style={styles.container} onLayout={this._onLayout}>
+			<View style={styles.container}>
 				<MapView
+					ref={ref => {
+						this.map = ref;
+					}}
 					showsMyLocationButton={true}
 					style={styles.map}
-					region={{
-						latitude: this.props.location.latitude,
-						longitude: this.props.location.longitude,
-						latitudeDelta: LATITUDE_DELTA,
-						longitudeDelta: LONGITUDE_DELTA
-					}}
+					region={this.state.curr_region}
 				>
-					<MapView.Marker
-						coordinate={{
-							latitude: this.props.location.latitude,
-							longitude: this.props.location.longitude
-						}}
-					/>
+					<MapView.Marker coordinate={this.state.marker} />
 				</MapView>
 				<GooglePlacesAutocomplete
-					placeholder={this.props.location_name || 'Enter Location'}
 					minLength={2}
 					listViewDisplayed="auto"
 					autoFocus={false}
-					fetchDetails
+					returnKeyType={'search'}
+					fetchDetails={true}
 					query={{
 						key: Config.GOOGLE_MAPS_KEY,
 						language: 'en'
 					}}
+					textInputProps={{
+						clearButtonMode: 'never',
+						ref: input => {
+							this.textInput = input;
+						}
+					}}
 					onPress={(data, details = null) => {
-						let latitude = details.geometry.location.lat;
-						let longitude = details.geometry.location.lng;
-						let name = details.name;
-						this.props.SetLocationOnCustomSearch(
-							latitude,
-							longitude,
-							name
-						);
+						var coordinates = {
+							lat: details.geometry.location.lat,
+							lng: details.geometry.location.lng,
+							name: details.name
+						};
+						this.handleRelocation(coordinates, 'search');
 					}}
 					styles={searchBarStyle}
-					currentLocation={true}
+					renderRightButton={() => (
+						<TouchableOpacity
+							style={styles.clearButton}
+							onPress={() => {
+								this.textInput.clear();
+							}}
+						>
+							<Icon name="remove" size={15} style={styles.icon} />
+						</TouchableOpacity>
+					)}
 				/>
 				<TouchableOpacity
 					style={styles.repositionButton}
-					onPress={() => this.props.getLocation()}
+					onPress={() => {
+						this.handleRelocation(null, 'curr_location');
+					}}
 				>
-					<Icon
-						name="map-marker"
-						size={30}
-						style={{ alignSelf: 'center' }}
-					/>
+					<Icon name="crosshairs" size={30} style={styles.icon} />
 				</TouchableOpacity>
 			</View>
 		);
@@ -111,33 +177,37 @@ class MapScreen extends Component {
 
 //Prop types for prop checking.
 MapScreen.propTypes = {
-	SetLocationOnCustomSearch: PropTypes.func.isRequired,
-	getLocation: PropTypes.func.isRequired
+	setLocationOnCustomSearch: PropTypes.func.isRequired,
+	getCurrLocation: PropTypes.func.isRequired,
+	location: PropTypes.object,
+	curr_location: PropTypes.object
 };
 
 /**
- * Mapping dispatchable actions to props so that actions can be used through props in children components.
+ * Mapping dispatchable actions to props so that actions can be used
+ * through props in children components.
  * @param dispatch Dispatches an action to trigger a state change.
  * @return Turns action creator objects into an objects with the same keys.
  */
 function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{
-			SetLocationOnCustomSearch: SetLocationOnCustomSearch,
-			getLocation: getLocation
+			setLocationOnCustomSearch: setLocationOnCustomSearch,
+			getCurrLocation: getCurrLocation
 		},
 		dispatch
 	);
 }
 
 /**
- * Mapping state to props so that state variables can be used through props in children components.
+ * Mapping state to props so that state variables can be used
+ * through props in children components.
  * @param state Current state in the store.
  * @return Returns states as props.
  */
 const mapStateToProps = state => ({
 	location: state.location.coordinates,
-	location_name: state.location.coordinates.name
+	curr_location: state.location.curr_coordinates
 });
 
 export default connect(mapStateToProps, matchDispatchToProps)(MapScreen);

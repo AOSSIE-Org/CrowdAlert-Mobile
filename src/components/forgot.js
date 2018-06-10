@@ -54,7 +54,7 @@ class Forgot extends Component {
 	}
 }
 Forgot.propTypes = {
-	onforget: PropTypes.func.isRequired,
+	onForget: PropTypes.func.isRequired,
 	login: PropTypes.object
 };
 

@@ -5,30 +5,27 @@ const { width, height } = Dimensions.get('window');
 const searchBarStyle = {
 	container: {
 		position: 'absolute',
-		backgroundColor: 'rgba(0,0,0,0)',
+		backgroundColor: 'transparent',
 		top: 10
 	},
-	predefinedPlacesDescription: {
-		color: '#1faadb'
-	},
 	textInputContainer: {
-		backgroundColor: 'rgba(0,0,0,0)',
+		backgroundColor: 'transparent',
 		top: 0,
 		alignSelf: 'center',
 		borderTopWidth: 0,
 		borderBottomWidth: 0,
-		width: 400
+		width: width
 	},
 	textInput: {
-		marginLeft: 10,
-		marginRight: 10,
-		color: '#5d5d5d',
+		marginHorizontal: width / 50,
+		paddingRight: width / 30 + width / 50,
+		backgroundColor: 'white',
+		color: 'rgba(0,0,0,0.7)',
 		fontSize: 14
 	},
 	listView: {
 		backgroundColor: 'rgba(256,256,256,0.95)',
-		marginLeft: 10,
-		marginRight: 10
+		marginHorizontal: width / 50
 	}
 };
 
@@ -50,6 +47,15 @@ const styles = StyleSheet.create({
 		backgroundColor: 'white',
 		borderRadius: 30,
 		justifyContent: 'center'
+	},
+	clearButton: {
+		position: 'absolute',
+		backgroundColor: 'rgba(0,0,0,0)',
+		top: 13.5,
+		right: width / 30
+	},
+	icon: {
+		alignSelf: 'center'
 	}
 });
 

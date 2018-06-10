@@ -20,6 +20,7 @@ import { Actions } from 'react-native-router-flux';
 import { styles } from '../assets/styles/login_styles';
 import { GoogleSignin } from 'react-native-google-signin';
 import Config from 'react-native-config';
+import PropTypes from 'prop-types';
 
 /**
  * Screen showing all login options.
@@ -93,6 +94,13 @@ class HomeLogin extends Component {
 		);
 	}
 }
+
+//Prop types for prop checking.
+HomeLogin.propTypes = {
+	fbSignIn: PropTypes.func.isRequired,
+	googleSignin: PropTypes.func.isRequired,
+	login: PropTypes.object
+};
 
 /**
  * Mapping dispatchable actions to props so that actions can be used

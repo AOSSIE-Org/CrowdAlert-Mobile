@@ -1,8 +1,9 @@
-import { LOGIN_LOADING, USER_SIGN_IN, ERROR_HANDLING } from './types';
+import { LOGIN_LOADING, USER_SIGN_IN } from './types';
 import firebase from 'react-native-firebase';
 import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
 import { GoogleSignin } from 'react-native-google-signin';
 import { ToastAndroid, ActivityIndicator } from 'react-native';
+import { handleError } from './errorAction';
 
 /**
  * This function signs in the user into app using firebase authentication.
@@ -19,11 +20,11 @@ export const onPressSignIn = (email, password) => {
 			.then(data => {
 				dispatch(loginLoading(false));
 				dispatch(saveUser(data.user, 'email'));
-				console.log(data.user);
 				ToastAndroid.show('You are logged in', ToastAndroid.SHORT);
 			})
 			.catch(error => {
 				dispatch(loginLoading(false));
+				dispatch(handleError(error));
 				const { code, message } = error;
 				if (code == 'auth/wrong-password') {
 					ToastAndroid.show(
@@ -52,7 +53,6 @@ export const onPressSignIn = (email, password) => {
  * @return signs up in the user successfully or triggers an error.
  */
 export const onPressSignUp = (email, password) => {
-	console.log(email, password);
 	return dispatch => {
 		dispatch(loginLoading(true));
 		firebase
@@ -60,7 +60,6 @@ export const onPressSignUp = (email, password) => {
 			.createUserAndRetrieveDataWithEmailAndPassword(email, password) //signs up a User
 			.then(data => {
 				//on success
-				console.log(data.user.email);
 				dispatch(saveUser(data.user, 'email'));
 				dispatch(loginLoading(false));
 				ToastAndroid.show(
@@ -137,7 +136,6 @@ export const fbSignIn = () => {
 					.signInAndRetrieveDataWithCredential(credential);
 			})
 			.then(user => {
-				console.log(user);
 				dispatch(saveUser(user.user, 'facebook'));
 				dispatch(loginLoading(false));
 				ToastAndroid.show('Login successful', ToastAndroid.SHORT);
@@ -174,7 +172,6 @@ export const googleSignin = () => {
 					.signInAndRetrieveDataWithCredential(credential);
 			})
 			.then(user => {
-				console.log(user);
 				dispatch(saveUser(user.user, 'google'));
 				dispatch(loginLoading(false));
 				ToastAndroid.show('Login successful', ToastAndroid.SHORT);
@@ -199,17 +196,6 @@ function loginLoading(bool) {
 	return {
 		type: LOGIN_LOADING,
 		loading: bool
-	};
-}
-/**
- * Hanles error.
- * @param  {object} error
- * @return returns type and error.
- */
-export function handleError(error) {
-	return {
-		type: ERROR_HANDLING,
-		error: error
 	};
 }
 /**
