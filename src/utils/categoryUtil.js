@@ -4,15 +4,17 @@ const health_marker = require('../assets/images/health_marker_100.png');
 const fire_marker = require('../assets/images/fire_marker_100.png');
 const flood_marker = require('../assets/images/floods_marker_100.png');
 const electric_marker = require('../assets/images/electric_marker_100.png');
-const logo = require('../assets/images/earthquake-30-512.png');
+const all_marker = require('../assets/images/earthquake-30-512.png');
 
 // Defing properties for the categories of incidents
 const categories = {
 	all: {
-		image: logo
+		title: 'All Incidents',
+		category: 'all',
+		image: all_marker
 	},
 	road: {
-		title: 'Road',
+		title: 'Road Accident',
 		category: 'road',
 		image: road_marker,
 		color: '#2c3e50'
@@ -37,7 +39,7 @@ const categories = {
 	},
 	blackout: {
 		title: 'Electricity Blackout',
-		category: 'electric',
+		category: 'blackout',
 		image: electric_marker,
 		color: '#2ecc71'
 	}
@@ -47,4 +49,5 @@ const categories = {
 getMarkerImage = category => {
 	return categories[category].image;
 };
+
 export { categories, getMarkerImage };

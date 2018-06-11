@@ -14,7 +14,7 @@ import {
 import LocationServicesDialogBox from 'react-native-android-location-services-dialog-box';
 import MapView, { Marker } from 'react-native-maps';
 import { bindActionCreators } from 'redux';
-import { getMarkerImage } from '../utils/categoryUtil.js';
+import { getMarkerImage, categories } from '../utils/categoryUtil.js';
 import { connect } from 'react-redux';
 import {
 	setLocationOnCustomSearch,
@@ -27,7 +27,6 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
 import { styles, searchBarStyle } from '../assets/styles/map_styles.js';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Config from 'react-native-config';
-import { GetIncidentFirebase } from '../utility/firebaseUtil';
 
 /**
  * Map screen showing google maps with search location and add incident feature
@@ -127,33 +126,45 @@ class MapScreen extends Component {
 		}
 	}
 
+	//Sets the filter category
 	alertItemName = item => {
-		this.setState({ domain: item.id });
-		this.setState({ visibleModal: false });
+		this.setState({ domain: item.category });
+		this.closeModal();
 	};
-	//Modal to be displayed for filter menu.
+
+	//Opens the modal
+	openModal() {
+		this.setState({ visibleModal: true });
+	}
+
+	//Closes the modal
+	closeModal() {
+		this.setState({ visibleModal: false });
+	}
+
+	//Modal to be displayed for the filter menu.
 	_renderModalContent = () => (
 		<View>
-			<TouchableOpacity
-				onPress={() => this.setState({ visibleModal: false })}
-			>
+			<TouchableOpacity onPress={() => this.closeModal()}>
 				<Icon name="close" size={20} style={styles.modalIcon} />
 			</TouchableOpacity>
 			<Text style={styles.modalHeadText}>
-				Select category from below :{' '}
+				Select category from below :
 			</Text>
 			<View style={styles.modalContainer}>
-				{this.state.names.map((item, index) => (
+				{Object.keys(categories).map((key, index) => (
 					<TouchableOpacity
-						key={item.id}
+						key={categories[key].category}
 						style={styles.modalField}
-						onPress={() => this.alertItemName(item)}
+						onPress={() => this.alertItemName(categories[key])}
 					>
 						<Image
 							style={styles.modalImage}
-							source={getMarkerImage(item.id)}
+							source={getMarkerImage(categories[key].category)}
 						/>
-						<Text style={styles.modalText}>{item.name}</Text>
+						<Text style={styles.modalText}>
+							{categories[key].title}
+						</Text>
 					</TouchableOpacity>
 				))}
 			</View>
@@ -161,7 +172,7 @@ class MapScreen extends Component {
 	);
 
 	render() {
-		//logic for filter
+		//Logic for filtering the incidents
 		var state = this.state;
 		if (this.props.incident.all_incidents !== null) {
 			var markers = this.props.incident.all_incidents.filter(function(
@@ -187,16 +198,14 @@ class MapScreen extends Component {
 					<MapView.Marker coordinate={this.state.marker} />
 					{this.props.incident.all_incidents !== null
 						? markers.map(marker => {
+								var coordinates =
+									marker.value.location.coordinates;
 								return (
 									<MapView.Marker
 										key={marker.key}
 										coordinate={{
-											latitude:
-												marker.value.location
-													.coordinates.latitude,
-											longitude:
-												marker.value.location
-													.coordinates.longitude
+											latitude: coordinates.latitude,
+											longitude: coordinates.longitude
 										}}
 										title={marker.value.title}
 										description={marker.value.details}
@@ -250,7 +259,7 @@ class MapScreen extends Component {
 				/>
 				<TouchableOpacity
 					style={styles.filterButton}
-					onPress={() => this.setState({ visibleModal: true })}
+					onPress={() => this.openModal()}
 				>
 					<Icon name="filter" size={30} style={styles.fabButton} />
 				</TouchableOpacity>
@@ -275,6 +284,7 @@ class MapScreen extends Component {
 				<Modal
 					visible={this.state.visibleModal}
 					onRequestClose={() => {
+						this.closeModal();
 						alert('Modal has been closed.');
 					}}
 				>
