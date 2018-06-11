@@ -81,16 +81,6 @@ class HomeLogin extends Component {
 					>
 						<Text style={styles.button_text_social}>Google</Text>
 					</TouchableOpacity>
-					<View>
-						<TouchableOpacity
-							style={styles.button_forgot}
-							onPress={() => Actions.map()}
-						>
-							<Text style={styles.button_text_forgot}>
-								Continue as a guest
-							</Text>
-						</TouchableOpacity>
-					</View>
 				</View>
 				<TouchableOpacity
 					style={styles.button_forgot}

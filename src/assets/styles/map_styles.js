@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions } from 'react-native';
 const { width, height } = Dimensions.get('window');
 
-//styling used in map.js
+//Styling for the Search Bar
 const searchBarStyle = {
 	container: {
 		position: 'absolute',
@@ -29,6 +29,7 @@ const searchBarStyle = {
 	}
 };
 
+//Styling for the map components
 const styles = StyleSheet.create({
 	container: {
 		...StyleSheet.absoluteFillObject,
@@ -41,12 +42,12 @@ const styles = StyleSheet.create({
 	repositionButton: {
 		width: width / 10,
 		height: width / 10,
-		position: 'absolute',
-		left: width / 50,
-		bottom: height / 50,
 		backgroundColor: 'white',
 		borderRadius: 30,
-		justifyContent: 'center'
+		justifyContent: 'center',
+		position: 'absolute',
+		left: width / 40,
+		bottom: height / 50
 	},
 	clearButton: {
 		position: 'absolute',
@@ -55,27 +56,24 @@ const styles = StyleSheet.create({
 		right: width / 30
 	},
 	addIncidentButton: {
-		backgroundColor: 'transparent',
 		width: width / 10,
 		height: width / 10,
-		position: 'absolute',
-		left: width / 40,
-		bottom: height / 40,
 		backgroundColor: 'white',
 		borderRadius: 30,
 		justifyContent: 'center',
-		marginLeft: width / 1.2
+		position: 'absolute',
+		right: width / 40,
+		bottom: height / 50
 	},
 	filterButton: {
 		width: width / 10,
 		height: width / 10,
-		position: 'absolute',
-		left: width / 50,
-		bottom: height / 50,
 		backgroundColor: 'white',
 		borderRadius: 30,
 		justifyContent: 'center',
-		marginBottom: height / 8
+		position: 'absolute',
+		right: width / 40,
+		top: height / 10
 	},
 	fabButton: {
 		alignSelf: 'center',
@@ -106,7 +104,11 @@ const styles = StyleSheet.create({
 	modalHeadContainer: {
 		flexDirection: 'row'
 	},
-	modalImage: { height: 40, width: 40, marginLeft: width / 20 },
+	modalImage: {
+		height: 40,
+		width: 40,
+		marginLeft: width / 20
+	},
 	modalIcon: {
 		marginTop: height / 90,
 		marginLeft: width / 1.1
