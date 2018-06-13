@@ -23,11 +23,10 @@ import {
 import { getAllIncidents } from '../actions/incidentsAction';
 import { Actions } from 'react-native-router-flux';
 import PropTypes from 'prop-types';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { styles, searchBarStyle } from '../assets/styles/map_styles.js';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Config from 'react-native-config';
-
+import { GooglePlacesAutocomplete } from './googleSearchBar';
 /**
  * Map screen showing google maps with search location and add incident feature
  * @extends Component
@@ -42,12 +41,12 @@ class MapScreen extends Component {
 				latitudeDelta: 0.0052,
 				longitudeDelta: 0.0052
 			},
-			marker: {
+			curr_location_marker: {
 				latitude: this.props.curr_location.latitude,
 				longitude: this.props.curr_location.longitude
 			},
 			domain: 'all',
-			markers: null,
+			incidents_marker: null,
 			visibleModal: false
 		};
 	}
@@ -73,7 +72,7 @@ class MapScreen extends Component {
 							latitude: this.props.curr_location.latitude,
 							longitude: this.props.curr_location.longitude
 						},
-						marker: {
+						curr_location_marker: {
 							latitude: this.props.curr_location.latitude,
 							longitude: this.props.curr_location.longitude
 						}
@@ -89,8 +88,25 @@ class MapScreen extends Component {
 		}
 	}
 
+	//Setting up the region upon relocation
+	setRegion(lat, lng) {
+		var self = this;
+		setTimeout(function() {
+			self.setState({
+				curr_region: {
+					...self.state.curr_region,
+					latitude: lat,
+					longitude: lng
+				}
+			});
+		}, 100);
+	}
+
+	// Handling the relocation of the map screen from the current location
+	// to another location or vice-versa
 	handleRelocation(coordinates, type) {
 		const mapRef = this.map;
+		const markerRef = this.marker;
 
 		if (type === 'search') {
 			this.props.setLocationOnCustomSearch(
@@ -98,31 +114,38 @@ class MapScreen extends Component {
 				coordinates['lng'],
 				coordinates['name']
 			);
-			this.setState({
-				marker: {
-					latitude: this.props.location.latitude,
-					longitude: this.props.location.longitude
-				}
-			});
-			Keyboard.dismiss();
 			mapRef.animateToRegion({
 				...this.state.curr_region,
 				latitude: this.props.location.latitude,
 				longitude: this.props.location.longitude
 			});
+			markerRef._component.animateMarkerToCoordinate(
+				{
+					latitude: this.props.location.latitude,
+					longitude: this.props.location.longitude
+				},
+				500
+			);
+			this.setRegion(coordinates['lat'], coordinates['lng']);
+			Keyboard.dismiss();
 		} else if (type === 'curr_location') {
 			var self = this;
-			mapRef.animateToRegion(self.state.curr_region);
-			setTimeout(function() {
-				self.setState({
-					marker: {
-						latitude: self.props.curr_location.latitude,
-						longitude: self.props.curr_location.longitude
-					}
-				});
-				self.textInput.clear();
-			}, 5);
-			self.textInput.clear();
+			mapRef.animateToRegion({
+				...this.state.curr_region,
+				latitude: this.props.curr_location.latitude,
+				longitude: this.props.curr_location.longitude
+			});
+			markerRef._component.animateMarkerToCoordinate(
+				{
+					latitude: this.props.curr_location.latitude,
+					longitude: this.props.curr_location.longitude
+				},
+				500
+			);
+			this.setRegion(
+				this.props.curr_location.latitude,
+				this.props.curr_location.longitude
+			);
 		}
 	}
 
@@ -175,15 +198,15 @@ class MapScreen extends Component {
 		//Logic for filtering the incidents
 		var state = this.state;
 		if (this.props.incident.all_incidents !== null) {
-			var markers = this.props.incident.all_incidents.filter(function(
-				item
-			) {
-				if (state.domain === 'all') {
-					return true;
-				} else {
-					return item.value.category === state.domain;
+			var incidents_marker = this.props.incident.all_incidents.filter(
+				function(item) {
+					if (state.domain === 'all') {
+						return true;
+					} else {
+						return item.value.category === state.domain;
+					}
 				}
-			});
+			);
 		}
 		return (
 			<View style={styles.container}>
@@ -191,13 +214,18 @@ class MapScreen extends Component {
 					ref={ref => {
 						this.map = ref;
 					}}
-					showsMyLocationButton={true}
+					// showsMyLocationButton={true}
 					style={styles.map}
 					region={this.state.curr_region}
 				>
-					<MapView.Marker coordinate={this.state.marker} />
+					<Marker.Animated
+						ref={marker => {
+							this.marker = marker;
+						}}
+						coordinate={this.state.curr_location_marker}
+					/>
 					{this.props.incident.all_incidents !== null
-						? markers.map(marker => {
+						? incidents_marker.map(marker => {
 								var coordinates =
 									marker.value.location.coordinates;
 								return (
@@ -217,6 +245,40 @@ class MapScreen extends Component {
 						  })
 						: null}
 				</MapView>
+
+				<TouchableOpacity
+					style={styles.filterButton}
+					onPress={() => this.openModal()}
+				>
+					<Icon name="filter" size={30} style={styles.fabButton} />
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.repositionButton}
+					onPress={() => {
+						this.handleRelocation(null, 'curr_location');
+					}}
+				>
+					<Icon
+						name="crosshairs"
+						size={30}
+						style={styles.fabButton}
+					/>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.addIncidentButton}
+					onPress={() => Actions.addIncident()}
+				>
+					<Icon name="plus" size={30} style={styles.fabButton} />
+				</TouchableOpacity>
+				<Modal
+					visible={this.state.visibleModal}
+					onRequestClose={() => {
+						this.closeModal();
+						alert('Modal has been closed.');
+					}}
+				>
+					{this._renderModalContent()}
+				</Modal>
 				<GooglePlacesAutocomplete
 					minLength={2}
 					listViewDisplayed="auto"
@@ -242,54 +304,7 @@ class MapScreen extends Component {
 						this.handleRelocation(coordinates, 'search');
 					}}
 					styles={searchBarStyle}
-					renderRightButton={() => (
-						<TouchableOpacity
-							style={styles.clearButton}
-							onPress={() => {
-								this.textInput.clear();
-							}}
-						>
-							<Icon
-								name="remove"
-								size={15}
-								style={styles.fabButton}
-							/>
-						</TouchableOpacity>
-					)}
 				/>
-				<TouchableOpacity
-					style={styles.filterButton}
-					onPress={() => this.openModal()}
-				>
-					<Icon name="filter" size={30} style={styles.fabButton} />
-				</TouchableOpacity>
-				<TouchableOpacity
-					style={styles.repositionButton}
-					onPress={() => {
-						this.handleRelocation(null, 'curr_location');
-					}}
-				>
-					<Icon
-						name="map-marker"
-						size={30}
-						style={styles.fabButton}
-					/>
-				</TouchableOpacity>
-				<TouchableOpacity
-					style={styles.addIncidentButton}
-					onPress={() => Actions.addIncident()}
-				>
-					<Icon name="plus" size={30} style={styles.fabButton} />
-				</TouchableOpacity>
-				<Modal
-					visible={this.state.visibleModal}
-					onRequestClose={() => {
-						this.closeModal();
-						alert('Modal has been closed.');
-					}}
-				>
-					{this._renderModalContent()}
-				</Modal>
 				{this.props.incident.loading ? (
 					<ActivityIndicator size={'large'} />
 				) : null}
