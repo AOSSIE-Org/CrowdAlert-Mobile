@@ -4,24 +4,21 @@ const { width, height } = Dimensions.get('window');
 //Styling for the Search Bar
 const searchBarStyle = {
 	container: {
-		position: 'absolute',
 		backgroundColor: 'transparent',
-		top: 10
+		marginTop: height / 70
 	},
 	textInputContainer: {
-		backgroundColor: 'transparent',
-		top: 0,
-		alignSelf: 'center',
+		backgroundColor: 'white',
 		borderTopWidth: 0,
 		borderBottomWidth: 0,
-		width: width
+		width: width * 0.95,
+		height: height * 0.07
 	},
 	textInput: {
-		marginHorizontal: width / 50,
-		paddingRight: width / 30 + width / 50,
 		backgroundColor: 'white',
 		color: 'rgba(0,0,0,0.7)',
-		fontSize: 14
+		fontSize: 14,
+		height: height * 0.05
 	},
 	listView: {
 		backgroundColor: 'rgba(256,256,256,0.95)',
@@ -50,10 +47,9 @@ const styles = StyleSheet.create({
 		bottom: height / 50
 	},
 	clearButton: {
-		position: 'absolute',
 		backgroundColor: 'rgba(0,0,0,0)',
-		top: 13.5,
-		right: width / 30
+		justifyContent: 'center',
+		paddingRight: width / 30
 	},
 	addIncidentButton: {
 		width: width / 10,

@@ -1,30 +1,36 @@
 import React, { Component } from 'react';
-import { Provider, connect } from 'react-redux';
-import { Router } from 'react-native-router-flux';
-import { Actions, Scene, Drawer } from 'react-native-router-flux';
+import { Provider } from 'react-redux';
+import { Actions } from 'react-native-router-flux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import Route from './src/utils/routes';
+import { ActivityIndicator } from 'react-native';
 
 import configureStore from './src/utils/store';
 let { store, persistor } = configureStore();
-
-const ConnectedRouter = connect()(Router);
 
 /**
  * Navigator using React-Native-Router-Flux
  * @extends Component
  */
 export default class App extends Component {
-	onBackPress() {
-		Actions.pop();
-		return true;
-	}
-
 	render() {
 		return (
 			<Provider store={store}>
 				<PersistGate loading={null} persistor={persistor}>
-					<Route />
+					{loading => {
+						if (!loading) {
+							return <ActivityIndicator size={'large'} />;
+						} else {
+							var initial = true;
+							if (
+								store.getState().login.userFirebase.length == 0
+							) {
+								return <Route initial={initial} />;
+							} else {
+								return <Route initial={!initial} />;
+							}
+						}
+					}}
 				</PersistGate>
 			</Provider>
 		);

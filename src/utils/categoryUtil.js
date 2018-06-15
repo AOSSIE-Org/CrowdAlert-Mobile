@@ -50,4 +50,8 @@ getMarkerImage = category => {
 	return categories[category].image;
 };
 
-export { categories, getMarkerImage };
+// Get color for the given category
+getColor = category => {
+	return categories[category].color;
+};
+export { categories, getMarkerImage, getColor };

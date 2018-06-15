@@ -3,7 +3,6 @@ import {
 	Text,
 	View,
 	Platform,
-	Dimensions,
 	TouchableOpacity,
 	Keyboard,
 	ActivityIndicator,
@@ -27,6 +26,8 @@ import { styles, searchBarStyle } from '../assets/styles/map_styles.js';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Config from 'react-native-config';
 import { GooglePlacesAutocomplete } from './googleSearchBar';
+import { sideMenu } from './profile/navBarButtons';
+
 /**
  * Map screen showing google maps with search location and add incident feature
  * @extends Component
@@ -226,6 +227,7 @@ class MapScreen extends Component {
 					/>
 					{this.props.incident.all_incidents !== null
 						? incidents_marker.map(marker => {
+								console.log(marker.value.location);
 								var coordinates =
 									marker.value.location.coordinates;
 								return (
@@ -304,6 +306,7 @@ class MapScreen extends Component {
 						this.handleRelocation(coordinates, 'search');
 					}}
 					styles={searchBarStyle}
+					renderLeftButton={() => sideMenu()}
 				/>
 				{this.props.incident.loading ? (
 					<ActivityIndicator size={'large'} />

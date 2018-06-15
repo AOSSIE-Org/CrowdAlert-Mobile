@@ -1,7 +1,8 @@
 import {
 	LATEST_INCIDENT_ADDED,
 	ALL_INCIDENTS,
-	INCIDENTS_LOADING
+	INCIDENTS_LOADING,
+	USERS_INCIDENTS
 } from './types';
 import { handleError } from './loginAction';
 import firebase from 'react-native-firebase';
@@ -13,8 +14,8 @@ import firebase from 'react-native-firebase';
  */
 export const addToFirebase = incident => {
 	return dispatch => {
+		dispatch(incidentsLoading(true));
 		return new Promise((resolve, reject) => {
-			dispatch(incidentsLoading(true));
 			firebase
 				.database()
 				.ref()
@@ -41,8 +42,8 @@ export const addToFirebase = incident => {
  */
 export const getAllIncidents = () => {
 	return dispatch => {
+		dispatch(incidentsLoading(true));
 		return new Promise((resolve, reject) => {
-			dispatch(incidentsLoading(true));
 			firebase
 				.database()
 				.ref('incidents')
@@ -66,6 +67,34 @@ export const getAllIncidents = () => {
 		});
 	};
 };
+
+export const getUserIncidents = userID => {
+	return dispatch => {
+		dispatch(incidentsLoading(true));
+		var incident_ref = firebase.database().ref('incidents/');
+		incident_ref
+			.orderByChild('user_id')
+			.equalTo(userID)
+			.on('value', function(snapshot) {
+				var items = [];
+				snapshot.forEach(item => {
+					items.push({
+						key: item.key,
+						value: item.val()
+					});
+				});
+				dispatch(userIncidents(items));
+				dispatch(incidentsLoading(false));
+			});
+	};
+};
+
+function userIncidents(data) {
+	return {
+		type: USERS_INCIDENTS,
+		user_incidents: data
+	};
+}
 
 /**
  * Triggers the redux store for updates.

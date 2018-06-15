@@ -1,9 +1,13 @@
-import { LOGIN_LOADING, USER_SIGN_IN } from '../actions/types';
+import {
+	LOGIN_LOADING,
+	GET_USER_AUTH_FIREBASE,
+	ADD_USER_FIREBASE
+} from '../actions/types';
 
 const INITIAL_STATE = {
 	loading: false,
-	error: null,
-	user: [],
+	userFirebase: [],
+	userDetails: [],
 	signInType: null
 };
 /**
@@ -22,11 +26,16 @@ export default function(state = INITIAL_STATE, action) {
 				...result,
 				loading: action.loading
 			};
-		case USER_SIGN_IN:
+		case GET_USER_AUTH_FIREBASE:
 			return {
 				...result,
-				user: action.user,
+				userFirebase: action.userFirebase,
 				signInType: action.signInType
+			};
+		case ADD_USER_FIREBASE:
+			return {
+				...result,
+				userDetails: action.userDetails
 			};
 		default:
 			return state;

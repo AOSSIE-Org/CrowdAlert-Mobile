@@ -34,9 +34,11 @@ class AddIncident extends Component {
 			details: '',
 			visible: true,
 			timestamp: new Date().toLocaleString(),
-			location: this.props.location,
+			location: {
+				coordinates: this.props.location.curr_coordinates
+			},
 			category: null,
-			user: this.props.login.user,
+			user_id: this.props.login.userDetails.email,
 			upvotes: 0,
 			image: {
 				isPresent: false,
@@ -73,7 +75,7 @@ class AddIncident extends Component {
 				.addToFirebase(this.state) // waits till incident details are updated in redux
 				.then(result => {
 					ToastAndroid.show('Incident Updated', ToastAndroid.SHORT);
-					Actions.map(); // set markers on map page to result from firebase.
+					Actions.pop(); // set markers on map page to result from firebase.
 				});
 		}
 	}
@@ -148,7 +150,7 @@ class AddIncident extends Component {
 							style={styles.field_title}
 							ref={input => (this.titleInput = input)}
 							onChangeText={title => this.setState({ title })}
-							onSubmitEditing={() => this.titleInput.focus()}
+							onSubmitEditing={() => this.detailsInput.focus()}
 							autoCapitalize="none"
 							autoCorrect={false}
 							keyboardType="email-address"
@@ -157,7 +159,7 @@ class AddIncident extends Component {
 						/>
 					</View>
 					<TextInput
-						ref={input => (this.passwordInput = input)}
+						ref={input => (this.detailsInput = input)}
 						style={styles.field_details}
 						onChangeText={details => this.setState({ details })}
 						//onSubmitEditing={() => this.passwordConfirmInput.focus()}

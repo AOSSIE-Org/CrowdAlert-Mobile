@@ -1,12 +1,14 @@
 import {
 	LATEST_INCIDENT_ADDED,
 	ALL_INCIDENTS,
-	INCIDENTS_LOADING
+	INCIDENTS_LOADING,
+	USERS_INCIDENTS
 } from '../actions/types';
 
 const INITIAL_STATE = {
 	all_incidents: null,
-	loading: false
+	loading: false,
+	user_incidents: null
 };
 
 /**
@@ -33,6 +35,11 @@ export default function(state = INITIAL_STATE, action) {
 			return {
 				...result,
 				loading: action.loading
+			};
+		case USERS_INCIDENTS:
+			return {
+				...result,
+				user_incidents: action.user_incidents
 			};
 		default:
 			return state;
