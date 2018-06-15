@@ -1,33 +1,34 @@
 {
 	"project_info": {
-		"project_number": "530975451806",
-		"firebase_url": "https://crowd-alert-ff472.firebaseio.com",
-		"project_id": "crowd-alert-ff472",
-		"storage_bucket": "crowd-alert-ff472.appspot.com"
+		"project_number": "443270569292",
+		"firebase_url": "https://crowdalert-mobile.firebaseio.com",
+		"project_id": "crowdalert-mobile",
+		"storage_bucket": "crowdalert-mobile.appspot.com"
 	},
 	"client": [
 		{
 			"client_info": {
-				"mobilesdk_app_id": "1:530975451806:android:8c5cb588f80dcbc1",
+				"mobilesdk_app_id": "1:443270569292:android:8c5cb588f80dcbc1",
 				"android_client_info": {
 					"package_name": "com.crowdalert"
 				}
 			},
 			"oauth_client": [
 				{
-					"client_id": "${GOOGLE_WEBID_KEY}",
-					"client_type": 3
-				},
-				{
-					"client_id": "${OAUTH_CLIENT_GOOGLE_SERVICE_KEY1}",
+					"client_id": "${GOOGLE_SERVICES_OAUTH_CLIENT_TYPE1}",
 					"client_type": 1,
 					"android_info": {
 						"package_name": "com.crowdalert",
-						"certificate_hash": "${CERTIFICATE_HASH}"
+						"certificate_hash":
+							"${GOOGLE_SERVICES_OAUTH_CLIENT_TYPE1_CERTIFICATE_HASH}"
 					}
 				},
 				{
-					"client_id": "${OAUTH_CLIENT_GOOGLE_SERVICE_KEY3}",
+					"client_id": "${GOOGLE_WEB_CLIENT_ID}",
+					"client_type": 3
+				},
+				{
+					"client_id": "${GOOGLE_WEB_CLIENT_ID}",
 					"client_type": 3
 				}
 			],
@@ -44,8 +45,17 @@
 					"status": 2,
 					"other_platform_oauth_client": [
 						{
-							"client_id": "${GOOGLE_WEBID_KEY}",
+							"client_id": "${GOOGLE_WEB_CLIENT_ID}",
 							"client_type": 3
+						},
+						{
+							"client_id":
+								"${GOOGLE_SERVICES_SERVICES_CLIENT_TYPE2}",
+							"client_type": 2,
+							"ios_info": {
+								"bundle_id":
+									"org.reactjs.native.example.CrowdAlert"
+							}
 						}
 					]
 				},

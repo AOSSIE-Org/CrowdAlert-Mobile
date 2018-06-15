@@ -76,5 +76,13 @@ export const styles = StyleSheet.create({
 		alignItems: 'center',
 		borderRadius: 2,
 		marginRight: width / 6
+	},
+	button_text_forgot: {
+		color: 'grey',
+		fontSize: 12
+	},
+	button_forgot: {
+		marginHorizontal: width / 20,
+		marginTop: height / 30
 	}
 });

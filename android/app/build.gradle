@@ -1,6 +1,7 @@
 apply plugin: "com.android.application"
 apply plugin: "io.fabric"
 apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
 
 import com.android.build.OutputFile
 
@@ -149,6 +150,12 @@ android {
 
 dependencies {
     compile project(':react-native-config')
+    compile project(':react-native-android-location-services-dialog-box')
+    compile(project(':react-native-maps')){
+      exclude group: 'com.google.android.gms', module: 'play-services-base'
+      exclude group: 'com.google.android.gms', module: 'play-services-maps'
+  }
+  compile 'com.google.android.gms:play-services-maps:15.0.0'
     compile project(':react-native-google-signin')
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile project(':react-native-fbsdk')
