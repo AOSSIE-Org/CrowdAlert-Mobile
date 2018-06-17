@@ -20,6 +20,9 @@ import EditProfile from '../components/profile/editProfile';
 import { editButton } from '../components/profile/navBarButtons';
 import { sideMenu } from '../components/profile/navBarButtons';
 
+import Incident from '../components/incident/incidentScreen';
+import NavBar from '../components/incident/navBar';
+
 const ConnectedRouter = connect()(Router);
 const { width, height } = Dimensions.get('window');
 
@@ -89,6 +92,12 @@ export default class Route extends Component {
 							component={AddIncident}
 						/>
 					</Scene>
+					<Scene
+						key="incident"
+						title="Incident Details"
+						component={Incident}
+						navBar={NavBar}
+					/>
 				</Scene>
 			</ConnectedRouter>
 		);

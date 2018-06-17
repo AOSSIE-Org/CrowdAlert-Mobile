@@ -239,6 +239,11 @@ class MapScreen extends Component {
 										}}
 										title={marker.value.title}
 										description={marker.value.details}
+										onCalloutPress={() => {
+											Actions.incident({
+												details: marker.value
+											});
+										}}
 										image={getMarkerImage(
 											marker.value.category
 										)}

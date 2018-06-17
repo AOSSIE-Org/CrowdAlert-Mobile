@@ -34,22 +34,33 @@ class Profile extends Component {
 	}
 
 	renderItem({ item }) {
+		console.log(item);
 		return (
-			<View
-				style={[
-					styles.incidentContainer,
-					{ backgroundColor: getColor(item.value.category) }
-				]}
+			<TouchableOpacity
+				onPress={() =>
+					Actions.incident({
+						details: item.value
+					})
+				}
 			>
-				<Image
-					style={styles.incidentsImage}
-					source={getMarkerImage(item.value.category)}
-				/>
-				<View style={styles.incidentTextContainer}>
-					<Text style={styles.incident}>{item.value.title}</Text>
-					<Text style={styles.incident}>{item.value.details}</Text>
+				<View
+					style={[
+						styles.incidentContainer,
+						{ backgroundColor: getColor(item.value.category) }
+					]}
+				>
+					<Image
+						style={styles.incidentsImage}
+						source={getMarkerImage(item.value.category)}
+					/>
+					<View style={styles.incidentTextContainer}>
+						<Text style={styles.incident}>{item.value.title}</Text>
+						<Text style={styles.incident}>
+							{item.value.details}
+						</Text>
+					</View>
 				</View>
-			</View>
+			</TouchableOpacity>
 		);
 	}
 
