@@ -5,6 +5,10 @@ import MapView, { Marker } from 'react-native-maps';
 import { Container, Content, Card, CardItem } from 'native-base';
 import { styles } from '../../assets/styles/incident_styles';
 
+/**
+ * Screen for showing individual incidents.
+ * @extends Component
+ */
 class Incident extends Component {
 	constructor(props) {
 		super(props);
@@ -12,11 +16,17 @@ class Incident extends Component {
 			isMapReady: false
 		};
 	}
-
+	/**
+	 * Function to check if map has been loaded then only display marker on the map.
+	 * @return  sets isMapReady ready to true.
+	 */
 	onMapLayout = () => {
 		this.setState({ isMapReady: true });
 	};
-
+	/**
+	 * The UI of incident screen.
+	 * @return the incident screen.
+	 */
 	render() {
 		return (
 			<Container>
@@ -45,20 +55,18 @@ class Incident extends Component {
 								{this.props.details.title}
 							</Text>
 						</CardItem>
-						{this.props.details.details === '' ? (
-							<View>
-								<CardItem>
-									<Text style={styles.titleTextHeader}>
-										Description
-									</Text>
-								</CardItem>
-								<CardItem>
-									<Text style={styles.titleTextDescription}>
-										{this.props.details.details}
-									</Text>
-								</CardItem>
-							</View>
-						) : null}
+						<View>
+							<CardItem>
+								<Text style={styles.titleTextHeader}>
+									Description
+								</Text>
+							</CardItem>
+							<CardItem>
+								<Text style={styles.titleTextDescription}>
+									{this.props.details.details}
+								</Text>
+							</CardItem>
+						</View>
 					</Card>
 					<Card>
 						<CardItem>
@@ -97,7 +105,11 @@ class Incident extends Component {
 		);
 	}
 }
-
+/**
+ * confirms that the props being used
+ * on this page have their specified type.
+ * @type {details}
+ */
 Incident.propTypes = {
 	details: PropTypes.object
 };

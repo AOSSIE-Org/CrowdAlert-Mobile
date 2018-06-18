@@ -320,10 +320,18 @@ class MapScreen extends Component {
 	}
 }
 
-//Prop types for prop checking.
+/**
+ * Checks that the functions specified as isRequired are present,
+ * and warns if the props used on this page,
+ * does not meet the specified type.
+ * @type {location}
+ * @type {curr_location}
+ * @type {getAllIncidents}
+ */
 MapScreen.propTypes = {
 	setLocationOnCustomSearch: PropTypes.func.isRequired,
 	getCurrLocation: PropTypes.func.isRequired,
+	getAllIncidents: PropTypes.func.isRequired,
 	location: PropTypes.object,
 	curr_location: PropTypes.object,
 	getAllIncidents: PropTypes.func.isRequired
