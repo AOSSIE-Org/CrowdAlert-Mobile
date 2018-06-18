@@ -19,7 +19,7 @@ import {
 	setLocationOnCustomSearch,
 	getCurrLocation
 } from '../actions/locationAction';
-import { getAllIncidents } from '../actions/incidentsAction';
+import { getAllIncidents, viewIncident } from '../actions/incidentsAction';
 import { Actions } from 'react-native-router-flux';
 import PropTypes from 'prop-types';
 import { styles, searchBarStyle } from '../assets/styles/map_styles.js';
@@ -150,6 +150,15 @@ class MapScreen extends Component {
 		}
 	}
 
+	viewClickedIncident(marker) {
+		if (marker.value.user_id === this.props.user.email) {
+			this.props.viewIncident(marker, true);
+		} else {
+			this.props.viewIncident(marker, false);
+		}
+		Actions.incident();
+	}
+
 	//Sets the filter category
 	alertItemName = item => {
 		this.setState({ domain: item.category });
@@ -239,9 +248,7 @@ class MapScreen extends Component {
 										title={marker.value.title}
 										description={marker.value.details}
 										onCalloutPress={() => {
-											Actions.incident({
-												details: marker.value
-											});
+											this.viewClickedIncident(marker);
 										}}
 										image={getMarkerImage(
 											marker.value.category
@@ -334,7 +341,8 @@ MapScreen.propTypes = {
 	getAllIncidents: PropTypes.func.isRequired,
 	location: PropTypes.object,
 	curr_location: PropTypes.object,
-	getAllIncidents: PropTypes.func.isRequired
+	getAllIncidents: PropTypes.func.isRequired,
+	viewIncident: PropTypes.func.isRequired
 };
 
 /**
@@ -348,7 +356,8 @@ function matchDispatchToProps(dispatch) {
 		{
 			setLocationOnCustomSearch: setLocationOnCustomSearch,
 			getCurrLocation: getCurrLocation,
-			getAllIncidents: getAllIncidents
+			getAllIncidents: getAllIncidents,
+			viewIncident: viewIncident
 		},
 		dispatch
 	);
@@ -363,7 +372,8 @@ function matchDispatchToProps(dispatch) {
 const mapStateToProps = state => ({
 	location: state.location.coordinates,
 	curr_location: state.location.curr_coordinates,
-	incident: state.incident
+	incident: state.incident,
+	user: state.login.userDetails
 });
 
 export default connect(mapStateToProps, matchDispatchToProps)(MapScreen);

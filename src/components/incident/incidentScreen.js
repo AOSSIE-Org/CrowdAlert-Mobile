@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
-import { Text, View, Image } from 'react-native';
+import { Text, View, Image, TouchableOpacity } from 'react-native';
 import PropTypes from 'prop-types';
 import MapView, { Marker } from 'react-native-maps';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { Container, Content, Card, CardItem } from 'native-base';
 import { styles } from '../../assets/styles/incident_styles';
+import getDirections from 'react-native-google-maps-directions';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 /**
  * Screen for showing individual incidents.
@@ -23,15 +27,37 @@ class Incident extends Component {
 	onMapLayout = () => {
 		this.setState({ isMapReady: true });
 	};
+
+	handleDirections() {
+		var coordinates = this.props.incidentDetails.location.coordinates;
+		getDirections({
+			source: {
+				latitude: '',
+				longitude: ''
+			},
+			destination: {
+				latitude: coordinates.latitude,
+				longitude: coordinates.longitude
+			},
+			params: [
+				{
+					key: 'dirflg',
+					value: 'd'
+				}
+			]
+		});
+	}
+
 	/**
 	 * The UI of incident screen.
 	 * @return the incident screen.
 	 */
 	render() {
+		var incident = this.props.incidentDetails;
 		return (
 			<Container>
 				<Content>
-					{this.props.details.image.isPresent ? (
+					{incident.image.isPresent ? (
 						<Card>
 							<CardItem>
 								<Image
@@ -40,7 +66,7 @@ class Incident extends Component {
 									source={{
 										uri:
 											'data:image/jpeg;base64, ' +
-											this.props.details.image.base64
+											incident.image.base64
 									}}
 								/>
 							</CardItem>
@@ -52,30 +78,32 @@ class Incident extends Component {
 						</CardItem>
 						<CardItem>
 							<Text style={styles.titleTextDescription}>
-								{this.props.details.title}
+								{incident.title}
 							</Text>
 						</CardItem>
-						<View>
-							<CardItem>
-								<Text style={styles.titleTextHeader}>
-									Description
-								</Text>
-							</CardItem>
-							<CardItem>
-								<Text style={styles.titleTextDescription}>
-									{this.props.details.details}
-								</Text>
-							</CardItem>
-						</View>
+						{incident.details !== '' ? (
+							<View>
+								<CardItem>
+									<Text style={styles.titleTextHeader}>
+										Description
+									</Text>
+								</CardItem>
+								<CardItem>
+									<Text style={styles.titleTextDescription}>
+										{incident.details}
+									</Text>
+								</CardItem>
+							</View>
+						) : null}
 					</Card>
 					<Card>
 						<CardItem>
 							<MapView
 								region={{
-									latitude: this.props.details.location
-										.coordinates.latitude,
-									longitude: this.props.details.location
-										.coordinates.longitude,
+									latitude:
+										incident.location.coordinates.latitude,
+									longitude:
+										incident.location.coordinates.longitude,
 									latitudeDelta: 0.0052,
 									longitudeDelta: 0.0052
 								}}
@@ -85,10 +113,12 @@ class Incident extends Component {
 								{this.state.isMapReady && (
 									<MapView.Marker
 										coordinate={{
-											latitude: this.props.details
-												.location.coordinates.latitude,
-											longitude: this.props.details
-												.location.coordinates.longitude
+											latitude:
+												incident.location.coordinates
+													.latitude,
+											longitude:
+												incident.location.coordinates
+													.longitude
 										}}
 									/>
 								)}
@@ -97,7 +127,17 @@ class Incident extends Component {
 					</Card>
 					<Card>
 						<CardItem>
-							<Text>Navigate</Text>
+							<TouchableOpacity
+								style={styles.navigationContainer}
+								onPress={() => this.handleDirections()}
+							>
+								<Text>Navigate</Text>
+								<Icon
+									name="map-pin"
+									size={23}
+									style={styles.navigationIcon}
+								/>
+							</TouchableOpacity>
 						</CardItem>
 					</Card>
 				</Content>
@@ -114,4 +154,14 @@ Incident.propTypes = {
 	details: PropTypes.object
 };
 
-export default Incident;
+/**
+ * Mapping state to props so that state variables can be used
+ * through props in children components.
+ * @param state Current state in the store.
+ * @return Returns states as props.
+ */
+const mapStateToProps = state => ({
+	incidentDetails: state.incident.incident.value
+});
+
+export default connect(mapStateToProps, null)(Incident);

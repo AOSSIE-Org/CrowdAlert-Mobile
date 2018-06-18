@@ -10,7 +10,7 @@ export const styles = StyleSheet.create({
 		marginHorizontal: width / 20,
 		width: width * 0.9,
 		marginTop: height / 50,
-		height: 40
+		height: height / 18
 	},
 	updateButton: {
 		alignItems: 'center',

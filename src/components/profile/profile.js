@@ -14,7 +14,7 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { styles } from '../../assets/styles/profile_styles';
 import PropTypes from 'prop-types';
-import { getUserIncidents } from '../../actions/incidentsAction';
+import { getUserIncidents, viewIncident } from '../../actions/incidentsAction';
 import { getColor } from '../../utils/categoryUtil';
 
 /**
@@ -30,16 +30,19 @@ class Profile extends Component {
 		this.props.getUserIncidents(this.props.user.email);
 	}
 
+	viewClickedIncident(item) {
+		if (item.value.user_id === this.props.user.email) {
+			this.props.viewIncident(item, true);
+		} else {
+			this.props.viewIncident(item, false);
+		}
+		Actions.incident();
+	}
+
 	//Individual list item for the incidents
 	renderItem({ item }) {
 		return (
-			<TouchableOpacity
-				onPress={() =>
-					Actions.incident({
-						details: item.value
-					})
-				}
-			>
+			<TouchableOpacity onPress={() => this.viewClickedIncident(item)}>
 				<View
 					style={[
 						styles.incidentContainer,
@@ -119,7 +122,7 @@ class Profile extends Component {
 				<FlatList
 					contentContainerStyle={styles.flatListContainer}
 					data={this.props.incident.user_incidents}
-					renderItem={this.renderItem}
+					renderItem={this.renderItem.bind(this)}
 					keyExtractor={item => item.key}
 				/>
 			</ScrollView>
@@ -149,7 +152,8 @@ Profile.propTypes = {
 function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{
-			getUserIncidents: getUserIncidents
+			getUserIncidents: getUserIncidents,
+			viewIncident: viewIncident
 		},
 		dispatch
 	);

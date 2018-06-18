@@ -20,5 +20,13 @@ export const styles = StyleSheet.create({
 		flex: 1,
 		width: width,
 		height: height / 4
+	},
+	navigationContainer: {
+		flex: 1,
+		flexDirection: 'row'
+	},
+	navigationIcon: {
+		position: 'absolute',
+		right: 10
 	}
 });

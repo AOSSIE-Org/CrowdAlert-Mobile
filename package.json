@@ -35,6 +35,7 @@
 		"react-native-config": "^0.11.5",
 		"react-native-fbsdk": "^0.7.0",
 		"react-native-firebase": "^4.1.0",
+		"react-native-google-maps-directions": "^2.0.0",
 		"react-native-google-signin": "^0.12.0",
 		"react-native-image-picker": "^0.26.10",
 		"react-native-maps": "^0.21.0",

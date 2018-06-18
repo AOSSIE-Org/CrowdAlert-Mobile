@@ -11,7 +11,7 @@ import {
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { styles } from '../../assets/styles/editProfile_styles';
+import { styles } from '../../assets/styles/editScreen_styles';
 import PropTypes from 'prop-types';
 import { updateUserFirebase } from '../../actions/loginAction';
 var ImagePicker = require('react-native-image-picker');

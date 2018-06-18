@@ -60,7 +60,6 @@ class AddIncident extends Component {
 
 	/**
 	 * The function is used to update incident details with the details entered by the user.
-	 * @return {Promise} [description]
 	 */
 	handleAddIncident() {
 		console.log(this.state);
