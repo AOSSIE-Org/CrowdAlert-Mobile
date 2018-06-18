@@ -21,7 +21,9 @@ import { editButtonProfile } from '../components/profile/navBarButtons';
 import { sideMenu } from '../components/profile/navBarButtons';
 
 import Incident from '../components/incident/incidentScreen';
-import { moreOptions } from '../components/incident/navBarButtons';
+import DeleteButtonIncident from '../components/incident/navBarButtons/deleteIncident.js';
+import EditButtonIncident from '../components/incident/navBarButtons/editIncidentButton.js';
+import EditIncident from '../components/incident/editIncident';
 
 const ConnectedRouter = connect()(Router);
 const { width, height } = Dimensions.get('window');
@@ -72,7 +74,6 @@ export default class Route extends Component {
 							title="Profile"
 							renderRightButton={editButtonProfile}
 							renderLeftButton={sideMenu}
-							// right={[<Text>hi</Text>, <Text>hi</Text>]}
 							component={Profile}
 						/>
 						<Scene
@@ -97,7 +98,18 @@ export default class Route extends Component {
 						key="incident"
 						title="Incident Details"
 						component={Incident}
-						renderRightButton={moreOptions}
+						right={[
+							<EditButtonIncident />,
+							<DeleteButtonIncident />
+							// <ShareButtonIncident />
+						]}
+						// renderRightButton={moreOptions}
+					/>
+					<Scene
+						back={true}
+						key="editIncident"
+						title="Edit Incident"
+						component={EditIncident}
 					/>
 				</Scene>
 			</ConnectedRouter>

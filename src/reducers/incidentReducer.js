@@ -2,13 +2,16 @@ import {
 	LATEST_INCIDENT_ADDED,
 	ALL_INCIDENTS,
 	INCIDENTS_LOADING,
-	USERS_INCIDENTS
+	USERS_INCIDENTS,
+	VIEW_INCIDENT
 } from '../actions/types';
 
 const INITIAL_STATE = {
 	all_incidents: null,
 	loading: false,
-	user_incidents: null
+	user_incidents: null,
+	incident: null,
+	isLoggedIn: false
 };
 
 /**
@@ -40,6 +43,12 @@ export default function(state = INITIAL_STATE, action) {
 			return {
 				...result,
 				user_incidents: action.user_incidents
+			};
+		case VIEW_INCIDENT:
+			return {
+				...result,
+				incident: action.incident,
+				isLoggedIn: action.isLoggedIn
 			};
 		default:
 			return state;

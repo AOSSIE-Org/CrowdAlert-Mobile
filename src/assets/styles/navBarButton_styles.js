@@ -9,5 +9,8 @@ export const styles = StyleSheet.create({
 	},
 	editButton: {
 		marginRight: 10
+	},
+	incidentNavButton: {
+		marginRight: 15
 	}
 });

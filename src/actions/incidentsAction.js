@@ -2,7 +2,8 @@ import {
 	LATEST_INCIDENT_ADDED,
 	ALL_INCIDENTS,
 	INCIDENTS_LOADING,
-	USERS_INCIDENTS
+	USERS_INCIDENTS,
+	VIEW_INCIDENT
 } from './types';
 import { handleError } from './errorAction';
 import firebase from 'react-native-firebase';
@@ -78,16 +79,49 @@ export const getUserIncidents = userID => {
 			.on('value', function(snapshot) {
 				var items = [];
 				snapshot.forEach(item => {
-					items.push({
-						key: item.key,
-						value: item.val()
-					});
+					if (item.val().visible) {
+						items.push({
+							key: item.key,
+							value: item.val()
+						});
+					}
 				});
 				dispatch(userIncidents(items));
 				dispatch(incidentsLoading(false));
 			});
 	};
 };
+
+export const viewIncident = (incident, isLoggedIn) => {
+	return dispatch => {
+		dispatch(viewIncidentRedux(incident, isLoggedIn));
+	};
+};
+
+/**
+ *  Called when the user updates his details
+ *  Also updates the firebase and the redux store
+ * @param  {JSON} userDetails Details of the user
+ */
+export const updateIncidentFirebase = (key, value) => {
+	return dispatch => {
+		return new Promise((resolve, reject) => {
+			firebase
+				.database()
+				.ref('incidents/' + key)
+				.update(value);
+			resolve();
+		});
+	};
+};
+
+export function viewIncidentRedux(incident, bool) {
+	return {
+		type: VIEW_INCIDENT,
+		incident: incident,
+		isLoggedIn: bool
+	};
+}
 
 function userIncidents(data) {
 	return {
