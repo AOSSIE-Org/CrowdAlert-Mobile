@@ -127,8 +127,18 @@ class Profile extends Component {
 	}
 }
 
-//Prop types for prop checking.
-// Profile.propTypes = {};
+/**
+ * Checks that the functions specified as isRequired are present,
+ * and warns if the props used on this page,
+ * does not meet the specified type.
+ * @type {incident}
+ * @type {user}
+ */
+Profile.propTypes = {
+	getUserIncidents: PropTypes.func.isRequired,
+	user: PropTypes.array,
+	incident: PropTypes.object
+};
 
 /**
  * Mapping dispatchable actions to props so that actions can be used

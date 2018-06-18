@@ -11,6 +11,7 @@ import {
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { styles } from '../assets/styles/drawer_styles';
+import PropTypes from 'prop-types';
 
 class DrawerContent extends Component {
 	render() {
@@ -47,7 +48,15 @@ class DrawerContent extends Component {
 		);
 	}
 }
-
+/**
+ * Checks that the functions specified as isRequired are present,
+ * and warns if the props used on this page,
+ * does not meet the specified type.
+ * @type {user}
+ */
+DrawerContent.propTypes = {
+	user: PropTypes.array
+};
 /**
  * Mapping state to props so that state variables can be used
  * through props in children components.

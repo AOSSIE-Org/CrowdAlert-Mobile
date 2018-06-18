@@ -220,7 +220,20 @@ class AddIncident extends Component {
 		);
 	}
 }
-
+/**
+ * Checks that the functions specified as isRequired are present,
+ * and warns if the props used on this page,
+ * does not meet the specified type.
+ * @type {login}
+ * @type {location}
+ * @type {incident}
+ */
+AddIncident.propTypes = {
+	addToFirebase: PropTypes.func.isRequired,
+	login: PropTypes.object,
+	location: PropTypes.object,
+	incident: PropTypes.object
+};
 /**
  * Mapping dispatchable actions to props so that actions can be used
  * through props in children components.
