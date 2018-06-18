@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions } from 'react-native';
 const { width, height } = Dimensions.get('window');
 
-//Styling used in main login page containing all login options.
+//Styling for the Profile screen.
 export const styles = StyleSheet.create({
 	container: {
 		flex: 1

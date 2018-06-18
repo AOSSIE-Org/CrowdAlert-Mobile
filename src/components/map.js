@@ -100,7 +100,7 @@ class MapScreen extends Component {
 					longitude: lng
 				}
 			});
-		}, 100);
+		}, 500);
 	}
 
 	// Handling the relocation of the map screen from the current location
@@ -115,34 +115,34 @@ class MapScreen extends Component {
 				coordinates['lng'],
 				coordinates['name']
 			);
-			mapRef.animateToRegion({
-				...this.state.curr_region,
-				latitude: this.props.location.latitude,
-				longitude: this.props.location.longitude
-			});
-			markerRef._component.animateMarkerToCoordinate(
+			mapRef.animateToRegion(
 				{
+					...this.state.curr_region,
 					latitude: this.props.location.latitude,
 					longitude: this.props.location.longitude
 				},
-				500
+				1000
 			);
+			markerRef._component.animateMarkerToCoordinate({
+				latitude: this.props.location.latitude,
+				longitude: this.props.location.longitude
+			});
 			this.setRegion(coordinates['lat'], coordinates['lng']);
 			Keyboard.dismiss();
 		} else if (type === 'curr_location') {
 			var self = this;
-			mapRef.animateToRegion({
-				...this.state.curr_region,
-				latitude: this.props.curr_location.latitude,
-				longitude: this.props.curr_location.longitude
-			});
-			markerRef._component.animateMarkerToCoordinate(
+			mapRef.animateToRegion(
 				{
+					...this.state.curr_region,
 					latitude: this.props.curr_location.latitude,
 					longitude: this.props.curr_location.longitude
 				},
-				500
+				1000
 			);
+			markerRef._component.animateMarkerToCoordinate({
+				latitude: this.props.curr_location.latitude,
+				longitude: this.props.curr_location.longitude
+			});
 			this.setRegion(
 				this.props.curr_location.latitude,
 				this.props.curr_location.longitude
@@ -227,7 +227,6 @@ class MapScreen extends Component {
 					/>
 					{this.props.incident.all_incidents !== null
 						? incidents_marker.map(marker => {
-								console.log(marker.value.location);
 								var coordinates =
 									marker.value.location.coordinates;
 								return (

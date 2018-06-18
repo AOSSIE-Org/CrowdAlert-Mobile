@@ -17,7 +17,7 @@ import PropTypes from 'prop-types';
 import { updateUserFirebase } from '../../actions/loginAction';
 
 /**
- * Screen showing all login options.
+ * Screen showing the edit options for the profile and personal information.
  * @extends Component
  */
 class EditProfile extends Component {

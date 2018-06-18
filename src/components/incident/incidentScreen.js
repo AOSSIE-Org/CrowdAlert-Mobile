@@ -1,35 +1,10 @@
 import React, { Component } from 'react';
-import {
-	Text,
-	View,
-	Platform,
-	Dimensions,
-	TouchableOpacity,
-	ActivityIndicator,
-	Picker,
-	Modal,
-	Image,
-	StyleSheet
-} from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import { Actions } from 'react-native-router-flux';
+import { Text, View, Image } from 'react-native';
 import PropTypes from 'prop-types';
 import MapView, { Marker } from 'react-native-maps';
-import {
-	Container,
-	Content,
-	Button,
-	Card,
-	CardItem,
-	Header,
-	Left,
-	Body,
-	Right,
-	Icon,
-	Title
-} from 'native-base';
+import { Container, Content, Card, CardItem } from 'native-base';
 import { styles } from '../../assets/styles/incident_styles';
+
 class Incident extends Component {
 	constructor(props) {
 		super(props);
@@ -37,11 +12,12 @@ class Incident extends Component {
 			isMapReady: false
 		};
 	}
+
 	onMapLayout = () => {
 		this.setState({ isMapReady: true });
 	};
+
 	render() {
-		console.log(this.props.details);
 		return (
 			<Container>
 				<Content>
@@ -69,16 +45,20 @@ class Incident extends Component {
 								{this.props.details.title}
 							</Text>
 						</CardItem>
-						<CardItem>
-							<Text style={styles.titleTextHeader}>
-								Description
-							</Text>
-						</CardItem>
-						<CardItem>
-							<Text style={styles.titleTextDescription}>
-								{this.props.details.details}
-							</Text>
-						</CardItem>
+						{this.props.details.details === '' ? (
+							<View>
+								<CardItem>
+									<Text style={styles.titleTextHeader}>
+										Description
+									</Text>
+								</CardItem>
+								<CardItem>
+									<Text style={styles.titleTextDescription}>
+										{this.props.details.details}
+									</Text>
+								</CardItem>
+							</View>
+						) : null}
 					</Card>
 					<Card>
 						<CardItem>

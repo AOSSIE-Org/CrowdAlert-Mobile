@@ -35,13 +35,11 @@ class Signin extends Component {
 		};
 	}
 
-	componentDidUpdate(prevProps) {
+	componentDidUpdate() {
 		// Typical usage (don't forget to compare props):
-		if (this.props.login.loading !== prevProps.login.loading) {
-			if (!this.props.login.loading) {
-				ToastAndroid.show('You are logged in', ToastAndroid.SHORT);
-				Actions.profile();
-			}
+		if (!this.props.login.loading && this.props.login.signInType !== null) {
+			ToastAndroid.show('You are logged in', ToastAndroid.SHORT);
+			Actions.profile();
 		}
 	}
 

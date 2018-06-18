@@ -18,7 +18,7 @@ import { getUserIncidents } from '../../actions/incidentsAction';
 import { getColor } from '../../utils/categoryUtil';
 
 /**
- * Screen showing all login options.
+ * Screen showing the profile along with his/her incidents.
  * @extends Component
  */
 class Profile extends Component {
@@ -28,13 +28,10 @@ class Profile extends Component {
 
 	componentWillMount() {
 		this.props.getUserIncidents(this.props.user.email);
-		// .then(() => {
-		// 	console.log(this.props.incident.user_incidents);
-		// });
 	}
 
+	//Individual list item for the incidents
 	renderItem({ item }) {
-		console.log(item);
 		return (
 			<TouchableOpacity
 				onPress={() =>
@@ -118,8 +115,6 @@ class Profile extends Component {
 					data={this.props.incident.user_incidents}
 					renderItem={this.renderItem}
 					keyExtractor={item => item.key}
-					// refreshing={this.state.refreshing}
-					// onRefresh={this._onRefresh.bind(this)}
 				/>
 			</ScrollView>
 		);

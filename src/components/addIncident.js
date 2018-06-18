@@ -16,7 +16,7 @@ import {
 import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { addToFirebase } from '../actions/incidentsAction';
+import { addIncidentToFirebase } from '../actions/incidentsAction';
 import { Actions } from 'react-native-router-flux';
 import { styles } from '../assets/styles/addincident_styles';
 import PropTypes from 'prop-types';
@@ -72,7 +72,7 @@ class AddIncident extends Component {
 			);
 		} else {
 			this.props
-				.addToFirebase(this.state) // waits till incident details are updated in redux
+				.addIncidentToFirebase(this.state) // waits till incident details are updated in redux
 				.then(result => {
 					ToastAndroid.show('Incident Updated', ToastAndroid.SHORT);
 					Actions.pop(); // set markers on map page to result from firebase.
@@ -162,7 +162,6 @@ class AddIncident extends Component {
 						ref={input => (this.detailsInput = input)}
 						style={styles.field_details}
 						onChangeText={details => this.setState({ details })}
-						//onSubmitEditing={() => this.passwordConfirmInput.focus()}
 						returnKeyType="next"
 						placeholder="Details [Optional]"
 					/>
@@ -179,12 +178,23 @@ class AddIncident extends Component {
 						<CheckBox
 							value={this.state.getHelp}
 							onValueChange={() =>
-								this.setState({ visible: !this.state.getHelp })
+								this.setState({ getHelp: !this.state.getHelp })
 							}
 						/>
 						<Text style={styles.CheckBoxText}>Get Help!</Text>
 					</View>
 				</View>
+				{this.state.image.isPresent ? (
+					<Image
+						style={styles.image}
+						resizeMethod={'resize'}
+						source={{
+							uri:
+								'data:image/jpeg;base64, ' +
+								this.state.image.base64
+						}}
+					/>
+				) : null}
 				<View style={styles.cameraContainer}>
 					<TouchableOpacity
 						style={styles.button_camera}
@@ -220,7 +230,7 @@ class AddIncident extends Component {
 function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{
-			addToFirebase: addToFirebase
+			addIncidentToFirebase: addIncidentToFirebase
 		},
 		dispatch
 	);

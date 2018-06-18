@@ -4,7 +4,7 @@ import {
 	INCIDENTS_LOADING,
 	USERS_INCIDENTS
 } from './types';
-import { handleError } from './loginAction';
+import { handleError } from './errorAction';
 import firebase from 'react-native-firebase';
 
 /**
@@ -12,7 +12,7 @@ import firebase from 'react-native-firebase';
  * @param  {JSON}  incident Consist all incident details.
  * @return {Promise} 		After the incident is pushed to firebase database.
  */
-export const addToFirebase = incident => {
+export const addIncidentToFirebase = incident => {
 	return dispatch => {
 		dispatch(incidentsLoading(true));
 		return new Promise((resolve, reject) => {

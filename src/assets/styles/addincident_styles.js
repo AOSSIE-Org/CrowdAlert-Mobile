@@ -24,6 +24,12 @@ export const styles = StyleSheet.create({
 		marginTop: height / 50,
 		marginLeft: width / 3
 	},
+	image: {
+		flex: 1,
+		height: height / 4,
+		width: null,
+		margin: height / 30
+	},
 	picker: {
 		marginHorizontal: width / 20,
 		width: width * 0.9,

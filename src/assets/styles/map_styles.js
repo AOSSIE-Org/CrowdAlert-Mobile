@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		position: 'absolute',
 		left: width / 40,
-		bottom: height / 50
+		bottom: height / 25
 	},
 	clearButton: {
 		backgroundColor: 'rgba(0,0,0,0)',
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'center',
 		position: 'absolute',
 		right: width / 40,
-		bottom: height / 50
+		bottom: height / 30
 	},
 	filterButton: {
 		width: width / 10,

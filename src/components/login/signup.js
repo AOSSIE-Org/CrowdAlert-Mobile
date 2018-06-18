@@ -33,16 +33,11 @@ class Signup extends Component {
 		};
 	}
 
-	componentDidUpdate(prevProps) {
+	componentDidUpdate() {
 		// Typical usage (don't forget to compare props):
-		if (this.props.login.loading !== prevProps.login.loading) {
-			if (!this.props.login.loading) {
-				ToastAndroid.show(
-					'Registration successful',
-					ToastAndroid.SHORT
-				);
-				Actions.profile();
-			}
+		if (!this.props.login.loading && this.props.login.signInType !== null) {
+			ToastAndroid.show('Registration successful', ToastAndroid.SHORT);
+			Actions.profile();
 		}
 	}
 

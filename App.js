@@ -17,17 +17,16 @@ export default class App extends Component {
 		return (
 			<Provider store={store}>
 				<PersistGate loading={null} persistor={persistor}>
-					{loading => {
-						if (!loading) {
+					{isLoaded => {
+						if (!isLoaded) {
 							return <ActivityIndicator size={'large'} />;
 						} else {
-							var initial = true;
 							if (
 								store.getState().login.userFirebase.length == 0
 							) {
-								return <Route initial={initial} />;
+								return <Route initial={true} />;
 							} else {
-								return <Route initial={!initial} />;
+								return <Route initial={false} />;
 							}
 						}
 					}}

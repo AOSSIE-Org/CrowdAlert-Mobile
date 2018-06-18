@@ -9,8 +9,13 @@ import { GoogleSignin } from 'react-native-google-signin';
 import { ToastAndroid } from 'react-native';
 import { handleError } from './errorAction';
 
-const userDetails = json => {
-	var user = json.providerData[0];
+/**
+ * Personal user details to be stored in the Firebase database and redux store
+ * @param  {JSON} data User details
+ * @return {JSON}      Returns the user JSON to be stored in Firebase
+ */
+const userFirebaseStructure = data => {
+	var user = data.providerData[0];
 	return {
 		name: user.displayName === null ? '' : user.displayName,
 		email: user.email === null ? '' : user.email,
@@ -35,7 +40,7 @@ export const onPressSignIn = (email, password) => {
 			.signInAndRetrieveDataWithEmailAndPassword(email, password) //signs in to firebase
 			.then(data => {
 				dispatch(getUserAuthFirebase(data.user, 'email'));
-				dispatch(addUserFirebase(userDetails(data.user)));
+				dispatch(addUserFirebase(userFirebaseStructure(data.user)));
 			})
 			.catch(error => {
 				dispatch(loginLoading(false));
@@ -77,7 +82,7 @@ export const onPressSignUp = (email, password) => {
 			.then(data => {
 				//on success
 				dispatch(getUserAuthFirebase(data.user, 'email'));
-				dispatch(addUserFirebase(userDetails(data.user)));
+				dispatch(addUserFirebase(userFirebaseStructure(data.user)));
 			})
 			.catch(error => {
 				dispatch(loginLoading(false));
@@ -150,7 +155,7 @@ export const fbSignIn = () => {
 			})
 			.then(data => {
 				dispatch(getUserAuthFirebase(data.user, 'facebook'));
-				dispatch(addUserFirebase(userDetails(data.user)));
+				dispatch(addUserFirebase(userFirebaseStructure(data.user)));
 			})
 			.catch(error => {
 				dispatch(loginLoading(false));
@@ -186,7 +191,7 @@ export const googleSignin = () => {
 			})
 			.then(data => {
 				dispatch(getUserAuthFirebase(data.user, 'google'));
-				dispatch(addUserFirebase(userDetails(data.user)));
+				dispatch(addUserFirebase(userFirebaseStructure(data.user)));
 			})
 			.catch(error => {
 				dispatch(loginLoading(false));
@@ -200,6 +205,12 @@ export const googleSignin = () => {
 	};
 };
 
+/**
+ * Called after the SignIn details are fetched from Firebase
+ * Adds the user(if not existing before) to the Firebase and store with
+ * the personal details.
+ * @param  {JSON} userDetails Details of the user
+ */
 const addUserFirebase = userDetails => {
 	return dispatch => {
 		const userKey = userDetails.email.replace('.', '');
@@ -227,6 +238,11 @@ const addUserFirebase = userDetails => {
 	};
 };
 
+/**
+ *  Called when the user updates his details
+ *  Also updates the firebase and the redux store
+ * @param  {JSON} userDetails Details of the user
+ */
 export const updateUserFirebase = userDetails => {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
@@ -241,6 +257,11 @@ export const updateUserFirebase = userDetails => {
 	};
 };
 
+/**
+ * Adds the personal user details to the redux store
+ * @param {JSON} details Details of the user
+ * @return returns type and user details.
+ */
 function addUserDetails(details) {
 	return {
 		type: ADD_USER_FIREBASE,
