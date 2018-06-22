@@ -27,6 +27,8 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Config from 'react-native-config';
 import { GooglePlacesAutocomplete } from './googleSearchBar';
 import { sideMenu } from './profile/navBarButtons';
+import { getEmergencyPlaces } from '../actions/emergencyPlacesAction';
+import getDirections from 'react-native-google-maps-directions';
 
 /**
  * Map screen showing google maps with search location and add incident feature
@@ -54,6 +56,7 @@ class MapScreen extends Component {
 
 	componentWillMount() {
 		this.props.getAllIncidents();
+		this.props.getEmergencyPlaces();
 		//Used to check if location services are enabled and
 		//if not than asks to enables them by redirecting to location settings.
 		if (Platform.OS === 'android') {
@@ -174,6 +177,29 @@ class MapScreen extends Component {
 	closeModal() {
 		this.setState({ visibleModal: false });
 	}
+	/**
+	 * to open google maps app and navigate the user to the specified destination.
+	 * @param  {object} coordinates contains the latitude and longitude of nearby place.
+	 * @return Opens the google maps app.
+	 */
+	handleNavigation(coordinates) {
+		getDirections({
+			source: {
+				latitude: '',
+				longitude: ''
+			},
+			destination: {
+				latitude: coordinates.lat,
+				longitude: coordinates.lng
+			},
+			params: [
+				{
+					key: 'dirflg',
+					value: 'd'
+				}
+			]
+		});
+	}
 
 	//Modal to be displayed for the filter menu.
 	_renderModalContent = () => (
@@ -256,6 +282,52 @@ class MapScreen extends Component {
 									/>
 								);
 						  })
+						: null}
+					{this.props.emergencyPlaces.hospitals !== null
+						? this.props.emergencyPlaces.hospitals.map(marker => {
+								var coordinates = marker.geometry.location;
+								//For displaying hospitals on map
+								return (
+									<MapView.Marker
+										key={marker.id}
+										coordinate={{
+											latitude: coordinates.lat,
+											longitude: coordinates.lng
+										}}
+										title={marker.name}
+										description={marker.vicinity}
+										image={marker.icon}
+										onCalloutPress={() => {
+											this.handleNavigation(coordinates);
+										}}
+									/>
+								);
+						  })
+						: null}
+					{this.props.emergencyPlaces.policeStations !== null
+						? this.props.emergencyPlaces.policeStations.map(
+								marker => {
+									var coordinates = marker.geometry.location;
+									//For displaying police stations on map
+									return (
+										<MapView.Marker
+											key={marker.id}
+											coordinate={{
+												latitude: coordinates.lat,
+												longitude: coordinates.lng
+											}}
+											title={marker.name}
+											description={marker.vicinity}
+											image={marker.icon}
+											onCalloutPress={() => {
+												this.handleNavigation(
+													coordinates
+												);
+											}}
+										/>
+									);
+								}
+						  )
 						: null}
 				</MapView>
 
@@ -342,7 +414,9 @@ MapScreen.propTypes = {
 	location: PropTypes.object,
 	curr_location: PropTypes.object,
 	getAllIncidents: PropTypes.func.isRequired,
-	viewIncident: PropTypes.func.isRequired
+	viewIncident: PropTypes.func.isRequired,
+	getEmergencyPlaces: PropTypes.func.isRequired,
+	emergencyPlaces: PropTypes.object
 };
 
 /**
@@ -357,7 +431,8 @@ function matchDispatchToProps(dispatch) {
 			setLocationOnCustomSearch: setLocationOnCustomSearch,
 			getCurrLocation: getCurrLocation,
 			getAllIncidents: getAllIncidents,
-			viewIncident: viewIncident
+			viewIncident: viewIncident,
+			getEmergencyPlaces: getEmergencyPlaces
 		},
 		dispatch
 	);
@@ -373,7 +448,8 @@ const mapStateToProps = state => ({
 	location: state.location.coordinates,
 	curr_location: state.location.curr_coordinates,
 	incident: state.incident,
-	user: state.login.userDetails
+	user: state.login.userDetails,
+	emergencyPlaces: state.emergencyPlaces
 });
 
 export default connect(mapStateToProps, matchDispatchToProps)(MapScreen);
