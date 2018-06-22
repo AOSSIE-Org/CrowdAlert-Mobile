@@ -25,6 +25,7 @@ import DeleteButtonIncident from '../components/incident/navBarButtons/deleteInc
 import EditButtonIncident from '../components/incident/navBarButtons/editIncidentButton.js';
 import EditIncident from '../components/incident/editIncident';
 
+import EmergencyLocation from '../components/emergencyPlaces';
 const ConnectedRouter = connect()(Router);
 const { width, height } = Dimensions.get('window');
 
@@ -92,6 +93,13 @@ export default class Route extends Component {
 							key="addIncident"
 							title="Add incident"
 							component={AddIncident}
+						/>
+						<Scene
+							back={true}
+							key="emergencylocation"
+							title="Emergency places nearby"
+							renderLeftButton={sideMenu}
+							component={EmergencyLocation}
 						/>
 					</Scene>
 					<Scene

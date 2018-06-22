@@ -11,7 +11,6 @@ import {
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { styles } from '../assets/styles/drawer_styles';
-import PropTypes from 'prop-types';
 
 class DrawerContent extends Component {
 	render() {
@@ -44,10 +43,14 @@ class DrawerContent extends Component {
 				<TouchableHighlight onPress={Actions.map}>
 					<Text style={styles.option}>Map</Text>
 				</TouchableHighlight>
+				<TouchableHighlight onPress={Actions.emergencylocation}>
+					<Text style={styles.option}>Emergency locations</Text>
+				</TouchableHighlight>
 			</ScrollView>
 		);
 	}
 }
+
 /**
  * Checks that the functions specified as isRequired are present,
  * and warns if the props used on this page,
@@ -57,6 +60,7 @@ class DrawerContent extends Component {
 DrawerContent.propTypes = {
 	user: PropTypes.array
 };
+
 /**
  * Mapping state to props so that state variables can be used
  * through props in children components.
