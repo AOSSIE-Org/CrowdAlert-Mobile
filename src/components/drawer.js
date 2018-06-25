@@ -20,12 +20,18 @@ class DrawerContent extends Component {
 					<Image
 						style={styles.userImage}
 						source={
-							this.props.user.photoURL === ''
-								? {
-										uri:
-											'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZA_wIwT-DV4G3E3jdNZScRLQnH4faqTH2a7PrNwlhqP4W1Zjh'
-								  }
-								: { uri: this.props.user.photoURL }
+							this.props.user.photo.url === ''
+								? this.props.user.photo.base64 === ''
+									? {
+											uri:
+												'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZA_wIwT-DV4G3E3jdNZScRLQnH4faqTH2a7PrNwlhqP4W1Zjh'
+									  }
+									: {
+											uri:
+												'data:image/jpeg;base64, ' +
+												this.props.user.photo.base64
+									  }
+								: { uri: this.props.user.photo.url }
 						}
 					/>
 					<Text style={styles.userName}>{this.props.user.name}</Text>

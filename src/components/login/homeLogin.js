@@ -94,14 +94,6 @@ class HomeLogin extends Component {
 				{this.props.login.loading ? (
 					<ActivityIndicator size={'large'} />
 				) : null}
-				<TouchableOpacity
-					style={styles.button_forgot}
-					onPress={() => Actions.map()}
-				>
-					<Text style={styles.button_text_forgot}>
-						Continue as a guest
-					</Text>
-				</TouchableOpacity>
 			</View>
 		);
 	}

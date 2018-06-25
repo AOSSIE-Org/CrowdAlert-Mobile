@@ -19,7 +19,10 @@ const userFirebaseStructure = data => {
 	return {
 		name: user.displayName === null ? '' : user.displayName,
 		email: user.email === null ? '' : user.email,
-		photoURL: user.photoURL === null ? '' : user.photoURL,
+		photo: {
+			url: user.photoURL === null ? '' : user.photoURL,
+			base64: ''
+		},
 		phone_no: '',
 		emergency_contact_name: '',
 		emergency_contact_phone_no: ''
@@ -245,6 +248,7 @@ const addUserFirebase = userDetails => {
  */
 export const updateUserFirebase = userDetails => {
 	return dispatch => {
+		dispatch(loginLoading(true));
 		return new Promise((resolve, reject) => {
 			const userKey = userDetails.email.replace('.', '');
 			firebase
@@ -252,6 +256,7 @@ export const updateUserFirebase = userDetails => {
 				.ref('users/' + userKey)
 				.update(userDetails);
 			dispatch(addUserDetails(userDetails));
+			dispatch(loginLoading(false));
 			resolve();
 		});
 	};

@@ -24,5 +24,23 @@ export const styles = StyleSheet.create({
 	},
 	updateText: {
 		color: 'white'
+	},
+	image: {
+		flex: 1,
+		height: height / 4,
+		width: null,
+		margin: width / 30
+	},
+	button_camera: {
+		height: height / 15,
+		width: width / 3,
+		backgroundColor: 'black',
+		borderRadius: 4,
+		justifyContent: 'center',
+		alignSelf: 'center'
+	},
+	cameraText: {
+		color: 'white',
+		alignSelf: 'center'
 	}
 });
