@@ -31,10 +31,10 @@ class Emergency extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			loading: false,
 			places: {}
 		};
 	}
+
 	componentDidMount() {
 		//to check if location has been turned on , if not tham prompts the user to turn on.
 		if (Platform.OS === 'android') {
@@ -47,15 +47,11 @@ class Emergency extends React.Component {
 				cancel: 'NO',
 				providerListener: true
 			}).then(success => {
-				this.setState({ loading: true });
-				this.props.getEmergencyPlaces().then(() => {
-					this.setState({
-						loading: false
-					});
-				});
+				this.props.getEmergencyPlaces();
 			});
 		}
 	}
+
 	/**
 	 * to open google maps app and navigate the user to the specified destination.
 	 * @param  {object} coordinates contains the latitude and longitude of nearby place.
@@ -79,16 +75,17 @@ class Emergency extends React.Component {
 			]
 		});
 	}
+
 	/**
 	 * UI for displaying each item in the list.
-	 * @param  {integer} val if  val is 1 than render the
-	 * 					hospitals list else render the police stations list
+	 * @param  {integer} val if  val is 'hospitals' than render the
+	 * hospitals list else render the police stations list
 	 * @return  returns the UI of list
 	 */
 	_renderCard(val) {
-		if (val == 1) {
+		if (val === 'hospitals') {
 			items = this.props.emergencyPlaces.hospitals;
-		} else {
+		} else if (val === 'policeStations') {
 			items = this.props.emergencyPlaces.policeStations;
 		}
 		return (
@@ -124,6 +121,7 @@ class Emergency extends React.Component {
 			</View>
 		);
 	}
+
 	render() {
 		if (this.props.emergencyPlaces.hospitals != null) {
 			return (
@@ -131,11 +129,11 @@ class Emergency extends React.Component {
 					<Content>
 						<View>
 							<Text style={styles.headText}>Hospitals</Text>
-							{this._renderCard(1)}
+							{this._renderCard('hospitals')}
 						</View>
 						<View>
 							<Text style={styles.headText}>Police Stations</Text>
-							{this._renderCard(2)}
+							{this._renderCard('policeStations')}
 						</View>
 					</Content>
 				</Container>
@@ -145,6 +143,7 @@ class Emergency extends React.Component {
 		}
 	}
 }
+
 /**
  * Checks that the functions specified as isRequired are present,
  * and warns if the props used on this page,
