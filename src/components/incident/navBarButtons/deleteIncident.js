@@ -6,6 +6,7 @@ import { styles } from '../../../assets/styles/navBarButton_styles';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { updateIncidentFirebase } from '../../../actions/incidentsAction';
+import PropTypes from 'prop-types';
 
 /**
  * Delete button for the incident in the nav bar
@@ -13,6 +14,7 @@ import { updateIncidentFirebase } from '../../../actions/incidentsAction';
  */
 
 class DeleteButtonIncident extends Component {
+	//Handles the delete functionality of an incident and updates the firebase database
 	handleDelete() {
 		Alert.alert(
 			'',
@@ -40,6 +42,7 @@ class DeleteButtonIncident extends Component {
 			{ cancelable: false }
 		);
 	}
+
 	render() {
 		if (this.props.incident.isLoggedIn) {
 			return (
@@ -57,6 +60,16 @@ class DeleteButtonIncident extends Component {
 		}
 	}
 }
+
+/**
+ * Checks that the functions specified as isRequired are present,
+ * and warns if the props used on this page,
+ * does not meet the specified type.
+ */
+DeleteButtonIncident.propTypes = {
+	updateIncidentFirebase: PropTypes.func.isRequired,
+	incident: PropTypes.object
+};
 
 /**
  * Mapping dispatchable actions to props so that actions can be used

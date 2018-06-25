@@ -69,6 +69,10 @@ export const getAllIncidents = () => {
 	};
 };
 
+/**
+ * Gets incidents from Firebase pertaining to a certain user only
+ * @param  {String} userID User's email ID is used as the UserID
+ */
 export const getUserIncidents = userID => {
 	return dispatch => {
 		dispatch(incidentsLoading(true));
@@ -92,6 +96,13 @@ export const getUserIncidents = userID => {
 	};
 };
 
+/**
+ * Stores the current incident viewed along with the state of
+ * 'If that incident belongs to the signed in user or not'.
+ * @param  {JSON}  incident   Current Incident being viewed
+ * @param  {Boolean} isLoggedIn Store the state whether the current
+ * incident being viewed is of the logged in user or not
+ */
 export const viewIncident = (incident, isLoggedIn) => {
 	return dispatch => {
 		dispatch(viewIncidentRedux(incident, isLoggedIn));
@@ -115,6 +126,12 @@ export const updateIncidentFirebase = (key, value) => {
 	};
 };
 
+/**
+ * Called when an incident is clicked to be viewed for its details
+ * @param  {JSON} incident Incident details
+ * @param  {Boolean} bool     Store the state whether the current
+ * incident being viewed is of the logged in user or not
+ */
 export function viewIncidentRedux(incident, bool) {
 	return {
 		type: VIEW_INCIDENT,
@@ -123,6 +140,10 @@ export function viewIncidentRedux(incident, bool) {
 	};
 }
 
+/**
+ * Called when user specific incidents are retrieved
+ * @param  {JSON} data User specific incidents
+ */
 function userIncidents(data) {
 	return {
 		type: USERS_INCIDENTS,

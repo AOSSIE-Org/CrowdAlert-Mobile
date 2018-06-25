@@ -3,11 +3,13 @@ import {
 	EMERGENCY_PLACES_POLICE_STATIONS,
 	EMERGENCY_PLACES_LOADING
 } from '../actions/types';
+
 const INITIAL_STATE = {
 	loading: false,
 	hospitals: null,
 	policeStations: null
 };
+
 /**
  * It handles all the changes when nearby hospitals and police stations are fetched.
  * It updates the hospitals and police stations based on the type specified.

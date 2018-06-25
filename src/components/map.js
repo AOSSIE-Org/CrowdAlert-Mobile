@@ -177,6 +177,7 @@ class MapScreen extends Component {
 	closeModal() {
 		this.setState({ visibleModal: false });
 	}
+
 	/**
 	 * to open google maps app and navigate the user to the specified destination.
 	 * @param  {object} coordinates contains the latitude and longitude of nearby place.
@@ -408,15 +409,15 @@ class MapScreen extends Component {
  * @type {getAllIncidents}
  */
 MapScreen.propTypes = {
+	location: PropTypes.object,
+	curr_location: PropTypes.object,
+	emergencyPlaces: PropTypes.object,
 	setLocationOnCustomSearch: PropTypes.func.isRequired,
 	getCurrLocation: PropTypes.func.isRequired,
 	getAllIncidents: PropTypes.func.isRequired,
-	location: PropTypes.object,
-	curr_location: PropTypes.object,
 	getAllIncidents: PropTypes.func.isRequired,
 	viewIncident: PropTypes.func.isRequired,
-	getEmergencyPlaces: PropTypes.func.isRequired,
-	emergencyPlaces: PropTypes.object
+	getEmergencyPlaces: PropTypes.func.isRequired
 };
 
 /**

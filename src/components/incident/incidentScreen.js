@@ -28,6 +28,7 @@ class Incident extends Component {
 		this.setState({ isMapReady: true });
 	};
 
+	//Handles the navigation by opening the Google Maps
 	handleDirections() {
 		var coordinates = this.props.incidentDetails.location.coordinates;
 		getDirections({
@@ -151,6 +152,7 @@ class Incident extends Component {
  * @type {details}
  */
 Incident.propTypes = {
+	incidentDetails: PropTypes.func.isRequired,
 	details: PropTypes.object
 };
 

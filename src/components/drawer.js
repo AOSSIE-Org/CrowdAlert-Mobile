@@ -11,6 +11,12 @@ import {
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { styles } from '../assets/styles/drawer_styles';
+import PropTypes from 'prop-types';
+
+/**
+ * Content for the side drawer
+ * @extends Component
+ */
 
 class DrawerContent extends Component {
 	render() {

@@ -1,14 +1,17 @@
 import {
 	EMERGENCY_PLACES_HOSPITALS,
 	EMERGENCY_PLACES_POLICE_STATIONS,
-	EMERGENCY_PLACES_LOADING
+	EMERGENCY_PLACES_LOADING,
+	NEARBY_PLACES_GOOGLE_URL
 } from './types';
 import { handleError } from './errorAction';
+import Config from 'react-native-config';
+
 /**
- * THis functions fetches a list of nearby police stations and
+ * This functions fetches a list of nearby police stations and
  * hospitals with the help of urlHospital and urlPoliceStation.
- * @return  updates the state in redux by calling EmergencyPlacesLoading ,
- * EmergencyPlacesHospitals , EmergencyPlacesPoliceStations functions.
+ * @return  updates the state in redux by calling EmergencyPlacesLoading,
+ * EmergencyPlacesHospitals, EmergencyPlacesPoliceStations functions.
  */
 export const getEmergencyPlaces = () => {
 	return dispatch => {
@@ -20,8 +23,14 @@ export const getEmergencyPlaces = () => {
 					position.coords.longitude.toFixed(6)
 				);
 				const pageToken = '';
-				const urlHospital = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=500&type=hospital&key=AIzaSyApvrC8t6Q4xaxQWHFEFvjCDREEgZw-_PQ`;
-				const urlPoliceStation = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${latitude},${longitude}&radius=500&type=police&key=AIzaSyApvrC8t6Q4xaxQWHFEFvjCDREEgZw-_PQ`;
+				const urlHospital =
+					NEARBY_PLACES_GOOGLE_URL +
+					`${latitude},${longitude}&radius=1000&type=hospital&key=` +
+					Config.GOOGLE_MAPS_KEY;
+				const urlPoliceStation =
+					NEARBY_PLACES_GOOGLE_URL +
+					`${latitude},${longitude}&radius=1000&type=police&key=` +
+					Config.GOOGLE_MAPS_KEY;
 				let hospitals = {};
 				let policeStations = {};
 				//fetches hospitals
@@ -57,9 +66,10 @@ export const getEmergencyPlaces = () => {
 		});
 	};
 };
+
 /**
  * Updates list of hospitals found near a user to redux store.
- * @param   {object} hospitals [description]
+ * @param   {JSON} hospitals Contains the list of all hospitals
  * @return  passes hospitals list to redux for updates.
  */
 function EmergencyPlacesHospitals(hospitals) {
@@ -68,9 +78,10 @@ function EmergencyPlacesHospitals(hospitals) {
 		hospitals: hospitals
 	};
 }
+
 /**
  * Updates list of nearby police stations to redux store.
- * @param   {object} policeStations contains list of all police stations.
+ * @param   {JSON} policeStations Contains list of all police stations.
  * @return  passes police stations list to redux for updates.
  */
 function EmergencyPlacesPoliceStations(policeStations) {
@@ -79,9 +90,10 @@ function EmergencyPlacesPoliceStations(policeStations) {
 		policeStations: policeStations
 	};
 }
+
 /**
  * Updates loading status to redux.
- * @param  {bool} bool [description]
+ * @param  {Boolean} bool Contains the loading state
  * @return passes loading status to redux for updates.
  */
 function EmergencyPlacesLoading(bool) {

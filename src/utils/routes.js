@@ -34,6 +34,7 @@ const { width, height } = Dimensions.get('window');
  * @extends Component
  */
 export default class Route extends Component {
+	//Describes the functionality of the hardware back button
 	onBackPress() {
 		if (Actions.currentScene === 'profile') {
 			return false;
@@ -95,7 +96,6 @@ export default class Route extends Component {
 							component={AddIncident}
 						/>
 						<Scene
-							back={true}
 							key="emergencylocation"
 							title="Emergency places nearby"
 							renderLeftButton={sideMenu}
