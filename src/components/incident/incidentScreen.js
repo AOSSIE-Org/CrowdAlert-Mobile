@@ -203,7 +203,6 @@ class Incident extends Component {
  */
 Incident.propTypes = {
 	incidentDetails: PropTypes.object,
-	details: PropTypes.object,
 	viewIncident: PropTypes.func.isRequired
 };
 /**

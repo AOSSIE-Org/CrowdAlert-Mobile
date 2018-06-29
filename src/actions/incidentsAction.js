@@ -3,10 +3,14 @@ import {
 	ALL_INCIDENTS,
 	INCIDENTS_LOADING,
 	USERS_INCIDENTS,
-	VIEW_INCIDENT
+	VIEW_INCIDENT,
+	NOTIFICATION_INCIDENTS
 } from './types';
 import { handleError } from './errorAction';
 import firebase from 'react-native-firebase';
+
+import configureStore from '../utils/store';
+let { store, persistor } = configureStore();
 
 /**
  * This function is called to update the store state that a new incident has been added.
@@ -49,19 +53,31 @@ export const getAllIncidents = () => {
 				.database()
 				.ref('incidents')
 				.on('value', snap => {
-					var items = [];
+					var all_incidents = [];
+					var incidents_notifs = store.getState().incident
+						.incidents_notifs;
 					// get children as an array
 					snap.forEach(child => {
 						if (child.val().visible) {
-							items.push({
+							all_incidents.push({
 								title: child.val().title,
 								key: child.key,
 								value: child.val()
 							});
+							if (incidents_notifs[child.key] === undefined) {
+								incidents_notifs[child.key] = {
+									date: String(new Date())
+								};
+							}
+						} else {
+							if (child.key in incidents_notifs) {
+								delete incidents_notifs[child.key];
+							}
 						}
 					});
-					console.log(items);
-					dispatch(retrieveAllIncidents(items));
+					console.log(all_incidents, incidents_notifs);
+					dispatch(retrieveAllIncidents(all_incidents));
+					dispatch(updateNotificationsStack(incidents_notifs));
 					dispatch(incidentsLoading(false));
 					resolve();
 				});
@@ -169,6 +185,24 @@ function retrieveAllIncidents(data) {
 	return {
 		type: ALL_INCIDENTS,
 		all_incidents: data
+	};
+}
+
+function updateNotificationsStack(data) {
+	return {
+		type: NOTIFICATION_INCIDENTS,
+		incidents_notifs: data
+	};
+}
+
+export function updateIndvNotification(key) {
+	var incidents_notifs = store.getState().incident.incidents_notifs;
+	incidents_notifs[key] = {
+		date: String(new Date())
+	};
+	return {
+		type: NOTIFICATION_INCIDENTS,
+		incidents_notifs: incidents_notifs
 	};
 }
 

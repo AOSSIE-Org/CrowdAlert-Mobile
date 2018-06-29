@@ -6,6 +6,7 @@ import {
 	ScrollView,
 	TouchableOpacity,
 	TextInput,
+	ToastAndroid,
 	ActivityIndicator,
 	FlatList
 } from 'react-native';
@@ -15,7 +16,9 @@ import { Actions } from 'react-native-router-flux';
 import { styles } from '../../assets/styles/profile_styles';
 import PropTypes from 'prop-types';
 import { getUserIncidents, viewIncident } from '../../actions/incidentsAction';
+import { watchCurrLocation } from '../../actions/locationAction';
 import { getColor } from '../../utils/categoryUtil';
+var PushNotification = require('react-native-push-notification');
 
 /**
  * Screen showing the profile along with his/her incidents.
@@ -27,7 +30,27 @@ class Profile extends Component {
 	}
 
 	componentWillMount() {
+		this.props.watchCurrLocation();
 		this.props.getUserIncidents(this.props.user.email);
+		PushNotification.configure({
+			// (required) Called when a remote or local notification is opened or received
+			onNotification: function(notification) {
+				console.log('NOTIFICATION:', notification);
+
+				// process the notification
+			},
+
+			// Should the initial notification be popped automatically
+			// default: true
+			popInitialNotification: true,
+
+			/**
+			 * (optional) default: true
+			 * - Specified if permissions (ios) and token (android and ios) will requested or not,
+			 * - if not, you must call PushNotificationsHandler.requestPermissions() later
+			 */
+			requestPermissions: true
+		});
 	}
 
 	viewClickedIncident(item) {
@@ -139,7 +162,8 @@ class Profile extends Component {
  */
 Profile.propTypes = {
 	getUserIncidents: PropTypes.func.isRequired,
-	user: PropTypes.array,
+	// watchCurrLocation: PropTypes.func.isRequired,
+	user: PropTypes.object,
 	incident: PropTypes.object
 };
 
@@ -153,6 +177,7 @@ function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{
 			getUserIncidents: getUserIncidents,
+			watchCurrLocation: watchCurrLocation,
 			viewIncident: viewIncident
 		},
 		dispatch

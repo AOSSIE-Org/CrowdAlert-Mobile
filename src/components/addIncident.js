@@ -228,7 +228,7 @@ class AddIncident extends Component {
  * @type {incident}
  */
 AddIncident.propTypes = {
-	addToFirebase: PropTypes.func.isRequired,
+	addIncidentToFirebase: PropTypes.func.isRequired,
 	login: PropTypes.object,
 	location: PropTypes.object,
 	incident: PropTypes.object

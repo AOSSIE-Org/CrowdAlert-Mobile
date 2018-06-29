@@ -64,7 +64,7 @@ class DrawerContent extends Component {
  * @type {user}
  */
 DrawerContent.propTypes = {
-	user: PropTypes.array
+	user: PropTypes.object
 };
 
 /**

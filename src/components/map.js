@@ -16,10 +16,14 @@ import { bindActionCreators } from 'redux';
 import { getMarkerImage, categories } from '../utils/categoryUtil.js';
 import { connect } from 'react-redux';
 import {
-	setLocationOnCustomSearch,
-	getCurrLocation
+	setLocationOnCustomSearch
+	// watchCurrLocation
 } from '../actions/locationAction';
-import { getAllIncidents, viewIncident } from '../actions/incidentsAction';
+import {
+	getAllIncidents,
+	viewIncident,
+	updateIndvNotification
+} from '../actions/incidentsAction';
 import { Actions } from 'react-native-router-flux';
 import PropTypes from 'prop-types';
 import { styles, searchBarStyle } from '../assets/styles/map_styles.js';
@@ -29,6 +33,8 @@ import { GooglePlacesAutocomplete } from './googleSearchBar';
 import { sideMenu } from './profile/navBarButtons';
 import { getEmergencyPlaces } from '../actions/emergencyPlacesAction';
 import getDirections from 'react-native-google-maps-directions';
+var PushNotification = require('react-native-push-notification');
+var haversine = require('haversine-distance');
 
 /**
  * Map screen showing google maps with search location and add incident feature
@@ -69,19 +75,19 @@ class MapScreen extends Component {
 				cancel: 'NO',
 				providerListener: true
 			}).then(success => {
-				this.props.getCurrLocation().then(() => {
-					this.setState({
-						curr_region: {
-							...this.state.curr_region,
-							latitude: this.props.curr_location.latitude,
-							longitude: this.props.curr_location.longitude
-						},
-						curr_location_marker: {
-							latitude: this.props.curr_location.latitude,
-							longitude: this.props.curr_location.longitude
-						}
-					});
+				// this.props.watchCurrLocation().then(() => {
+				this.setState({
+					curr_region: {
+						...this.state.curr_region,
+						latitude: this.props.curr_location.latitude,
+						longitude: this.props.curr_location.longitude
+					},
+					curr_location_marker: {
+						latitude: this.props.curr_location.latitude,
+						longitude: this.props.curr_location.longitude
+					}
 				});
+				// });
 			});
 		}
 	}
@@ -89,6 +95,66 @@ class MapScreen extends Component {
 	componentWillUnmount() {
 		if (Platform.OS === 'android') {
 			LocationServicesDialogBox.stopListener();
+		}
+	}
+
+	componentWillUpdate(nextProps) {
+		if (
+			nextProps.curr_location !== this.props.curr_location ||
+			nextProps.incident.all_incidents !==
+				this.props.incident.all_incidents
+		) {
+			var curr_position = {
+				lat: nextProps.curr_location.latitude,
+				lng: nextProps.curr_location.longitude
+			};
+			var self = this;
+			if (nextProps.incident.all_incidents !== null) {
+				nextProps.incident.all_incidents.map(incident => {
+					var incident_location = {
+						lat: incident.value.location.coordinates.latitude,
+						lng: incident.value.location.coordinates.longitude
+					};
+					console.log(
+						haversine(curr_position, incident_location),
+						self.props.incident.incidents_notifs[incident.key].date
+					);
+					if (haversine(curr_position, incident_location) < 2500.0) {
+						if (
+							new Date() -
+								new Date(
+									self.props.incident.incidents_notifs[
+										incident.key
+									].date
+								) >
+							30 * 60 * 1000
+						) {
+							PushNotification.localNotification({
+								/* Android Only Properties */
+								bigText: incident.value.details, // (optional) default: "message" prop
+								subText: 'This is a subText', // (optional) default: none
+								color: 'red', // (optional) default: system default
+								group: 'timestamp', // (optional) add group to message
+
+								/* iOS and Android properties */
+								title: 'Danger ahead!', // (optional)
+								message:
+									'You have a ' +
+									incident.value.category +
+									' incident near you', // (required)
+								playSound: true, // (optional) default: true
+								soundName: 'default' // (optional) Sound to play when the
+								//notification is shown. Value of 'default' plays the default sound.
+								//It can be set to a custom sound such as
+								//'android.resource://com.xyz/raw/my_sound'. It will look for the
+								//my_sound' audio file in 'res/raw' directory and play it.
+								//default: 'default' (default sound is played)
+							});
+							self.props.updateIndvNotification(incident.key);
+						}
+					}
+				});
+			}
 		}
 	}
 
@@ -413,7 +479,7 @@ MapScreen.propTypes = {
 	curr_location: PropTypes.object,
 	emergencyPlaces: PropTypes.object,
 	setLocationOnCustomSearch: PropTypes.func.isRequired,
-	getCurrLocation: PropTypes.func.isRequired,
+	// watchCurrLocation: PropTypes.func.isRequired,
 	getAllIncidents: PropTypes.func.isRequired,
 	getAllIncidents: PropTypes.func.isRequired,
 	viewIncident: PropTypes.func.isRequired,
@@ -430,10 +496,11 @@ function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{
 			setLocationOnCustomSearch: setLocationOnCustomSearch,
-			getCurrLocation: getCurrLocation,
+			// watchCurrLocation: watchCurrLocation,
 			getAllIncidents: getAllIncidents,
 			viewIncident: viewIncident,
-			getEmergencyPlaces: getEmergencyPlaces
+			getEmergencyPlaces: getEmergencyPlaces,
+			updateIndvNotification: updateIndvNotification
 		},
 		dispatch
 	);
