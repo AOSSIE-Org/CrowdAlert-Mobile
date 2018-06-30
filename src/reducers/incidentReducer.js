@@ -13,7 +13,7 @@ const INITIAL_STATE = {
 	user_incidents: null,
 	incident: null,
 	isLoggedIn: false,
-	incidents_notifs: {}
+	notificationStack: {}
 };
 
 /**
@@ -55,7 +55,7 @@ export default function(state = INITIAL_STATE, action) {
 		case NOTIFICATION_INCIDENTS:
 			return {
 				...result,
-				incidents_notifs: action.incidents_notifs
+				notificationStack: action.notificationStack
 			};
 		default:
 			return state;

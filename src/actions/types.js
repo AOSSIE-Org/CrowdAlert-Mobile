@@ -25,3 +25,9 @@ export const EMERGENCY_PLACES_POLICE_STATIONS =
 export const EMERGENCY_PLACES_LOADING = 'EMERGENCY_PLACES_LOADING';
 export const NEARBY_PLACES_GOOGLE_URL =
 	'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=';
+
+//Settings
+export const SET_EMERGENCY_RADIUS = 'SET_EMERGENCY_RADIUS';
+export const SET_NOTIFICATION_TIMEOUT = 'SET_NOTIFICATION_TIMEOUT';
+export const SET_NOTIFICATION_RADIUS = 'SET_NOTIFICATION_RADIUS';
+export const ENABLE_NOTIFICATIONS = 'ENABLE_NOTIFICATIONS';

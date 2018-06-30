@@ -10,7 +10,6 @@ import {
 	Modal,
 	Image
 } from 'react-native';
-import LocationServicesDialogBox from 'react-native-android-location-services-dialog-box';
 import MapView, { Marker } from 'react-native-maps';
 import { bindActionCreators } from 'redux';
 import { getMarkerImage, categories } from '../utils/categoryUtil.js';
@@ -62,98 +61,86 @@ class MapScreen extends Component {
 
 	componentWillMount() {
 		this.props.getAllIncidents();
-		this.props.getEmergencyPlaces();
-		//Used to check if location services are enabled and
-		//if not than asks to enables them by redirecting to location settings.
-		if (Platform.OS === 'android') {
-			LocationServicesDialogBox.checkLocationServicesIsEnabled({
-				message:
-					'<h2>Use Location ?</h2> \
-                    This app wants to change your device settings:<br/><br/> \
-                    Use GPS for location<br/><br/>',
-				ok: 'YES',
-				cancel: 'NO',
-				providerListener: true
-			}).then(success => {
-				// this.props.watchCurrLocation().then(() => {
-				this.setState({
-					curr_region: {
-						...this.state.curr_region,
-						latitude: this.props.curr_location.latitude,
-						longitude: this.props.curr_location.longitude
-					},
-					curr_location_marker: {
-						latitude: this.props.curr_location.latitude,
-						longitude: this.props.curr_location.longitude
-					}
-				});
-				// });
-			});
-		}
-	}
-
-	componentWillUnmount() {
-		if (Platform.OS === 'android') {
-			LocationServicesDialogBox.stopListener();
-		}
+		this.props.getEmergencyPlaces(this.props.settings.emergency_radius);
+		this.setState({
+			curr_region: {
+				...this.state.curr_region,
+				latitude: this.props.curr_location.latitude,
+				longitude: this.props.curr_location.longitude
+			},
+			curr_location_marker: {
+				latitude: this.props.curr_location.latitude,
+				longitude: this.props.curr_location.longitude
+			}
+		});
 	}
 
 	componentWillUpdate(nextProps) {
-		if (
-			nextProps.curr_location !== this.props.curr_location ||
-			nextProps.incident.all_incidents !==
-				this.props.incident.all_incidents
-		) {
-			var curr_position = {
-				lat: nextProps.curr_location.latitude,
-				lng: nextProps.curr_location.longitude
-			};
-			var self = this;
-			if (nextProps.incident.all_incidents !== null) {
-				nextProps.incident.all_incidents.map(incident => {
-					var incident_location = {
-						lat: incident.value.location.coordinates.latitude,
-						lng: incident.value.location.coordinates.longitude
-					};
-					console.log(
-						haversine(curr_position, incident_location),
-						self.props.incident.incidents_notifs[incident.key].date
-					);
-					if (haversine(curr_position, incident_location) < 2500.0) {
+		if (this.props.settings.enable_notifications) {
+			if (
+				nextProps.curr_location !== this.props.curr_location ||
+				nextProps.all_incidents !== this.props.all_incidents
+			) {
+				var curr_position = {
+					lat: nextProps.curr_location.latitude,
+					lng: nextProps.curr_location.longitude
+				};
+				var self = this;
+				if (nextProps.all_incidents !== null) {
+					nextProps.all_incidents.map(incident => {
+						var incident_location = {
+							lat: incident.value.location.coordinates.latitude,
+							lng: incident.value.location.coordinates.longitude
+						};
+						console.log(
+							haversine(curr_position, incident_location),
+							self.props.incident.notificationStack[incident.key]
+								.date
+						);
 						if (
-							new Date() -
-								new Date(
-									self.props.incident.incidents_notifs[
-										incident.key
-									].date
-								) >
-							30 * 60 * 1000
+							haversine(curr_position, incident_location) <
+							parseInt(
+								this.props.settings.notification_min_radius.toFixed(
+									2
+								)
+							)
 						) {
-							PushNotification.localNotification({
-								/* Android Only Properties */
-								bigText: incident.value.details, // (optional) default: "message" prop
-								subText: 'This is a subText', // (optional) default: none
-								color: 'red', // (optional) default: system default
-								group: 'timestamp', // (optional) add group to message
+							if (
+								new Date() -
+									new Date(
+										self.props.incident.notificationStack[
+											incident.key
+										].date
+									) >
+								this.props.settings.notification_timeout *
+									60 *
+									1000
+							) {
+								PushNotification.localNotification({
+									/* Android Only Properties */
+									bigText: incident.value.details, // (optional) default: "message" prop
+									color: 'red', // (optional) default: system default
+									group: 'grp', // (optional) add group to message
 
-								/* iOS and Android properties */
-								title: 'Danger ahead!', // (optional)
-								message:
-									'You have a ' +
-									incident.value.category +
-									' incident near you', // (required)
-								playSound: true, // (optional) default: true
-								soundName: 'default' // (optional) Sound to play when the
-								//notification is shown. Value of 'default' plays the default sound.
-								//It can be set to a custom sound such as
-								//'android.resource://com.xyz/raw/my_sound'. It will look for the
-								//my_sound' audio file in 'res/raw' directory and play it.
-								//default: 'default' (default sound is played)
-							});
-							self.props.updateIndvNotification(incident.key);
+									/* iOS and Android properties */
+									title: 'Danger ahead!', // (optional)
+									message:
+										'You have a ' +
+										incident.value.category +
+										' incident near you', // (required)
+									playSound: true, // (optional) default: true
+									soundName: 'default' // (optional) Sound to play when the
+									//notification is shown. Value of 'default' plays the default sound.
+									//It can be set to a custom sound such as
+									//'android.resource://com.xyz/raw/my_sound'. It will look for the
+									//my_sound' audio file in 'res/raw' directory and play it.
+									//default: 'default' (default sound is played)
+								});
+								self.props.updateIndvNotification(incident.key);
+							}
 						}
-					}
-				});
+					});
+				}
 			}
 		}
 	}
@@ -300,16 +287,16 @@ class MapScreen extends Component {
 	render() {
 		//Logic for filtering the incidents
 		var state = this.state;
-		if (this.props.incident.all_incidents !== null) {
-			var incidents_marker = this.props.incident.all_incidents.filter(
-				function(item) {
-					if (state.domain === 'all') {
-						return true;
-					} else {
-						return item.value.category === state.domain;
-					}
+		if (this.props.all_incidents !== null) {
+			var incidents_marker = this.props.all_incidents.filter(function(
+				item
+			) {
+				if (state.domain === 'all') {
+					return true;
+				} else {
+					return item.value.category === state.domain;
 				}
-			);
+			});
 		}
 		return (
 			<View style={styles.container}>
@@ -327,7 +314,7 @@ class MapScreen extends Component {
 						}}
 						coordinate={this.state.curr_location_marker}
 					/>
-					{this.props.incident.all_incidents !== null
+					{this.props.all_incidents !== null
 						? incidents_marker.map(marker => {
 								var coordinates =
 									marker.value.location.coordinates;
@@ -478,6 +465,7 @@ MapScreen.propTypes = {
 	location: PropTypes.object,
 	curr_location: PropTypes.object,
 	emergencyPlaces: PropTypes.object,
+	settings: PropTypes.object,
 	setLocationOnCustomSearch: PropTypes.func.isRequired,
 	// watchCurrLocation: PropTypes.func.isRequired,
 	getAllIncidents: PropTypes.func.isRequired,
@@ -515,9 +503,11 @@ function matchDispatchToProps(dispatch) {
 const mapStateToProps = state => ({
 	location: state.location.coordinates,
 	curr_location: state.location.curr_coordinates,
+	all_incidents: state.incident.all_incidents,
 	incident: state.incident,
 	user: state.login.userDetails,
-	emergencyPlaces: state.emergencyPlaces
+	emergencyPlaces: state.emergencyPlaces,
+	settings: state.settings
 });
 
 export default connect(mapStateToProps, matchDispatchToProps)(MapScreen);

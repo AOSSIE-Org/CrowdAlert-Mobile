@@ -3,7 +3,9 @@ import thunk from 'redux-thunk';
 import promise from 'redux-promise';
 import { createLogger } from 'redux-logger';
 import allReducers from '../reducers/index';
-import createFilter from 'redux-persist-transform-filter';
+import createFilter, {
+	createWhitelistFilter
+} from 'redux-persist-transform-filter';
 import { persistStore, persistReducer } from 'redux-persist';
 import FilesystemStorage from 'redux-persist-filesystem-storage';
 import { persistCombineReducers } from 'redux-persist';
@@ -16,8 +18,10 @@ const config = {
 	debug: true,
 	// whitelist: ['login', 'incident'],
 	transforms: [
-		createFilter('incident', ['incidents_notifs']),
-		createFilter('login')
+		createWhitelistFilter('incident', ['notificationStack']),
+		createWhitelistFilter('login'),
+		createWhitelistFilter('emergencyPlaces', []),
+		createWhitelistFilter('settings')
 	]
 };
 

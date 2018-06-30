@@ -7,62 +7,58 @@ import {
 import { handleError } from './errorAction';
 import Config from 'react-native-config';
 
+import configureStore from '../utils/store';
+let { store, persistor } = configureStore();
 /**
  * This functions fetches a list of nearby police stations and
  * hospitals with the help of urlHospital and urlPoliceStation.
  * @return  updates the state in redux by calling EmergencyPlacesLoading,
  * EmergencyPlacesHospitals, EmergencyPlacesPoliceStations functions.
  */
-export const getEmergencyPlaces = () => {
+export const getEmergencyPlaces = radius => {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
 			dispatch(EmergencyPlacesLoading(true));
-			navigator.geolocation.getCurrentPosition(position => {
-				var latitude = parseFloat(position.coords.latitude.toFixed(6));
-				var longitude = parseFloat(
-					position.coords.longitude.toFixed(6)
-				);
-				const pageToken = '';
-				const urlHospital =
-					NEARBY_PLACES_GOOGLE_URL +
-					`${latitude},${longitude}&radius=1000&type=hospital&key=` +
-					Config.GOOGLE_MAPS_KEY;
-				const urlPoliceStation =
-					NEARBY_PLACES_GOOGLE_URL +
-					`${latitude},${longitude}&radius=1000&type=police&key=` +
-					Config.GOOGLE_MAPS_KEY;
-				let hospitals = {};
-				let policeStations = {};
-				//fetches hospitals
-				fetch(urlHospital)
-					.then(resHospitals => {
-						return resHospitals.json();
-					})
-					.then(resHospitals => {
-						dispatch(
-							EmergencyPlacesHospitals(resHospitals.results)
-						);
-					})
-					.catch(error => {
-						dispatch(handleError(error));
-					});
-				//fetches police stations
-				fetch(urlPoliceStation)
-					.then(resPoliceStations => {
-						return resPoliceStations.json();
-					})
-					.then(resPoliceStations => {
-						dispatch(
-							EmergencyPlacesPoliceStations(
-								resPoliceStations.results
-							)
-						);
-						resolve(dispatch(EmergencyPlacesLoading(false)));
-					})
-					.catch(error => {
-						dispatch(handleError(error));
-					});
-			});
+			// navigator.geolocation.getCurrentPosition(position => {});
+			var latitude = store.getState().location.curr_coordinates.latitude;
+			var longitude = store.getState().location.curr_coordinates
+				.longitude;
+			const urlHospital =
+				NEARBY_PLACES_GOOGLE_URL +
+				`${latitude},${longitude}&radius=${radius}&type=hospital&key=` +
+				Config.GOOGLE_MAPS_KEY;
+			const urlPoliceStation =
+				NEARBY_PLACES_GOOGLE_URL +
+				`${latitude},${longitude}&radius=${radius}&type=police&key=` +
+				Config.GOOGLE_MAPS_KEY;
+			//fetches hospitals
+			fetch(urlHospital)
+				.then(resHospitals => {
+					return resHospitals.json();
+				})
+				.then(resHospitals => {
+					dispatch(EmergencyPlacesHospitals(resHospitals.results));
+					//fetches police stations
+					fetch(urlPoliceStation)
+						.then(resPoliceStations => {
+							return resPoliceStations.json();
+						})
+						.then(resPoliceStations => {
+							dispatch(
+								EmergencyPlacesPoliceStations(
+									resPoliceStations.results
+								)
+							);
+							dispatch(EmergencyPlacesLoading(false));
+							resolve();
+						})
+						.catch(error => {
+							dispatch(handleError(error));
+						});
+				})
+				.catch(error => {
+					dispatch(handleError(error));
+				});
 		});
 	};
 };

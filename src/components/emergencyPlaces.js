@@ -11,7 +11,6 @@ import {
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { getEmergencyPlaces } from '../actions/emergencyPlacesAction';
-import LocationServicesDialogBox from 'react-native-android-location-services-dialog-box';
 import { styles } from '../assets/styles/emergencyPlaces_styles';
 import {
 	Content,
@@ -28,28 +27,8 @@ import PropTypes from 'prop-types';
 
 //Screen for displaying list of Emergency places near by.
 class Emergency extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			places: {}
-		};
-	}
-
 	componentDidMount() {
-		//to check if location has been turned on , if not tham prompts the user to turn on.
-		if (Platform.OS === 'android') {
-			LocationServicesDialogBox.checkLocationServicesIsEnabled({
-				message:
-					'<h2>Use Location ?</h2> \
-                    This app wants to change your device settings:<br/><br/> \
-                    Use GPS for location<br/><br/>',
-				ok: 'YES',
-				cancel: 'NO',
-				providerListener: true
-			}).then(success => {
-				this.props.getEmergencyPlaces();
-			});
-		}
+		this.props.getEmergencyPlaces(this.props.emergency_radius);
 	}
 
 	/**
@@ -78,7 +57,7 @@ class Emergency extends React.Component {
 
 	/**
 	 * UI for displaying each item in the list.
-	 * @param  {integer} val if  val is 'hospitals' than render the
+	 * @param  {String} val if  val is 'hospitals' than render the
 	 * hospitals list else render the police stations list
 	 * @return  returns the UI of list
 	 */
@@ -123,7 +102,7 @@ class Emergency extends React.Component {
 	}
 
 	render() {
-		if (this.props.emergencyPlaces.hospitals != null) {
+		if (!this.props.emergencyPlaces.loading) {
 			return (
 				<Container>
 					<Content>
@@ -152,7 +131,8 @@ class Emergency extends React.Component {
  */
 Emergency.propTypes = {
 	getEmergencyPlaces: PropTypes.func.isRequired,
-	emergencyPlaces: PropTypes.object
+	emergencyPlaces: PropTypes.object,
+	emergency_radius: PropTypes.number
 };
 
 /**
@@ -177,7 +157,8 @@ function matchDispatchToProps(dispatch) {
  * @return Returns states as props.
  */
 const mapStateToProps = state => ({
-	emergencyPlaces: state.emergencyPlaces
+	emergencyPlaces: state.emergencyPlaces,
+	emergency_radius: state.settings.emergency_radius
 });
 
 export default connect(mapStateToProps, matchDispatchToProps)(Emergency);

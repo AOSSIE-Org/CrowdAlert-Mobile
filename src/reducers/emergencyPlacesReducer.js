@@ -5,7 +5,7 @@ import {
 } from '../actions/types';
 
 const INITIAL_STATE = {
-	loading: false,
+	loading: true,
 	hospitals: null,
 	policeStations: null
 };

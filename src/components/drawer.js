@@ -52,6 +52,9 @@ class DrawerContent extends Component {
 				<TouchableHighlight onPress={Actions.emergencylocation}>
 					<Text style={styles.option}>Emergency locations</Text>
 				</TouchableHighlight>
+				<TouchableHighlight onPress={Actions.settingsOption}>
+					<Text style={styles.option}>Settings</Text>
+				</TouchableHighlight>
 			</ScrollView>
 		);
 	}

@@ -54,8 +54,8 @@ export const getAllIncidents = () => {
 				.ref('incidents')
 				.on('value', snap => {
 					var all_incidents = [];
-					var incidents_notifs = store.getState().incident
-						.incidents_notifs;
+					var notificationStack = store.getState().incident
+						.notificationStack;
 					// get children as an array
 					snap.forEach(child => {
 						if (child.val().visible) {
@@ -64,20 +64,20 @@ export const getAllIncidents = () => {
 								key: child.key,
 								value: child.val()
 							});
-							if (incidents_notifs[child.key] === undefined) {
-								incidents_notifs[child.key] = {
+							if (notificationStack[child.key] === undefined) {
+								notificationStack[child.key] = {
 									date: String(new Date())
 								};
 							}
 						} else {
-							if (child.key in incidents_notifs) {
-								delete incidents_notifs[child.key];
+							if (child.key in notificationStack) {
+								delete notificationStack[child.key];
 							}
 						}
 					});
-					console.log(all_incidents, incidents_notifs);
+					console.log(all_incidents, notificationStack);
 					dispatch(retrieveAllIncidents(all_incidents));
-					dispatch(updateNotificationsStack(incidents_notifs));
+					dispatch(updateNotificationsStack(notificationStack));
 					dispatch(incidentsLoading(false));
 					resolve();
 				});
@@ -143,6 +143,21 @@ export const updateIncidentFirebase = (key, value) => {
 };
 
 /**
+ *  Called when the user updates his details
+ *  Also updates the firebase and the redux store
+ * @param  {JSON} userDetails Details of the user
+ */
+export const updateIndvNotification = key => {
+	return dispatch => {
+		var notificationStack = store.getState().incident.notificationStack;
+		notificationStack[key] = {
+			date: String(new Date())
+		};
+		dispatch(updateIndvNotificationHelper(notificationStack));
+	};
+};
+
+/**
  * Called when an incident is clicked to be viewed for its details
  * @param  {JSON} incident Incident details
  * @param  {Boolean} bool     Store the state whether the current
@@ -191,18 +206,14 @@ function retrieveAllIncidents(data) {
 function updateNotificationsStack(data) {
 	return {
 		type: NOTIFICATION_INCIDENTS,
-		incidents_notifs: data
+		notificationStack: data
 	};
 }
 
-export function updateIndvNotification(key) {
-	var incidents_notifs = store.getState().incident.incidents_notifs;
-	incidents_notifs[key] = {
-		date: String(new Date())
-	};
+function updateIndvNotificationHelper(notificationStack) {
 	return {
 		type: NOTIFICATION_INCIDENTS,
-		incidents_notifs: incidents_notifs
+		notificationStack: notificationStack
 	};
 }
 

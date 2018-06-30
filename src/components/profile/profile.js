@@ -8,8 +8,10 @@ import {
 	TextInput,
 	ToastAndroid,
 	ActivityIndicator,
-	FlatList
+	FlatList,
+	Platform
 } from 'react-native';
+import LocationServicesDialogBox from 'react-native-android-location-services-dialog-box';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
@@ -30,7 +32,21 @@ class Profile extends Component {
 	}
 
 	componentWillMount() {
-		this.props.watchCurrLocation();
+		//Used to check if location services are enabled and
+		//if not than asks to enables them by redirecting to location settings.
+		if (Platform.OS === 'android') {
+			LocationServicesDialogBox.checkLocationServicesIsEnabled({
+				message:
+					'<h2>Use Location ?</h2> \
+		            This app wants to change your device settings:<br/><br/> \
+		            Use GPS for location<br/><br/>',
+				ok: 'YES',
+				cancel: 'NO',
+				providerListener: true
+			}).then(success => {
+				this.props.watchCurrLocation();
+			});
+		}
 		this.props.getUserIncidents(this.props.user.email);
 		PushNotification.configure({
 			// (required) Called when a remote or local notification is opened or received
@@ -52,6 +68,12 @@ class Profile extends Component {
 			requestPermissions: true
 		});
 	}
+
+	// componentWillUnmount() {
+	// 	if (Platform.OS === 'android') {
+	// 		LocationServicesDialogBox.stopListener();
+	// 	}
+	// }
 
 	viewClickedIncident(item) {
 		if (item.value.user_id === this.props.user.email) {

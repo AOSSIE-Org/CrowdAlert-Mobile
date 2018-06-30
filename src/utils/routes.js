@@ -27,6 +27,8 @@ import ShareButtonIncident from '../components/incident/navBarButtons/ShareIncid
 import EditIncident from '../components/incident/editIncident';
 import crossroads from 'crossroads';
 import EmergencyLocation from '../components/emergencyPlaces';
+import SettingsOption from '../components/settings';
+
 const ConnectedRouter = connect()(Router);
 const { width, height } = Dimensions.get('window');
 
@@ -101,6 +103,12 @@ export default class Route extends Component {
 							title="Emergency places nearby"
 							renderLeftButton={sideMenu}
 							component={EmergencyLocation}
+						/>
+						<Scene
+							back={true}
+							key="settingsOption"
+							title="Settings"
+							component={SettingsOption}
 						/>
 					</Scene>
 					<Scene
