@@ -23,9 +23,11 @@ import { sideMenu } from '../components/profile/navBarButtons';
 import Incident from '../components/incident/incidentScreen';
 import DeleteButtonIncident from '../components/incident/navBarButtons/deleteIncident.js';
 import EditButtonIncident from '../components/incident/navBarButtons/editIncidentButton.js';
+import ShareButtonIncident from '../components/incident/navBarButtons/ShareIncidentButton.js';
 import EditIncident from '../components/incident/editIncident';
-
+import crossroads from 'crossroads';
 import EmergencyLocation from '../components/emergencyPlaces';
+
 const ConnectedRouter = connect()(Router);
 const { width, height } = Dimensions.get('window');
 
@@ -107,9 +109,9 @@ export default class Route extends Component {
 						title="Incident Details"
 						component={Incident}
 						right={[
-							<EditButtonIncident />,
-							<DeleteButtonIncident />
-							// <ShareButtonIncident />
+							<EditButtonIncident key={1} />,
+							<DeleteButtonIncident key={2} />,
+							<ShareButtonIncident key={3} />
 						]}
 						// renderRightButton={moreOptions}
 					/>
@@ -124,3 +126,7 @@ export default class Route extends Component {
 		);
 	}
 }
+
+crossroads.addRoute('www.crowdalert.com/incident/{key}', key => {
+	Actions.incident({ incident_key: key });
+});

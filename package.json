@@ -25,6 +25,7 @@
 		]
 	},
 	"dependencies": {
+		"crossroads": "^0.12.2",
 		"lodash.debounce": "^4.0.8",
 		"native-base": "^2.5.2",
 		"prop-types": "^15.6.1",

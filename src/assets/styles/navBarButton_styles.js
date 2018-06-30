@@ -12,5 +12,8 @@ export const styles = StyleSheet.create({
 	},
 	incidentNavButton: {
 		marginRight: 15
+	},
+	ShareNavButton: {
+		marginRight: 5
 	}
 });
