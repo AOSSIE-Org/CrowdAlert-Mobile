@@ -47,33 +47,18 @@ class Profile extends Component {
 				this.props.watchCurrLocation();
 			});
 		}
+		//Gets user submitted incidents
 		this.props.getUserIncidents(this.props.user.email);
+		//Configures the push notification
 		PushNotification.configure({
-			// (required) Called when a remote or local notification is opened or received
+			//Called when a remote or local notification is opened or received
 			onNotification: function(notification) {
 				console.log('NOTIFICATION:', notification);
-
 				// process the notification
 			},
-
-			// Should the initial notification be popped automatically
-			// default: true
-			popInitialNotification: true,
-
-			/**
-			 * (optional) default: true
-			 * - Specified if permissions (ios) and token (android and ios) will requested or not,
-			 * - if not, you must call PushNotificationsHandler.requestPermissions() later
-			 */
-			requestPermissions: true
+			requestPermissions: this.props.enable_notifications
 		});
 	}
-
-	// componentWillUnmount() {
-	// 	if (Platform.OS === 'android') {
-	// 		LocationServicesDialogBox.stopListener();
-	// 	}
-	// }
 
 	viewClickedIncident(item) {
 		if (item.value.user_id === this.props.user.email) {
@@ -176,11 +161,8 @@ class Profile extends Component {
 }
 
 /**
- * Checks that the functions specified as isRequired are present,
- * and warns if the props used on this page,
- * does not meet the specified type.
- * @type {incident}
- * @type {user}
+ * Checks that the functions specified as isRequired are present and warns if the
+ * props used on this page does not meet the specified type.
  */
 Profile.propTypes = {
 	getUserIncidents: PropTypes.func.isRequired,
@@ -214,7 +196,8 @@ function matchDispatchToProps(dispatch) {
  */
 const mapStateToProps = state => ({
 	user: state.login.userDetails,
-	incident: state.incident
+	incident: state.incident,
+	enable_notifications: state.settings.enable_notifications
 });
 
 export default connect(mapStateToProps, matchDispatchToProps)(Profile);

@@ -42,7 +42,8 @@ export const addIncidentToFirebase = incident => {
 };
 
 /**
- * To store all the incidents retrieved from the firebase database to the redux store.
+ * Stores all the incidents retrieved from the firebase database to the redux store.
+ * Also creates a notification stack which would be used to trigger the notifications
  * @return {Promise}
  */
 export const getAllIncidents = () => {
@@ -64,12 +65,15 @@ export const getAllIncidents = () => {
 								key: child.key,
 								value: child.val()
 							});
+							//Adds the child to the stack if not present with a timestamp
 							if (notificationStack[child.key] === undefined) {
 								notificationStack[child.key] = {
-									date: String(new Date())
+									date: String(new Date()),
+									isFirstTime: true
 								};
 							}
 						} else {
+							//Removes all those children which have been deleted ie. visible=false
 							if (child.key in notificationStack) {
 								delete notificationStack[child.key];
 							}
@@ -143,17 +147,17 @@ export const updateIncidentFirebase = (key, value) => {
 };
 
 /**
- *  Called when the user updates his details
- *  Also updates the firebase and the redux store
- * @param  {JSON} userDetails Details of the user
+ * Called when a notification is triggered so as to change its timestamp to reschedule it
+ * @param  {String} key Incident key whose timestamp is to be changed
  */
 export const updateIndvNotification = key => {
 	return dispatch => {
 		var notificationStack = store.getState().incident.notificationStack;
 		notificationStack[key] = {
-			date: String(new Date())
+			date: String(new Date()),
+			isFirstTime: false
 		};
-		dispatch(updateIndvNotificationHelper(notificationStack));
+		dispatch(updateNotificationsStack(notificationStack));
 	};
 };
 
@@ -203,14 +207,11 @@ function retrieveAllIncidents(data) {
 	};
 }
 
-function updateNotificationsStack(data) {
-	return {
-		type: NOTIFICATION_INCIDENTS,
-		notificationStack: data
-	};
-}
-
-function updateIndvNotificationHelper(notificationStack) {
+/**
+ * Adds/Updates the notification stack to the store
+ * @param  {JSON} notificationStack Notification stack to be updated
+ */
+function updateNotificationsStack(notificationStack) {
 	return {
 		type: NOTIFICATION_INCIDENTS,
 		notificationStack: notificationStack

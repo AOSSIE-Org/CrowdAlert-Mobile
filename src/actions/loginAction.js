@@ -216,7 +216,7 @@ export const googleSignin = () => {
  */
 const addUserFirebase = userDetails => {
 	return dispatch => {
-		const userKey = userDetails.email.replace('.', '');
+		const userKey = userDetails.email.replace(/\./g, '');
 		var userRef = firebase.database().ref('users/' + userKey);
 		userRef.on('value', function(snapshot) {
 			if (snapshot.exists()) {
@@ -250,7 +250,7 @@ export const updateUserFirebase = userDetails => {
 	return dispatch => {
 		dispatch(loginLoading(true));
 		return new Promise((resolve, reject) => {
-			const userKey = userDetails.email.replace('.', '');
+			const userKey = userDetails.email.replace(/\./g, '');
 			firebase
 				.database()
 				.ref('users/' + userKey)

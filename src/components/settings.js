@@ -19,12 +19,12 @@ import {
 import { styles } from '../assets/styles/setting_styles';
 import PropTypes from 'prop-types';
 import Slider from 'react-native-slider';
+var PushNotification = require('react-native-push-notification');
 
 /**
- * Content for the side drawer
+ * Settings Screen to update various app settings
  * @extends Component
  */
-
 class SettingsOption extends Component {
 	constructor(props) {
 		super(props);
@@ -102,6 +102,9 @@ class SettingsOption extends Component {
 					<Switch
 						onValueChange={enable_notifications => {
 							this.setState({ enable_notifications });
+							if (enable_notifications) {
+								PushNotification.requestPermissions();
+							}
 							this.props.set_notifications(enable_notifications);
 						}}
 						value={this.state.enable_notifications}
@@ -113,16 +116,14 @@ class SettingsOption extends Component {
 }
 
 /**
- * Checks that the functions specified as isRequired are present,
- * and warns if the props used on this page,
- * does not meet the specified type.
- * @type {SettingsOption}
+ * Checks that the functions specified as isRequired are present and warns if the
+ * props used on this page does not meet the specified type.
  */
 SettingsOption.propTypes = {
-	set_emergency_radius: PropTypes.func,
-	set_notifications_radius: PropTypes.func,
-	set_notifications_timeout: PropTypes.func,
-	set_notifications: PropTypes.func,
+	set_emergency_radius: PropTypes.func.isRequired,
+	set_notifications_radius: PropTypes.func.isRequired,
+	set_notifications_timeout: PropTypes.func.isRequired,
+	set_notifications: PropTypes.func.isRequired,
 	settings: PropTypes.object
 };
 

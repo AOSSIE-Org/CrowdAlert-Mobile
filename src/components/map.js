@@ -76,7 +76,9 @@ class MapScreen extends Component {
 	}
 
 	componentWillUpdate(nextProps) {
+		//Check if notifications are enabled or not
 		if (this.props.settings.enable_notifications) {
+			//If there has been any location change or modifications in the incidents
 			if (
 				nextProps.curr_location !== this.props.curr_location ||
 				nextProps.all_incidents !== this.props.all_incidents
@@ -92,11 +94,9 @@ class MapScreen extends Component {
 							lat: incident.value.location.coordinates.latitude,
 							lng: incident.value.location.coordinates.longitude
 						};
-						console.log(
-							haversine(curr_position, incident_location),
-							self.props.incident.notificationStack[incident.key]
-								.date
-						);
+						//Calculates the distance between the current position of the user
+						//to the incidents locations. If its within a specified distance range and
+						//within a certain trigger timeout range then notification is triggered
 						if (
 							haversine(curr_position, incident_location) <
 							parseInt(
@@ -112,9 +112,12 @@ class MapScreen extends Component {
 											incident.key
 										].date
 									) >
-								this.props.settings.notification_timeout *
-									60 *
-									1000
+									this.props.settings.notification_timeout *
+										60 *
+										1000 ||
+								self.props.incident.notificationStack[
+									incident.key
+								].isFirstTime
 							) {
 								PushNotification.localNotification({
 									/* Android Only Properties */
@@ -454,16 +457,15 @@ class MapScreen extends Component {
 }
 
 /**
- * Checks that the functions specified as isRequired are present,
- * and warns if the props used on this page,
- * does not meet the specified type.
- * @type {location}
- * @type {curr_location}
- * @type {getAllIncidents}
+ * Checks that the functions specified as isRequired are present and warns if the
+ * props used on this page does not meet the specified type.
  */
 MapScreen.propTypes = {
 	location: PropTypes.object,
 	curr_location: PropTypes.object,
+	all_incidents: PropTypes.array,
+	incident: PropTypes.object,
+	user: PropTypes.object,
 	emergencyPlaces: PropTypes.object,
 	settings: PropTypes.object,
 	setLocationOnCustomSearch: PropTypes.func.isRequired,
@@ -471,7 +473,8 @@ MapScreen.propTypes = {
 	getAllIncidents: PropTypes.func.isRequired,
 	getAllIncidents: PropTypes.func.isRequired,
 	viewIncident: PropTypes.func.isRequired,
-	getEmergencyPlaces: PropTypes.func.isRequired
+	getEmergencyPlaces: PropTypes.func.isRequired,
+	updateIndvNotification: PropTypes.func.isRequired
 };
 
 /**

@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions } from 'react-native';
 const { width, height } = Dimensions.get('window');
 
-//styling used in signin page.
+//Styling used for the settings page.
 export const styles = StyleSheet.create({
 	container: {
 		flex: 1,

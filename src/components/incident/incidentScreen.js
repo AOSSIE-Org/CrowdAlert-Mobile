@@ -195,11 +195,10 @@ class Incident extends Component {
 		}
 	}
 }
+
 /**
- * confirms that the props being used
- * on this page have their specified type.
- * @type {details}
- * @type {incidentDetails}
+ * Checks that the functions specified as isRequired are present and warns if the
+ * props used on this page does not meet the specified type.
  */
 Incident.propTypes = {
 	incidentDetails: PropTypes.object,

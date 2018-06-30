@@ -39,7 +39,7 @@ const { width, height } = Dimensions.get('window');
 export default class Route extends Component {
 	//Describes the functionality of the hardware back button
 	onBackPress() {
-		if (Actions.currentScene === 'profile') {
+		if (Actions.currentScene === '_profile') {
 			return false;
 		}
 		Actions.pop();

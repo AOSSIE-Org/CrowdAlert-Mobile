@@ -2,16 +2,13 @@ import {
 	SET_EMERGENCY_RADIUS,
 	SET_NOTIFICATION_RADIUS,
 	SET_NOTIFICATION_TIMEOUT,
-	ENABLE_NOTIFICATIONS
+	TOGGLE_NOTIFICATIONS
 } from './types';
 import { handleError } from './errorAction';
 
 /**
- * This function is called to update the location co-ordinates of
- * custom location by communicating changes to redux via set_location.
- * @param {float} latitude  The latitude of the location entered by the user in the search bar.
- * @param {float} longitude The longitude of the location entered by the user in the search bar.
- * @param {string} name     Name of the location entered by the user in the search bar.
+ * Updates the emergency places radius(m) for the search
+ * @param {Number} radius Radius to be updated to.
  */
 export const set_emergency_radius = radius => {
 	return dispatch => {
@@ -20,11 +17,8 @@ export const set_emergency_radius = radius => {
 };
 
 /**
- * This function is called to update the location co-ordinates of
- * custom location by communicating changes to redux via set_location.
- * @param {float} latitude  The latitude of the location entered by the user in the search bar.
- * @param {float} longitude The longitude of the location entered by the user in the search bar.
- * @param {string} name     Name of the location entered by the user in the search bar.
+ * Updates the notification's min trigger radius(m)
+ * @param {Number} radius Radius to be updated to.
  */
 export const set_notifications_radius = radius => {
 	return dispatch => {
@@ -33,11 +27,8 @@ export const set_notifications_radius = radius => {
 };
 
 /**
- * This function is called to update the location co-ordinates of
- * custom location by communicating changes to redux via set_location.
- * @param {float} latitude  The latitude of the location entered by the user in the search bar.
- * @param {float} longitude The longitude of the location entered by the user in the search bar.
- * @param {string} name     Name of the location entered by the user in the search bar.
+ * Updates the notification's timeout time(min).
+ * @param {Number} timeout Time to be updated in the timeout
  */
 export const set_notifications_timeout = timeout => {
 	return dispatch => {
@@ -46,11 +37,8 @@ export const set_notifications_timeout = timeout => {
 };
 
 /**
- * This function is called to update the location co-ordinates of
- * custom location by communicating changes to redux via set_location.
- * @param {float} latitude  The latitude of the location entered by the user in the search bar.
- * @param {float} longitude The longitude of the location entered by the user in the search bar.
- * @param {string} name     Name of the location entered by the user in the search bar.
+ * Toggles the notification's status ie to be displayed or not.
+ * @param {Boolean} bool
  */
 export const set_notifications = bool => {
 	return dispatch => {
@@ -59,21 +47,19 @@ export const set_notifications = bool => {
 };
 
 /**
- * Updates the custom location co-ordinates .
- * @param {JSON} location The json object containing latitude and longitude of a location.
- * @param {string} name
+ * Updates the notification status to true/false in the store
+ * @param {Boolean} bool
  */
 function set_notificationsHelper(bool) {
 	return {
-		type: ENABLE_NOTIFICATIONS,
+		type: TOGGLE_NOTIFICATIONS,
 		enable_notifications: bool
 	};
 }
 
 /**
- * Updates the custom location co-ordinates .
- * @param {JSON} location The json object containing latitude and longitude of a location.
- * @param {string} name
+ * Updates the emergency places search radius in the store
+ * @param {Number} radius
  */
 function set_emergency_radiusHelper(radius) {
 	return {
@@ -83,9 +69,8 @@ function set_emergency_radiusHelper(radius) {
 }
 
 /**
- * Updates the custom location co-ordinates .
- * @param {JSON} location The json object containing latitude and longitude of a location.
- * @param {string} name
+ * Updates the notifications trigger radius in the store
+ * @param {Number} radius
  */
 function set_notifications_radiusHelper(radius) {
 	return {
@@ -95,9 +80,8 @@ function set_notifications_radiusHelper(radius) {
 }
 
 /**
- * Updates the custom location co-ordinates .
- * @param {JSON} location The json object containing latitude and longitude of a location.
- * @param {string} name
+ * Updates the notifications timeout trigger in the store
+ * @param {Number} timeout
  */
 function set_notifications_timeoutHelper(timeout) {
 	return {

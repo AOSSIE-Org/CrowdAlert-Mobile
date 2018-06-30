@@ -61,10 +61,8 @@ class DrawerContent extends Component {
 }
 
 /**
- * Checks that the functions specified as isRequired are present,
- * and warns if the props used on this page,
- * does not meet the specified type.
- * @type {user}
+ * Checks that the functions specified as isRequired are present and warns if the
+ * props used on this page does not meet the specified type.
  */
 DrawerContent.propTypes = {
 	user: PropTypes.object

@@ -2,7 +2,7 @@ import {
 	SET_EMERGENCY_RADIUS,
 	SET_NOTIFICATION_RADIUS,
 	SET_NOTIFICATION_TIMEOUT,
-	ENABLE_NOTIFICATIONS
+	TOGGLE_NOTIFICATIONS
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -13,8 +13,8 @@ const INITIAL_STATE = {
 };
 
 /**
- * Login Reducer handling all types of login states.
- * This would maintain the state of the login in the Redux store.
+ * Settings Reducer handling all setting states.
+ * This would maintain the state of various settings in the Redux store.
  * @param  {JSON} state=INITIAL_STATE State to be maintained by this
  * reducer in the redux store.
  * @param  {JSON} action Tells the reducer to perform certain actions and make changes
@@ -38,7 +38,7 @@ export default function(state = INITIAL_STATE, action) {
 				...result,
 				notification_timeout: action.notification_timeout
 			};
-		case ENABLE_NOTIFICATIONS:
+		case TOGGLE_NOTIFICATIONS:
 			return {
 				...result,
 				enable_notifications: action.enable_notifications

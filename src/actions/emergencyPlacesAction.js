@@ -9,6 +9,7 @@ import Config from 'react-native-config';
 
 import configureStore from '../utils/store';
 let { store, persistor } = configureStore();
+
 /**
  * This functions fetches a list of nearby police stations and
  * hospitals with the help of urlHospital and urlPoliceStation.

@@ -3,7 +3,7 @@ import { handleError } from './errorAction';
 
 /**
  * This function is called to update the location co-ordinates to user's current location
- * by communicating changes to redux via set_currLocation.
+ * by watching those and then dispatching them to the store.
  * @return dispatches location updates to set_currLocation.
  */
 export const watchCurrLocation = () => {
