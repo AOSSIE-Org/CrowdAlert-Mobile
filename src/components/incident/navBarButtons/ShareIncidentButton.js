@@ -19,7 +19,7 @@ class ShareButtonIncident extends Component {
 		Share.share(
 			{
 				message:
-					'http://www.crowdalert.com/incident/' +
+					'https://crowdalert.herokuapp.com/view/' +
 					this.props.incident.incident.key,
 				title: 'Wow, did you see that ? Check it out !!!'
 			},

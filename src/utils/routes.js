@@ -27,7 +27,6 @@ import ShareButtonIncident from '../components/incident/navBarButtons/ShareIncid
 import EditIncident from '../components/incident/editIncident';
 import crossroads from 'crossroads';
 import EmergencyLocation from '../components/emergencyPlaces';
-
 const ConnectedRouter = connect()(Router);
 const { width, height } = Dimensions.get('window');
 
@@ -126,7 +125,6 @@ export default class Route extends Component {
 		);
 	}
 }
-
-crossroads.addRoute('www.crowdalert.com/incident/{key}', key => {
+crossroads.addRoute('crowdalert.herokuapp.com/view/{key}', key => {
 	Actions.incident({ incident_key: key });
 });

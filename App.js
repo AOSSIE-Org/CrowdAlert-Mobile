@@ -22,7 +22,7 @@ export default class App extends Component {
 						if (!isLoaded) {
 							return <ActivityIndicator size={'large'} />;
 						} else {
-							return <LinkedRouter scheme="http" />;
+							return <LinkedRouter scheme="https" />;
 						}
 					}}
 				</PersistGate>

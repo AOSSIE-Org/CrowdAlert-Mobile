@@ -31,9 +31,9 @@
              <category android:name="android.intent.category.DEFAULT" />
              <category android:name="android.intent.category.BROWSABLE" />
              <!-- Accepts URIs that begin with "http://www.crowdalert.com/incident” -->
-             <data android:scheme="http"
-                   android:host="www.crowdalert.com"
-                   android:pathPrefix="/incident" />
+             <data android:scheme="https"
+                   android:host="crowdalert.herokuapp.com"
+                   android:pathPrefix="/view" />
          </intent-filter>
         <intent-filter>
             <action android:name="android.intent.action.VIEW"/>
