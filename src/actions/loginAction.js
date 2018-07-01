@@ -1,7 +1,8 @@
 import {
 	LOGIN_LOADING,
 	GET_USER_AUTH_FIREBASE,
-	ADD_USER_FIREBASE
+	ADD_USER_FIREBASE,
+	SIGN_OUT
 } from './types';
 import firebase from 'react-native-firebase';
 import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
@@ -261,6 +262,28 @@ export const updateUserFirebase = userDetails => {
 		});
 	};
 };
+
+/**
+ *  Called when the user updates his details
+ *  Also updates the firebase and the redux store
+ * @param  {JSON} userDetails Details of the user
+ */
+export const logout = () => {
+	return dispatch => {
+		dispatch(logoutHelper());
+	};
+};
+
+/**
+ * Adds the personal user details to the redux store
+ * @param {JSON} details Details of the user
+ * @return returns type and user details.
+ */
+function logoutHelper() {
+	return {
+		type: SIGN_OUT
+	};
+}
 
 /**
  * Adds the personal user details to the redux store
