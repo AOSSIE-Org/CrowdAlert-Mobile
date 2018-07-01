@@ -97,68 +97,75 @@ class Profile extends Component {
 	}
 
 	render() {
-		return (
-			<ScrollView
-				style={styles.container}
-				showsVerticalScrollIndicator={false}
-			>
-				<View style={styles.avatarContainer}>
-					<Image
-						style={styles.avatar}
-						source={
-							this.props.user.photo.url === ''
-								? this.props.user.photo.base64 === ''
-									? {
-											uri:
-												'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZA_wIwT-DV4G3E3jdNZScRLQnH4faqTH2a7PrNwlhqP4W1Zjh'
-									  }
-									: {
-											uri:
-												'data:image/jpeg;base64, ' +
-												this.props.user.photo.base64
-									  }
-								: { uri: this.props.user.photo.url }
-						}
+		console.log(this.props.user.length);
+		if (this.props.user.length === 0) {
+			return <ActivityIndicator size={'large'} />;
+		} else {
+			return (
+				<ScrollView
+					style={styles.container}
+					showsVerticalScrollIndicator={false}
+				>
+					<View style={styles.avatarContainer}>
+						<Image
+							style={styles.avatar}
+							source={
+								this.props.user.photo.url === ''
+									? this.props.user.photo.base64 === ''
+										? {
+												uri:
+													'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZA_wIwT-DV4G3E3jdNZScRLQnH4faqTH2a7PrNwlhqP4W1Zjh'
+										  }
+										: {
+												uri:
+													'data:image/jpeg;base64, ' +
+													this.props.user.photo.base64
+										  }
+									: { uri: this.props.user.photo.url }
+							}
+						/>
+						<Text style={styles.userName}>
+							{this.props.user.name}
+						</Text>
+					</View>
+					<View style={styles.otherInfoContainer}>
+						<Text style={styles.otherInfoValue}>
+							<Text style={styles.otherInfoHead}>Email ID: </Text>
+							{this.props.user.email}
+						</Text>
+						<Text style={styles.otherInfoValue}>
+							<Text style={styles.otherInfoHead}>Phone No: </Text>
+							{this.props.user.phone_no}
+						</Text>
+						<Text style={styles.otherInfoValue}>
+							<Text style={styles.otherInfoHead}>
+								Emergency contact name:{' '}
+							</Text>
+							{this.props.user.emergency_contact_name === ''
+								? 'NA'
+								: this.props.user.emergency_contact_name}
+						</Text>
+						<Text style={styles.otherInfoValue}>
+							<Text style={styles.otherInfoHead}>
+								Emergency contact phone no:{' '}
+							</Text>
+							{this.props.user.emergency_contact_phone_no === ''
+								? 'NA'
+								: this.props.user.emergency_contact_phone_no}
+						</Text>
+					</View>
+					{this.props.incident.loading ? (
+						<ActivityIndicator size={'large'} />
+					) : null}
+					<FlatList
+						contentContainerStyle={styles.flatListContainer}
+						data={this.props.incident.user_incidents}
+						renderItem={this.renderItem.bind(this)}
+						keyExtractor={item => item.key}
 					/>
-					<Text style={styles.userName}>{this.props.user.name}</Text>
-				</View>
-				<View style={styles.otherInfoContainer}>
-					<Text style={styles.otherInfoValue}>
-						<Text style={styles.otherInfoHead}>Email ID: </Text>
-						{this.props.user.email}
-					</Text>
-					<Text style={styles.otherInfoValue}>
-						<Text style={styles.otherInfoHead}>Phone No: </Text>
-						{this.props.user.phone_no}
-					</Text>
-					<Text style={styles.otherInfoValue}>
-						<Text style={styles.otherInfoHead}>
-							Emergency contact name:{' '}
-						</Text>
-						{this.props.user.emergency_contact_name === ''
-							? 'NA'
-							: this.props.user.emergency_contact_name}
-					</Text>
-					<Text style={styles.otherInfoValue}>
-						<Text style={styles.otherInfoHead}>
-							Emergency contact phone no:{' '}
-						</Text>
-						{this.props.user.emergency_contact_phone_no === ''
-							? 'NA'
-							: this.props.user.emergency_contact_phone_no}
-					</Text>
-				</View>
-				{this.props.incident.loading ? (
-					<ActivityIndicator size={'large'} />
-				) : null}
-				<FlatList
-					contentContainerStyle={styles.flatListContainer}
-					data={this.props.incident.user_incidents}
-					renderItem={this.renderItem.bind(this)}
-					keyExtractor={item => item.key}
-				/>
-			</ScrollView>
-		);
+				</ScrollView>
+			);
+		}
 	}
 }
 

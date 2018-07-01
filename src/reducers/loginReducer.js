@@ -7,7 +7,7 @@ import {
 const INITIAL_STATE = {
 	loading: false,
 	userFirebase: [],
-	userDetails: [],
+	userDetails: null,
 	signInType: null
 };
 /**
