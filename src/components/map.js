@@ -124,6 +124,10 @@ class MapScreen extends Component {
 									bigText: incident.value.details, // (optional) default: "message" prop
 									color: 'red', // (optional) default: system default
 									group: 'grp', // (optional) add group to message
+									tag: {
+										key: incident.key,
+										value: incident.value
+									}, // (optional) add tag to message
 
 									/* iOS and Android properties */
 									title: 'Danger ahead!', // (optional)

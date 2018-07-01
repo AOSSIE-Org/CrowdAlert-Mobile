@@ -52,8 +52,10 @@ class Profile extends Component {
 		//Configures the push notification
 		PushNotification.configure({
 			//Called when a remote or local notification is opened or received
-			onNotification: function(notification) {
+			onNotification: notification => {
 				console.log('NOTIFICATION:', notification);
+				this.viewClickedIncident(notification.tag);
+				// Actions.incident({ incident_key: notification.tag });
 				// process the notification
 			},
 			requestPermissions: this.props.enable_notifications

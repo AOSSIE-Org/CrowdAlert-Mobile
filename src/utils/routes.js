@@ -4,6 +4,7 @@ import { Text, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import { Router } from 'react-native-router-flux';
 import { Actions, Scene, Drawer } from 'react-native-router-flux';
+import crossroads from 'crossroads';
 
 import Signin from '../components/login/signin';
 import Signup from '../components/login/signup';
@@ -25,7 +26,6 @@ import DeleteButtonIncident from '../components/incident/navBarButtons/deleteInc
 import EditButtonIncident from '../components/incident/navBarButtons/editIncidentButton.js';
 import ShareButtonIncident from '../components/incident/navBarButtons/ShareIncidentButton.js';
 import EditIncident from '../components/incident/editIncident';
-import crossroads from 'crossroads';
 import EmergencyLocation from '../components/emergencyPlaces';
 import SettingsOption from '../components/settings';
 
@@ -133,6 +133,7 @@ export default class Route extends Component {
 		);
 	}
 }
+
 crossroads.addRoute('crowdalert.herokuapp.com/view/{key}', key => {
 	Actions.incident({ incident_key: key });
 });

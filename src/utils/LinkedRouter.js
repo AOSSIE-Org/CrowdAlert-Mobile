@@ -47,7 +47,7 @@ export default class LinkedRouter extends React.Component {
 	}
 
 	render() {
-		if (store.getState().login.userFirebase.length == 0) {
+		if (store.getState().login.userDetails.length == 0) {
 			return <Route initial={true} />;
 		} else {
 			return <Route initial={false} />;

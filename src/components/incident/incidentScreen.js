@@ -14,7 +14,10 @@ import { Container, Content, Card, CardItem } from 'native-base';
 import { styles } from '../../assets/styles/incident_styles';
 import getDirections from 'react-native-google-maps-directions';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { viewIncident } from '../../actions/incidentsAction.js';
+import {
+	viewIncident,
+	getIndvIncident
+} from '../../actions/incidentsAction.js';
 import firebase from 'react-native-firebase';
 
 /**
@@ -25,11 +28,10 @@ class Incident extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isMapReady: false,
-			incident: null,
-			loading: false
+			isMapReady: false
 		};
 	}
+
 	/**
 	 * Function to check if map has been loaded then only display marker on the map.
 	 * @return  sets isMapReady ready to true.
@@ -37,6 +39,7 @@ class Incident extends Component {
 	onMapLayout = () => {
 		this.setState({ isMapReady: true });
 	};
+
 	/**
 	 * This screen gets opened either through a shared link or normally
 	 * through app navigation. When the screen gets opened through a shared
@@ -47,29 +50,19 @@ class Incident extends Component {
 	 * @return sets the incident to be viewed.
 	 */
 	componentWillMount() {
-		if (this.props.incident_key) {
-			this.setState({ loading: true });
-			var key = this.props.incident_key;
-			console.log(key);
-			firebase
-				.database()
-				.ref('incidents/' + key)
-				.on('value', snap => {
-					console.log(snap._value);
-					if (snap._value.user_id === this.props.user.email) {
-						this.props.viewIncident(snap._value, true);
-					} else {
-						this.props.viewIncident(snap._value, false);
-					}
-					this.setState({ incident: snap._value, loading: false });
-				});
-		} else {
-			this.setState({ incident: this.props.incidentDetails.value });
+		if (
+			this.props.incident_key &&
+			(this.props.incident.incident !== null
+				? this.props.incident_key !== this.props.incident.incident.key
+				: true)
+		) {
+			this.props.getIndvIncident(this.props.incident_key);
 		}
 	}
+
 	//Handles the navigation by opening the Google Maps
 	handleDirections() {
-		var coordinates = this.state.incident.location.coordinates;
+		var coordinates = this.props.incidentDetails.location.coordinates;
 		getDirections({
 			source: {
 				latitude: '',
@@ -93,14 +86,14 @@ class Incident extends Component {
 	 * @return the incident screen.
 	 */
 	render() {
-		var incident = this.state.incident;
-		if (this.state.loading) {
+		if (this.props.incident.loading) {
 			return <ActivityIndicator size={'large'} />;
 		} else {
+			var incidentDetails = this.props.incident.incident.value;
 			return (
 				<Container>
 					<Content>
-						{incident.image.isPresent ? (
+						{incidentDetails.image.isPresent ? (
 							<Card>
 								<CardItem>
 									<Image
@@ -109,7 +102,7 @@ class Incident extends Component {
 										source={{
 											uri:
 												'data:image/jpeg;base64, ' +
-												incident.image.base64
+												incidentDetails.image.base64
 										}}
 									/>
 								</CardItem>
@@ -123,10 +116,10 @@ class Incident extends Component {
 							</CardItem>
 							<CardItem>
 								<Text style={styles.titleTextDescription}>
-									{incident.title}
+									{incidentDetails.title}
 								</Text>
 							</CardItem>
-							{incident.details !== '' ? (
+							{incidentDetails.details !== '' ? (
 								<View>
 									<CardItem>
 										<Text style={styles.titleTextHeader}>
@@ -137,7 +130,7 @@ class Incident extends Component {
 										<Text
 											style={styles.titleTextDescription}
 										>
-											{incident.details}
+											{incidentDetails.details}
 										</Text>
 									</CardItem>
 								</View>
@@ -148,10 +141,10 @@ class Incident extends Component {
 								<MapView
 									region={{
 										latitude:
-											incident.location.coordinates
+											incidentDetails.location.coordinates
 												.latitude,
 										longitude:
-											incident.location.coordinates
+											incidentDetails.location.coordinates
 												.longitude,
 										latitudeDelta: 0.0052,
 										longitudeDelta: 0.0052
@@ -163,10 +156,10 @@ class Incident extends Component {
 										<MapView.Marker
 											coordinate={{
 												latitude:
-													incident.location
+													incidentDetails.location
 														.coordinates.latitude,
 												longitude:
-													incident.location
+													incidentDetails.location
 														.coordinates.longitude
 											}}
 										/>
@@ -201,8 +194,10 @@ class Incident extends Component {
  * props used on this page does not meet the specified type.
  */
 Incident.propTypes = {
-	incidentDetails: PropTypes.object,
-	viewIncident: PropTypes.func.isRequired
+	incident: PropTypes.object,
+	user: PropTypes.object,
+	viewIncident: PropTypes.func.isRequired,
+	getIndvIncident: PropTypes.func.isRequired
 };
 /**
  * Mapping dispatchable actions to props so that actions can be used
@@ -213,11 +208,13 @@ Incident.propTypes = {
 function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{
-			viewIncident: viewIncident
+			viewIncident: viewIncident,
+			getIndvIncident: getIndvIncident
 		},
 		dispatch
 	);
 }
+
 /**
  * Mapping state to props so that state variables can be used
  * through props in children components.
@@ -225,7 +222,7 @@ function matchDispatchToProps(dispatch) {
  * @return Returns states as props.
  */
 const mapStateToProps = state => ({
-	incidentDetails: state.incident.incident,
+	incident: state.incident,
 	user: state.login.userDetails
 });
 

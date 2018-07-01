@@ -125,7 +125,7 @@ export const getUserIncidents = userID => {
  */
 export const viewIncident = (incident, isLoggedIn) => {
 	return dispatch => {
-		dispatch(viewIncidentRedux(incident, isLoggedIn));
+		dispatch(viewIncidentHelper(incident, isLoggedIn));
 	};
 };
 
@@ -161,13 +161,38 @@ export const updateIndvNotification = key => {
 	};
 };
 
+export const getIndvIncident = key => {
+	return dispatch => {
+		dispatch(incidentsLoading(true));
+		firebase
+			.database()
+			.ref('incidents/' + key)
+			.on('value', snap => {
+				console.log(snap);
+				var item = {
+					key: snap.key,
+					value: snap._value
+				};
+				if (
+					item.value.user_id ===
+					store.getState().login.userDetails.email
+				) {
+					dispatch(viewIncident(item, true));
+				} else {
+					dispatch(viewIncident(item, false));
+				}
+				dispatch(incidentsLoading(false));
+			});
+	};
+};
+
 /**
  * Called when an incident is clicked to be viewed for its details
  * @param  {JSON} incident Incident details
  * @param  {Boolean} bool     Store the state whether the current
  * incident being viewed is of the logged in user or not
  */
-export function viewIncidentRedux(incident, bool) {
+export function viewIncidentHelper(incident, bool) {
 	return {
 		type: VIEW_INCIDENT,
 		incident: incident,
