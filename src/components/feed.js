@@ -16,7 +16,7 @@ import Timeline from 'react-native-timeline-listview';
 import PropTypes from 'prop-types';
 
 /**
- * Settings Screen to update various app settings
+ * Global incidents feed showing all the incidents from around the globe.
  * @extends Component
  */
 class FeedScreen extends Component {
@@ -26,6 +26,7 @@ class FeedScreen extends Component {
 		}
 	}
 
+	//Converts a timestamp to a presentable date and time
 	getTime(timestamp) {
 		var m_names = [
 			'Jan',
@@ -69,6 +70,7 @@ class FeedScreen extends Component {
 		return day + '\n' + strTime;
 	}
 
+	//Handles an incident click and redirects to its particulat incident screen
 	viewClickedIncident(item) {
 		if (item.value.user_id === this.props.user.email) {
 			this.props.viewIncident(item, true);
@@ -82,6 +84,7 @@ class FeedScreen extends Component {
 		if (this.props.incident.loading) {
 			return <ActivityIndicator size={'large'} />;
 		} else {
+			//Creates the 'data', to be passed to the Timeline Component.
 			const all_incidents = [];
 			this.props.incident.all_incidents.map(incident => {
 				all_incidents.push({
@@ -93,17 +96,8 @@ class FeedScreen extends Component {
 			});
 			console.log(this.props.incident.all_incidents, all_incidents);
 			return (
-				<View style={{ flex: 1 }}>
-					<Text
-						style={{
-							textAlign: 'center',
-							fontWeight: 'bold',
-							fontSize: 25,
-							marginVertical: 10
-						}}
-					>
-						Global Feed
-					</Text>
+				<View style={styles.container}>
+					<Text style={styles.heading}>Global Feed</Text>
 					<Timeline
 						data={all_incidents}
 						circleSize={22}
@@ -114,37 +108,15 @@ class FeedScreen extends Component {
 						// separator={true}
 						renderFullLine={true}
 						// columnFormat="two-column"
-						timeContainerStyle={{ minWidth: 100 }}
-						iconStyle={{
-							minWidth: 100
-						}}
-						circleStyle={{
-							marginTop: 14
-						}}
-						style={
-							{
-								// backgroundColor: 'yellow',
-								// marginTop: 20
-							}
-						}
-						// rowContainerStyle={{ marginTop: 20 }}
-						timeStyle={{
-							textAlign: 'center',
-							backgroundColor: '#0288D1',
-							color: 'white',
-							paddingVertical: 5
-							// borderRadius: 13
-						}}
-						detailContainerStyle={{
-							backgroundColor: '#B3E5FC',
-							marginBottom: 20,
-							// marginHorizontal: 10,
-							borderRadius: 15
-						}}
-						titleStyle={{ paddingLeft: 10 }}
-						descriptionStyle={{ color: 'gray', paddingLeft: 10 }}
+						timeContainerStyle={styles.timeContainerStyle}
+						iconStyle={styles.iconStyle}
+						circleStyle={styles.circleStyle}
+						style={styles.timelineContainer}
+						timeStyle={styles.timeStyle}
+						detailContainerStyle={styles.detailContainerStyle}
+						titleStyle={styles.titleStyle}
+						descriptionStyle={styles.descriptionStyle}
 						options={{
-							style: { marginHorizontal: 10 },
 							showsVerticalScrollIndicator: false
 						}}
 						onEventPress={event => {
@@ -162,7 +134,12 @@ class FeedScreen extends Component {
  * Checks that the functions specified as isRequired are present and warns if the
  * props used on this page does not meet the specified type.
  */
-FeedScreen.propTypes = {};
+FeedScreen.propTypes = {
+	getAllIncidents: PropTypes.func.isRequired,
+	viewIncident: PropTypes.func.isRequired,
+	user: PropTypes.object,
+	incident: PropTypes.object
+};
 
 /**
  * Mapping dispatchable actions to props so that actions can be used
