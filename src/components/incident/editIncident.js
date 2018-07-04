@@ -179,7 +179,7 @@ class EditIncident extends Component {
  * props used on this page does not meet the specified type.
  */
 EditIncident.propTypes = {
-	updateUserFirebase: PropTypes.func.isRequired,
+	updateIncidentFirebase: PropTypes.func.isRequired,
 	viewIncident: PropTypes.func.isRequired,
 	incidentDetails: PropTypes.object,
 	incident: PropTypes.object
