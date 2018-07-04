@@ -26,6 +26,7 @@
 	},
 	"dependencies": {
 		"crossroads": "^0.12.2",
+		"geojson": "^0.5.0",
 		"haversine-distance": "^1.1.4",
 		"lodash.debounce": "^4.0.8",
 		"native-base": "^2.5.2",
@@ -53,6 +54,7 @@
 		"redux-persist-filesystem-storage": "^1.2.0",
 		"redux-persist-transform-filter": "0.0.18",
 		"redux-promise": "^0.5.3",
-		"redux-thunk": "^2.2.0"
+		"redux-thunk": "^2.2.0",
+		"supercluster": "^4.0.1"
 	}
 }

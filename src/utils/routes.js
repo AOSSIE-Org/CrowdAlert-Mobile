@@ -14,7 +14,7 @@ import Forgot from '../components/login/forgot';
 
 import DrawerContent from '../components/drawer';
 
-import MapScreen from '../components/map';
+import MapScreen from '../components/map/mapScreen';
 import AddIncident from '../components/addIncident';
 import FeedScreen from '../components/feed';
 
