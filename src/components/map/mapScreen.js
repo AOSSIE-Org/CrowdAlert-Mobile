@@ -10,28 +10,29 @@ import {
 	Modal,
 	Image
 } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import { Marker } from 'react-native-maps';
 import { bindActionCreators } from 'redux';
-import { getMarkerImage, categories } from '../utils/categoryUtil.js';
 import { connect } from 'react-redux';
+import { Actions } from 'react-native-router-flux';
+import PropTypes from 'prop-types';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import getDirections from 'react-native-google-maps-directions';
+import Config from 'react-native-config';
+import MapContainer from './mapContainer';
+import { getMarkerImage, categories } from '../../utils/categoryUtil.js';
 import {
 	setLocationOnCustomSearch
 	// watchCurrLocation
-} from '../actions/locationAction';
+} from '../../actions/locationAction';
 import {
 	getAllIncidents,
 	viewIncident,
 	updateIndvNotification
-} from '../actions/incidentsAction';
-import { Actions } from 'react-native-router-flux';
-import PropTypes from 'prop-types';
-import { styles, searchBarStyle } from '../assets/styles/map_styles.js';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import Config from 'react-native-config';
-import { GooglePlacesAutocomplete } from './googleSearchBar';
-import { sideMenu } from './profile/navBarButtons';
-import { getEmergencyPlaces } from '../actions/emergencyPlacesAction';
-import getDirections from 'react-native-google-maps-directions';
+} from '../../actions/incidentsAction';
+import { styles, searchBarStyle } from '../../assets/styles/map_styles.js';
+import { GooglePlacesAutocomplete } from '../googleSearchBar';
+import { sideMenu } from '../profile/navBarButtons';
+import { getEmergencyPlaces } from '../../actions/emergencyPlacesAction';
 var PushNotification = require('react-native-push-notification');
 var haversine = require('haversine-distance');
 
@@ -214,15 +215,6 @@ class MapScreen extends Component {
 		}
 	}
 
-	viewClickedIncident(marker) {
-		if (marker.value.user_id === this.props.user.email) {
-			this.props.viewIncident(marker, true);
-		} else {
-			this.props.viewIncident(marker, false);
-		}
-		Actions.incident();
-	}
-
 	//Sets the filter category
 	alertItemName = item => {
 		this.setState({ domain: item.category });
@@ -237,30 +229,6 @@ class MapScreen extends Component {
 	//Closes the modal
 	closeModal() {
 		this.setState({ visibleModal: false });
-	}
-
-	/**
-	 * to open google maps app and navigate the user to the specified destination.
-	 * @param  {object} coordinates contains the latitude and longitude of nearby place.
-	 * @return Opens the google maps app.
-	 */
-	handleNavigation(coordinates) {
-		getDirections({
-			source: {
-				latitude: '',
-				longitude: ''
-			},
-			destination: {
-				latitude: coordinates.lat,
-				longitude: coordinates.lng
-			},
-			params: [
-				{
-					key: 'dirflg',
-					value: 'd'
-				}
-			]
-		});
 	}
 
 	//Modal to be displayed for the filter menu.
@@ -293,105 +261,13 @@ class MapScreen extends Component {
 	);
 
 	render() {
-		//Logic for filtering the incidents
-		var state = this.state;
-		if (this.props.all_incidents !== null) {
-			var incidents_marker = this.props.all_incidents.filter(function(
-				item
-			) {
-				if (state.domain === 'all') {
-					return true;
-				} else {
-					return item.value.category === state.domain;
-				}
-			});
-		}
 		return (
 			<View style={styles.container}>
-				<MapView
-					ref={ref => {
-						this.map = ref;
-					}}
+				<MapContainer
 					// showsMyLocationButton={true}
 					style={styles.map}
-					region={this.state.curr_region}
-				>
-					<Marker.Animated
-						ref={marker => {
-							this.marker = marker;
-						}}
-						coordinate={this.state.curr_location_marker}
-					/>
-					{this.props.all_incidents !== null
-						? incidents_marker.map(marker => {
-								var coordinates =
-									marker.value.location.coordinates;
-								return (
-									<MapView.Marker
-										key={marker.key}
-										coordinate={{
-											latitude: coordinates.latitude,
-											longitude: coordinates.longitude
-										}}
-										title={marker.value.title}
-										description={marker.value.details}
-										onCalloutPress={() => {
-											this.viewClickedIncident(marker);
-										}}
-										image={getMarkerImage(
-											marker.value.category
-										)}
-									/>
-								);
-						  })
-						: null}
-					{this.props.emergencyPlaces.hospitals !== null
-						? this.props.emergencyPlaces.hospitals.map(marker => {
-								var coordinates = marker.geometry.location;
-								//For displaying hospitals on map
-								return (
-									<MapView.Marker
-										key={marker.id}
-										coordinate={{
-											latitude: coordinates.lat,
-											longitude: coordinates.lng
-										}}
-										title={marker.name}
-										description={marker.vicinity}
-										image={marker.icon}
-										onCalloutPress={() => {
-											this.handleNavigation(coordinates);
-										}}
-									/>
-								);
-						  })
-						: null}
-					{this.props.emergencyPlaces.policeStations !== null
-						? this.props.emergencyPlaces.policeStations.map(
-								marker => {
-									var coordinates = marker.geometry.location;
-									//For displaying police stations on map
-									return (
-										<MapView.Marker
-											key={marker.id}
-											coordinate={{
-												latitude: coordinates.lat,
-												longitude: coordinates.lng
-											}}
-											title={marker.name}
-											description={marker.vicinity}
-											image={marker.icon}
-											onCalloutPress={() => {
-												this.handleNavigation(
-													coordinates
-												);
-											}}
-										/>
-									);
-								}
-						  )
-						: null}
-				</MapView>
+					domain={this.state.domain}
+				/>
 
 				<TouchableOpacity
 					style={styles.filterButton}
