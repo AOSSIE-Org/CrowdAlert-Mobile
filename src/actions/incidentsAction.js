@@ -80,6 +80,13 @@ export const getAllIncidents = () => {
 						}
 					});
 					console.log(all_incidents, notificationStack);
+					//Sorting the incidents according to their correct timestamp order.
+					all_incidents.sort(function(a, b) {
+						return (
+							new Date(b.value.timestamp) -
+							new Date(a.value.timestamp)
+						);
+					});
 					dispatch(retrieveAllIncidents(all_incidents));
 					dispatch(updateNotificationsStack(notificationStack));
 					dispatch(incidentsLoading(false));
