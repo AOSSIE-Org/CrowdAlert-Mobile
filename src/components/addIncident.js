@@ -31,9 +31,9 @@ class AddIncident extends Component {
 		super(props);
 		this.state = {
 			title: null,
-			details: '',
+			details: null,
 			visible: true,
-			timestamp: new Date().toLocaleString(),
+			timestamp: new Date().toString(),
 			location: {
 				coordinates: this.props.location.curr_coordinates
 			},
@@ -64,7 +64,11 @@ class AddIncident extends Component {
 	handleAddIncident() {
 		console.log(this.state);
 		Keyboard.dismiss();
-		if (this.state.title === null || this.state.category === null) {
+		if (
+			this.state.title === null ||
+			this.state.details === null ||
+			this.state.category === null
+		) {
 			ToastAndroid.show(
 				'Please dont leave any field blank',
 				ToastAndroid.SHORT
@@ -162,7 +166,7 @@ class AddIncident extends Component {
 						style={styles.field_details}
 						onChangeText={details => this.setState({ details })}
 						returnKeyType="next"
-						placeholder="Details [Optional]"
+						placeholder="Description"
 					/>
 					<View style={styles.checkBox}>
 						<CheckBox

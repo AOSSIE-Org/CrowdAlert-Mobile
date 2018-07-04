@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { Router } from 'react-native-router-flux';
 import { Actions, Scene, Drawer } from 'react-native-router-flux';
 import crossroads from 'crossroads';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 import Signin from '../components/login/signin';
 import Signup from '../components/login/signup';
@@ -15,6 +16,7 @@ import DrawerContent from '../components/drawer';
 
 import MapScreen from '../components/map';
 import AddIncident from '../components/addIncident';
+import FeedScreen from '../components/feed';
 
 import Profile from '../components/profile/profile';
 import EditProfile from '../components/profile/editProfile';
@@ -88,10 +90,28 @@ export default class Route extends Component {
 							component={EditProfile}
 						/>
 						<Scene
-							key="map"
-							hideNavBar={true}
-							component={MapScreen}
-						/>
+							key="mapFeed"
+							tabs={true}
+							lazy={true}
+							swipeEnabled={false}
+							tabBarPosition="bottom"
+							activeBackgroundColor="#d6d7d8"
+						>
+							<Scene
+								key="map"
+								title="Map"
+								hideNavBar={true}
+								icon={() => <Icon name="map" size={20} />}
+								component={MapScreen}
+							/>
+							<Scene
+								key="feed"
+								title="World Feed"
+								hideNavBar={true}
+								icon={() => <Icon name="feed" size={20} />}
+								component={FeedScreen}
+							/>
+						</Scene>
 						<Scene
 							back={true}
 							key="addIncident"

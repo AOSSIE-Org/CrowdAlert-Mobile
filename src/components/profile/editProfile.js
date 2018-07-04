@@ -195,7 +195,7 @@ class EditProfile extends Component {
 EditProfile.propTypes = {
 	updateUserFirebase: PropTypes.func.isRequired,
 	user: PropTypes.object,
-	updateLoading: PropTypes.object
+	updateLoading: PropTypes.boolean
 };
 
 /**

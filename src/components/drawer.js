@@ -31,7 +31,6 @@ class DrawerContent extends Component {
 	}
 
 	render() {
-		console.log(this.props.user.length);
 		if (this.props.user.length === 0) {
 			return <ActivityIndicator size={'large'} />;
 		} else {
@@ -64,7 +63,7 @@ class DrawerContent extends Component {
 						<Text style={styles.option}>Home</Text>
 					</TouchableHighlight>
 					<TouchableHighlight onPress={Actions.map}>
-						<Text style={styles.option}>Map</Text>
+						<Text style={styles.option}>Map / Feed</Text>
 					</TouchableHighlight>
 					<TouchableHighlight onPress={Actions.emergencylocation}>
 						<Text style={styles.option}>Emergency locations</Text>
