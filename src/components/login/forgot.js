@@ -14,9 +14,9 @@ import firebase from 'react-native-firebase';
 import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { onForget } from '../actions/loginAction';
+import { onForget } from '../../actions/loginAction';
 import { Actions } from 'react-native-router-flux';
-import { styles } from '../assets/styles/signin_styles';
+import { styles } from '../../assets/styles/signin_styles';
 import PropTypes from 'prop-types';
 
 class Forgot extends Component {

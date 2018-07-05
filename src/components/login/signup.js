@@ -10,12 +10,13 @@ import {
 	TextInput,
 	Button,
 	Keyboard,
+	ToastAndroid,
 	ActivityIndicator
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { onPressSignUp } from '../actions/loginAction';
-import { styles } from '../assets/styles/signin_styles';
+import { onPressSignUp } from '../../actions/loginAction';
+import { styles } from '../../assets/styles/signin_styles';
 import PropTypes from 'prop-types';
 
 /**
@@ -31,6 +32,15 @@ class Signup extends Component {
 			name: ''
 		};
 	}
+
+	componentDidUpdate() {
+		// Typical usage (don't forget to compare props):
+		if (!this.props.login.loading && this.props.login.signInType !== null) {
+			ToastAndroid.show('Registration successful', ToastAndroid.SHORT);
+			Actions.profile();
+		}
+	}
+
 	/**
 	 * Hides the Keyboard and calls onPressSignUp function in loginAction screen.
 	 */

@@ -8,6 +8,7 @@ import {
 	TouchableOpacity,
 	Alert,
 	TextInput,
+	ToastAndroid,
 	Button,
 	ActivityIndicator
 } from 'react-native';
@@ -15,9 +16,9 @@ import firebase from 'react-native-firebase';
 import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { fbSignIn, googleSignin } from '../actions/loginAction';
+import { fbSignIn, googleSignin } from '../../actions/loginAction';
 import { Actions } from 'react-native-router-flux';
-import { styles } from '../assets/styles/login_styles';
+import { styles } from '../../assets/styles/login_styles';
 import { GoogleSignin } from 'react-native-google-signin';
 import Config from 'react-native-config';
 import PropTypes from 'prop-types';
@@ -42,13 +43,21 @@ class HomeLogin extends Component {
 		});
 	}
 
+	componentDidUpdate() {
+		// Typical usage (don't forget to compare props):
+		if (!this.props.login.loading && this.props.login.signInType !== null) {
+			ToastAndroid.show('Login successful', ToastAndroid.SHORT);
+			Actions.profile();
+		}
+	}
+
 	render() {
 		return (
 			<View style={styles.container}>
 				{/* <ActivityIndicator animating={this.props.login.loading} size={'large'}/> */}
 				<View style={styles.headerImage}>
 					<Image
-						source={require('../assets/earthquake-30-512.png')}
+						source={require('../../assets/images/earthquake-30-512.png')}
 						style={styles.logo}
 					/>
 				</View>
@@ -82,14 +91,9 @@ class HomeLogin extends Component {
 						<Text style={styles.button_text_social}>Google</Text>
 					</TouchableOpacity>
 				</View>
-				<TouchableOpacity
-					style={styles.button_forgot}
-					onPress={() => Actions.map()}
-				>
-					<Text style={styles.button_text_forgot}>
-						Continue as a guest
-					</Text>
-				</TouchableOpacity>
+				{this.props.login.loading ? (
+					<ActivityIndicator size={'large'} />
+				) : null}
 			</View>
 		);
 	}

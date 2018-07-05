@@ -1,18 +1,19 @@
 import {
-	LOGIN_LOADING,
-	GET_USER_AUTH_FIREBASE,
-	ADD_USER_FIREBASE
+	LATEST_INCIDENT_ADDED,
+	ALL_INCIDENTS,
+	INCIDENTS_LOADING,
+	USERS_INCIDENTS
 } from '../actions/types';
 
 const INITIAL_STATE = {
+	all_incidents: null,
 	loading: false,
-	userFirebase: [],
-	userDetails: [],
-	signInType: null
+	user_incidents: null
 };
+
 /**
- * Login Reducer handling all types of login states.
- * This would maintain the state of the login in the Redux store.
+ * Incident Reducer handling all types of incident being added.
+ * Whenever a new incident gets added than the redux state gets updated.
  * @param  {JSON} state=INITIAL_STATE State to be maintained by this
  * reducer in the redux store.
  * @param  {JSON} action Tells the reducer to perform certain actions and make changes
@@ -21,21 +22,24 @@ const INITIAL_STATE = {
 export default function(state = INITIAL_STATE, action) {
 	let result = Object.assign({}, state);
 	switch (action.type) {
-		case LOGIN_LOADING:
+		case LATEST_INCIDENT_ADDED:
+			return {
+				...result
+			};
+		case ALL_INCIDENTS:
+			return {
+				...result,
+				all_incidents: action.all_incidents
+			};
+		case INCIDENTS_LOADING:
 			return {
 				...result,
 				loading: action.loading
 			};
-		case GET_USER_AUTH_FIREBASE:
+		case USERS_INCIDENTS:
 			return {
 				...result,
-				userFirebase: action.userFirebase,
-				signInType: action.signInType
-			};
-		case ADD_USER_FIREBASE:
-			return {
-				...result,
-				userDetails: action.userDetails
+				user_incidents: action.user_incidents
 			};
 		default:
 			return state;

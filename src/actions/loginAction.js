@@ -1,9 +1,33 @@
-import { LOGIN_LOADING, USER_SIGN_IN } from './types';
+import {
+	LOGIN_LOADING,
+	GET_USER_AUTH_FIREBASE,
+	ADD_USER_FIREBASE
+} from './types';
 import firebase from 'react-native-firebase';
 import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
 import { GoogleSignin } from 'react-native-google-signin';
-import { ToastAndroid, ActivityIndicator } from 'react-native';
+import { ToastAndroid } from 'react-native';
 import { handleError } from './errorAction';
+
+/**
+ * Personal user details to be stored in the Firebase database and redux store
+ * @param  {JSON} data User details
+ * @return {JSON}      Returns the user JSON to be stored in Firebase
+ */
+const userFirebaseStructure = data => {
+	var user = data.providerData[0];
+	return {
+		name: user.displayName === null ? '' : user.displayName,
+		email: user.email === null ? '' : user.email,
+		photo: {
+			url: user.photoURL === null ? '' : user.photoURL,
+			base64: ''
+		},
+		phone_no: '',
+		emergency_contact_name: '',
+		emergency_contact_phone_no: ''
+	};
+};
 
 /**
  * This function signs in the user into app using firebase authentication.
@@ -18,9 +42,8 @@ export const onPressSignIn = (email, password) => {
 			.auth()
 			.signInAndRetrieveDataWithEmailAndPassword(email, password) //signs in to firebase
 			.then(data => {
-				dispatch(loginLoading(false));
-				dispatch(saveUser(data.user, 'email'));
-				ToastAndroid.show('You are logged in', ToastAndroid.SHORT);
+				dispatch(getUserAuthFirebase(data.user, 'email'));
+				dispatch(addUserFirebase(userFirebaseStructure(data.user)));
 			})
 			.catch(error => {
 				dispatch(loginLoading(false));
@@ -46,6 +69,7 @@ export const onPressSignIn = (email, password) => {
 			});
 	};
 };
+
 /**
  * This function is used for registering a user in firebase.
  * @param  {string} email carries email entered by the user on signin screen.
@@ -60,12 +84,8 @@ export const onPressSignUp = (email, password) => {
 			.createUserAndRetrieveDataWithEmailAndPassword(email, password) //signs up a User
 			.then(data => {
 				//on success
-				dispatch(saveUser(data.user, 'email'));
-				dispatch(loginLoading(false));
-				ToastAndroid.show(
-					'Registration successful',
-					ToastAndroid.SHORT
-				);
+				dispatch(getUserAuthFirebase(data.user, 'email'));
+				dispatch(addUserFirebase(userFirebaseStructure(data.user)));
 			})
 			.catch(error => {
 				dispatch(loginLoading(false));
@@ -107,6 +127,7 @@ export const onForget = email => {
 			});
 	};
 };
+
 /**
  * This function logs in the user using facebook login and stores the user in firebase.
  * @return on success fb signin, else will trigger alerts.
@@ -114,9 +135,9 @@ export const onForget = email => {
 export const fbSignIn = () => {
 	return dispatch => {
 		// We specify in an array what we want to access from a user profile.
+		dispatch(loginLoading(true));
 		LoginManager.logInWithReadPermissions(['public_profile', 'email'])
 			.then(result => {
-				dispatch(loginLoading(true));
 				if (result.isCancelled) {
 					return Promise.reject(
 						new Error('The user cancelled the request')
@@ -135,10 +156,9 @@ export const fbSignIn = () => {
 					.auth()
 					.signInAndRetrieveDataWithCredential(credential);
 			})
-			.then(user => {
-				dispatch(saveUser(user.user, 'facebook'));
-				dispatch(loginLoading(false));
-				ToastAndroid.show('Login successful', ToastAndroid.SHORT);
+			.then(data => {
+				dispatch(getUserAuthFirebase(data.user, 'facebook'));
+				dispatch(addUserFirebase(userFirebaseStructure(data.user)));
 			})
 			.catch(error => {
 				dispatch(loginLoading(false));
@@ -151,15 +171,16 @@ export const fbSignIn = () => {
 			});
 	};
 };
+
 /**
  * This function is used for google login and storing the user in firebase.
  * @return If success, log in with google else trigger alerts.
  */
 export const googleSignin = () => {
 	return dispatch => {
+		dispatch(loginLoading(true));
 		GoogleSignin.signIn()
 			.then(data => {
-				dispatch(loginLoading(true));
 				// Retrieve the access token
 				// Create a new Firebase credential with the token
 				const credential = firebase.auth.GoogleAuthProvider.credential(
@@ -171,10 +192,9 @@ export const googleSignin = () => {
 					.auth()
 					.signInAndRetrieveDataWithCredential(credential);
 			})
-			.then(user => {
-				dispatch(saveUser(user.user, 'google'));
-				dispatch(loginLoading(false));
-				ToastAndroid.show('Login successful', ToastAndroid.SHORT);
+			.then(data => {
+				dispatch(getUserAuthFirebase(data.user, 'google'));
+				dispatch(addUserFirebase(userFirebaseStructure(data.user)));
 			})
 			.catch(error => {
 				dispatch(loginLoading(false));
@@ -187,6 +207,73 @@ export const googleSignin = () => {
 			});
 	};
 };
+
+/**
+ * Called after the SignIn details are fetched from Firebase
+ * Adds the user(if not existing before) to the Firebase and store with
+ * the personal details.
+ * @param  {JSON} userDetails Details of the user
+ */
+const addUserFirebase = userDetails => {
+	return dispatch => {
+		const userKey = userDetails.email.replace('.', '');
+		var userRef = firebase.database().ref('users/' + userKey);
+		userRef.on('value', function(snapshot) {
+			if (snapshot.exists()) {
+				var items = {};
+				snapshot.forEach(child => {
+					items[child.key] = child.val();
+				});
+				dispatch(addUserDetails(items));
+				console.log('User Exists');
+			} else {
+				dispatch(addUserDetails(userDetails));
+				// Adding User to 'users' collection
+				firebase
+					.database()
+					.ref('users')
+					.child(userKey)
+					.set(userDetails)
+					.catch(error => console.log(error));
+			}
+			dispatch(loginLoading(false));
+		});
+	};
+};
+
+/**
+ *  Called when the user updates his details
+ *  Also updates the firebase and the redux store
+ * @param  {JSON} userDetails Details of the user
+ */
+export const updateUserFirebase = userDetails => {
+	return dispatch => {
+		dispatch(loginLoading(true));
+		return new Promise((resolve, reject) => {
+			const userKey = userDetails.email.replace('.', '');
+			firebase
+				.database()
+				.ref('users/' + userKey)
+				.update(userDetails);
+			dispatch(addUserDetails(userDetails));
+			dispatch(loginLoading(false));
+			resolve();
+		});
+	};
+};
+
+/**
+ * Adds the personal user details to the redux store
+ * @param {JSON} details Details of the user
+ * @return returns type and user details.
+ */
+function addUserDetails(details) {
+	return {
+		type: ADD_USER_FIREBASE,
+		userDetails: details
+	};
+}
+
 /**
  * It checks if loading is complete.
  * @param  {boolean} bool.
@@ -198,16 +285,17 @@ function loginLoading(bool) {
 		loading: bool
 	};
 }
+
 /**
  * Saves user
  * @param  {object} user
  * @param  {string} type of signin
  * @return returns user object and type of signin.
  */
-function saveUser(user, type) {
+function getUserAuthFirebase(user, type) {
 	return {
-		type: USER_SIGN_IN,
-		user: user,
+		type: GET_USER_AUTH_FIREBASE,
+		userFirebase: user,
 		signInType: type
 	};
 }

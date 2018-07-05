@@ -15,17 +15,31 @@
 			},
 			"oauth_client": [
 				{
-					"client_id": "${GOOGLE_SERVICES_OAUTH_CLIENT_TYPE1}",
+					"client_id": "${GOOGLE_SERVICES_OAUTH_CLIENT_TYPE11}",
 					"client_type": 1,
 					"android_info": {
 						"package_name": "com.crowdalert",
 						"certificate_hash":
-							"${GOOGLE_SERVICES_OAUTH_CLIENT_TYPE1_CERTIFICATE_HASH}"
+							"${GOOGLE_SERVICES_OAUTH_CLIENT_TYPE11_CERTIFICATE_HASH}"
 					}
 				},
 				{
-					"client_id": "${GOOGLE_WEB_CLIENT_ID}",
-					"client_type": 3
+					"client_id": "${GOOGLE_SERVICES_OAUTH_CLIENT_TYPE12}",
+					"client_type": 1,
+					"android_info": {
+						"package_name": "com.crowdalert",
+						"certificate_hash":
+							"${GOOGLE_SERVICES_OAUTH_CLIENT_TYPE12_CERTIFICATE_HASH}"
+					}
+				},
+				{
+					"client_id": "${GOOGLE_SERVICES_OAUTH_CLIENT_TYPE13}",
+					"client_type": 1,
+					"android_info": {
+						"package_name": "com.crowdalert",
+						"certificate_hash":
+							"${GOOGLE_SERVICES_OAUTH_CLIENT_TYPE13_CERTIFICATE_HASH}"
+					}
 				},
 				{
 					"client_id": "${GOOGLE_WEB_CLIENT_ID}",

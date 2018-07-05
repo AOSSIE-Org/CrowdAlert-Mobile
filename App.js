@@ -1,63 +1,35 @@
 import React, { Component } from 'react';
-import { Provider, connect } from 'react-redux';
-import { Router } from 'react-native-router-flux';
-import { Actions, Scene, Drawer } from 'react-native-router-flux';
+import { Provider } from 'react-redux';
+import { Actions } from 'react-native-router-flux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
-import Signin from './src/components/signin';
-import Signup from './src/components/signup';
-import HomeLogin from './src/components/homeLogin';
-import Forgot from './src/components/forgot';
-import MapScreen from './src/components/map';
+import Route from './src/utils/routes';
+import { ActivityIndicator } from 'react-native';
 
-import configureStore from './src/store/store';
+import configureStore from './src/utils/store';
 let { store, persistor } = configureStore();
-
-const ConnectedRouter = connect()(Router);
 
 /**
  * Navigator using React-Native-Router-Flux
  * @extends Component
  */
 export default class App extends Component {
-	onBackPress() {
-		Actions.pop();
-		return true;
-	}
-
 	render() {
 		return (
 			<Provider store={store}>
 				<PersistGate loading={null} persistor={persistor}>
-					<ConnectedRouter backAndroidHandler={this.onBackPress}>
-						<Scene key="root">
-							<Scene
-								key="signin"
-								title="Log in"
-								component={Signin}
-							/>
-							<Scene
-								key="signup"
-								title="Register"
-								component={Signup}
-							/>
-							<Scene
-								key="homeLogin"
-								title="Welcome"
-								component={HomeLogin}
-								initial={true}
-							/>
-							<Scene
-								key="forgot"
-								title="Reset Password"
-								component={Forgot}
-							/>
-							<Scene
-								key="map"
-								hideNavBar={true}
-								component={MapScreen}
-							/>
-						</Scene>
-					</ConnectedRouter>
+					{isLoaded => {
+						if (!isLoaded) {
+							return <ActivityIndicator size={'large'} />;
+						} else {
+							if (
+								store.getState().login.userFirebase.length == 0
+							) {
+								return <Route initial={true} />;
+							} else {
+								return <Route initial={false} />;
+							}
+						}
+					}}
 				</PersistGate>
 			</Provider>
 		);

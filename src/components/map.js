@@ -3,25 +3,35 @@ import {
 	Text,
 	View,
 	Platform,
-	Dimensions,
 	TouchableOpacity,
-	Keyboard
+	Keyboard,
+	ActivityIndicator,
+	Picker,
+	Modal,
+	Image
 } from 'react-native';
 import LocationServicesDialogBox from 'react-native-android-location-services-dialog-box';
-import MapView from 'react-native-maps';
+import MapView, { Marker } from 'react-native-maps';
 import { bindActionCreators } from 'redux';
+import { getMarkerImage, categories } from '../utils/categoryUtil.js';
 import { connect } from 'react-redux';
 import {
 	setLocationOnCustomSearch,
 	getCurrLocation
 } from '../actions/locationAction';
+import { getAllIncidents } from '../actions/incidentsAction';
 import { Actions } from 'react-native-router-flux';
 import PropTypes from 'prop-types';
-import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { styles, searchBarStyle } from '../assets/styles/map_styles.js';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Config from 'react-native-config';
+import { GooglePlacesAutocomplete } from './googleSearchBar';
+import { sideMenu } from './profile/navBarButtons';
 
+/**
+ * Map screen showing google maps with search location and add incident feature
+ * @extends Component
+ */
 class MapScreen extends Component {
 	constructor(props) {
 		super(props);
@@ -32,14 +42,18 @@ class MapScreen extends Component {
 				latitudeDelta: 0.0052,
 				longitudeDelta: 0.0052
 			},
-			marker: {
+			curr_location_marker: {
 				latitude: this.props.curr_location.latitude,
 				longitude: this.props.curr_location.longitude
-			}
+			},
+			domain: 'all',
+			incidents_marker: null,
+			visibleModal: false
 		};
 	}
 
-	componentDidMount() {
+	componentWillMount() {
+		this.props.getAllIncidents();
 		//Used to check if location services are enabled and
 		//if not than asks to enables them by redirecting to location settings.
 		if (Platform.OS === 'android') {
@@ -52,7 +66,6 @@ class MapScreen extends Component {
 				cancel: 'NO',
 				providerListener: true
 			}).then(success => {
-				console.log(success);
 				this.props.getCurrLocation().then(() => {
 					this.setState({
 						curr_region: {
@@ -60,7 +73,7 @@ class MapScreen extends Component {
 							latitude: this.props.curr_location.latitude,
 							longitude: this.props.curr_location.longitude
 						},
-						marker: {
+						curr_location_marker: {
 							latitude: this.props.curr_location.latitude,
 							longitude: this.props.curr_location.longitude
 						}
@@ -76,8 +89,25 @@ class MapScreen extends Component {
 		}
 	}
 
+	//Setting up the region upon relocation
+	setRegion(lat, lng) {
+		var self = this;
+		setTimeout(function() {
+			self.setState({
+				curr_region: {
+					...self.state.curr_region,
+					latitude: lat,
+					longitude: lng
+				}
+			});
+		}, 500);
+	}
+
+	// Handling the relocation of the map screen from the current location
+	// to another location or vice-versa
 	handleRelocation(coordinates, type) {
 		const mapRef = this.map;
+		const markerRef = this.marker;
 
 		if (type === 'search') {
 			this.props.setLocationOnCustomSearch(
@@ -85,47 +115,176 @@ class MapScreen extends Component {
 				coordinates['lng'],
 				coordinates['name']
 			);
-			this.setState({
-				marker: {
+			mapRef.animateToRegion(
+				{
+					...this.state.curr_region,
 					latitude: this.props.location.latitude,
 					longitude: this.props.location.longitude
-				}
-			});
-			Keyboard.dismiss();
-			mapRef.animateToRegion({
-				...this.state.curr_region,
+				},
+				1000
+			);
+			markerRef._component.animateMarkerToCoordinate({
 				latitude: this.props.location.latitude,
 				longitude: this.props.location.longitude
 			});
+			this.setRegion(coordinates['lat'], coordinates['lng']);
+			Keyboard.dismiss();
 		} else if (type === 'curr_location') {
 			var self = this;
-			mapRef.animateToRegion(self.state.curr_region);
-			setTimeout(function() {
-				self.setState({
-					marker: {
-						latitude: self.props.curr_location.latitude,
-						longitude: self.props.curr_location.longitude
-					}
-				});
-				self.textInput.clear();
-			}, 5);
-			self.textInput.clear();
+			mapRef.animateToRegion(
+				{
+					...this.state.curr_region,
+					latitude: this.props.curr_location.latitude,
+					longitude: this.props.curr_location.longitude
+				},
+				1000
+			);
+			markerRef._component.animateMarkerToCoordinate({
+				latitude: this.props.curr_location.latitude,
+				longitude: this.props.curr_location.longitude
+			});
+			this.setRegion(
+				this.props.curr_location.latitude,
+				this.props.curr_location.longitude
+			);
 		}
 	}
 
+	//Sets the filter category
+	alertItemName = item => {
+		this.setState({ domain: item.category });
+		this.closeModal();
+	};
+
+	//Opens the modal
+	openModal() {
+		this.setState({ visibleModal: true });
+	}
+
+	//Closes the modal
+	closeModal() {
+		this.setState({ visibleModal: false });
+	}
+
+	//Modal to be displayed for the filter menu.
+	_renderModalContent = () => (
+		<View>
+			<TouchableOpacity onPress={() => this.closeModal()}>
+				<Icon name="close" size={20} style={styles.modalIcon} />
+			</TouchableOpacity>
+			<Text style={styles.modalHeadText}>
+				Select category from below :
+			</Text>
+			<View style={styles.modalContainer}>
+				{Object.keys(categories).map((key, index) => (
+					<TouchableOpacity
+						key={categories[key].category}
+						style={styles.modalField}
+						onPress={() => this.alertItemName(categories[key])}
+					>
+						<Image
+							style={styles.modalImage}
+							source={getMarkerImage(categories[key].category)}
+						/>
+						<Text style={styles.modalText}>
+							{categories[key].title}
+						</Text>
+					</TouchableOpacity>
+				))}
+			</View>
+		</View>
+	);
+
 	render() {
+		//Logic for filtering the incidents
+		var state = this.state;
+		if (this.props.incident.all_incidents !== null) {
+			var incidents_marker = this.props.incident.all_incidents.filter(
+				function(item) {
+					if (state.domain === 'all') {
+						return true;
+					} else {
+						return item.value.category === state.domain;
+					}
+				}
+			);
+		}
 		return (
 			<View style={styles.container}>
 				<MapView
 					ref={ref => {
 						this.map = ref;
 					}}
-					showsMyLocationButton={true}
+					// showsMyLocationButton={true}
 					style={styles.map}
 					region={this.state.curr_region}
 				>
-					<MapView.Marker coordinate={this.state.marker} />
+					<Marker.Animated
+						ref={marker => {
+							this.marker = marker;
+						}}
+						coordinate={this.state.curr_location_marker}
+					/>
+					{this.props.incident.all_incidents !== null
+						? incidents_marker.map(marker => {
+								var coordinates =
+									marker.value.location.coordinates;
+								return (
+									<MapView.Marker
+										key={marker.key}
+										coordinate={{
+											latitude: coordinates.latitude,
+											longitude: coordinates.longitude
+										}}
+										title={marker.value.title}
+										description={marker.value.details}
+										onCalloutPress={() => {
+											Actions.incident({
+												details: marker.value
+											});
+										}}
+										image={getMarkerImage(
+											marker.value.category
+										)}
+									/>
+								);
+						  })
+						: null}
 				</MapView>
+
+				<TouchableOpacity
+					style={styles.filterButton}
+					onPress={() => this.openModal()}
+				>
+					<Icon name="filter" size={30} style={styles.fabButton} />
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.repositionButton}
+					onPress={() => {
+						this.handleRelocation(null, 'curr_location');
+					}}
+				>
+					<Icon
+						name="crosshairs"
+						size={30}
+						style={styles.fabButton}
+					/>
+				</TouchableOpacity>
+				<TouchableOpacity
+					style={styles.addIncidentButton}
+					onPress={() => Actions.addIncident()}
+				>
+					<Icon name="plus" size={30} style={styles.fabButton} />
+				</TouchableOpacity>
+				<Modal
+					visible={this.state.visibleModal}
+					onRequestClose={() => {
+						this.closeModal();
+						alert('Modal has been closed.');
+					}}
+				>
+					{this._renderModalContent()}
+				</Modal>
 				<GooglePlacesAutocomplete
 					minLength={2}
 					listViewDisplayed="auto"
@@ -151,25 +310,11 @@ class MapScreen extends Component {
 						this.handleRelocation(coordinates, 'search');
 					}}
 					styles={searchBarStyle}
-					renderRightButton={() => (
-						<TouchableOpacity
-							style={styles.clearButton}
-							onPress={() => {
-								this.textInput.clear();
-							}}
-						>
-							<Icon name="remove" size={15} style={styles.icon} />
-						</TouchableOpacity>
-					)}
+					renderLeftButton={() => sideMenu()}
 				/>
-				<TouchableOpacity
-					style={styles.repositionButton}
-					onPress={() => {
-						this.handleRelocation(null, 'curr_location');
-					}}
-				>
-					<Icon name="crosshairs" size={30} style={styles.icon} />
-				</TouchableOpacity>
+				{this.props.incident.loading ? (
+					<ActivityIndicator size={'large'} />
+				) : null}
 			</View>
 		);
 	}
@@ -180,7 +325,8 @@ MapScreen.propTypes = {
 	setLocationOnCustomSearch: PropTypes.func.isRequired,
 	getCurrLocation: PropTypes.func.isRequired,
 	location: PropTypes.object,
-	curr_location: PropTypes.object
+	curr_location: PropTypes.object,
+	getAllIncidents: PropTypes.func.isRequired
 };
 
 /**
@@ -193,7 +339,8 @@ function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{
 			setLocationOnCustomSearch: setLocationOnCustomSearch,
-			getCurrLocation: getCurrLocation
+			getCurrLocation: getCurrLocation,
+			getAllIncidents: getAllIncidents
 		},
 		dispatch
 	);
@@ -207,7 +354,8 @@ function matchDispatchToProps(dispatch) {
  */
 const mapStateToProps = state => ({
 	location: state.location.coordinates,
-	curr_location: state.location.curr_coordinates
+	curr_location: state.location.curr_coordinates,
+	incident: state.incident
 });
 
 export default connect(mapStateToProps, matchDispatchToProps)(MapScreen);

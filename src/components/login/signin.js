@@ -9,6 +9,7 @@ import {
 	Alert,
 	TextInput,
 	Button,
+	ToastAndroid,
 	Keyboard,
 	ActivityIndicator
 } from 'react-native';
@@ -16,9 +17,9 @@ import firebase from 'react-native-firebase';
 import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { onPressSignIn } from '../actions/loginAction';
+import { onPressSignIn } from '../../actions/loginAction';
 import { Actions } from 'react-native-router-flux';
-import { styles } from '../assets/styles/signin_styles';
+import { styles } from '../../assets/styles/signin_styles';
 import PropTypes from 'prop-types';
 
 /**
@@ -33,6 +34,15 @@ class Signin extends Component {
 			password: ''
 		};
 	}
+
+	componentDidUpdate() {
+		// Typical usage (don't forget to compare props):
+		if (!this.props.login.loading && this.props.login.signInType !== null) {
+			ToastAndroid.show('You are logged in', ToastAndroid.SHORT);
+			Actions.profile();
+		}
+	}
+
 	/**
 	 * Hides Keyboard and calls onPressSignIn function in loginAction screen.
 	 */
