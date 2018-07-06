@@ -21,6 +21,7 @@ const config = {
 		createWhitelistFilter('incident', ['notificationStack']),
 		createWhitelistFilter('login'),
 		createWhitelistFilter('emergencyPlaces', []),
+		createWhitelistFilter('location', []),
 		createWhitelistFilter('settings')
 	]
 };

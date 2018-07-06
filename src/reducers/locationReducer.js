@@ -1,13 +1,17 @@
-import { LOCATION, CURR_LOCATION } from '../actions/types';
+import { SEARCH_LOCATION, CURR_LOCATION } from '../actions/types';
 
 const INITIAL_STATE = {
-	coordinates: {
+	search_coordinates: {
 		latitude: 30,
-		longitude: 40
+		longitude: 40,
+		latitudeDelta: 0.0052,
+		longitudeDelta: 0.0052
 	},
 	curr_coordinates: {
 		latitude: 30,
-		longitude: 40
+		longitude: 40,
+		latitudeDelta: 0.0052,
+		longitudeDelta: 0.0052
 	},
 	location_name: null
 };
@@ -25,12 +29,20 @@ export default function(state = INITIAL_STATE, action) {
 		case CURR_LOCATION:
 			return {
 				...result,
-				curr_coordinates: action.curr_coordinates
+				curr_coordinates: {
+					...result.curr_coordinates,
+					latitude: action.curr_coordinates.latitude,
+					longitude: action.curr_coordinates.longitude
+				}
 			};
-		case LOCATION:
+		case SEARCH_LOCATION:
 			return {
 				...result,
-				coordinates: action.coordinates,
+				search_coordinates: {
+					...result.search_coordinates,
+					latitude: action.search_coordinates.latitude,
+					longitude: action.search_coordinates.longitude
+				},
 				location_name: action.location_name
 			};
 		default:
