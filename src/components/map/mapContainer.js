@@ -8,28 +8,6 @@ import Cluster from './markers/cluster';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-const initialRegion = {
-	latitude: 55.676098,
-	longitude: 12.568337,
-	latitudeDelta: 0.0922,
-	longitudeDelta: 0.0421
-};
-let northeast = {
-	latitude: initialRegion.latitude + initialRegion.latitudeDelta / 2,
-	longitude: initialRegion.longitude + initialRegion.longitudeDelta / 2
-};
-let southwest = {
-	latitude: initialRegion.latitude - initialRegion.latitudeDelta / 2,
-	longitude: initialRegion.longitude - initialRegion.longitudeDelta / 2
-};
-let northwest = {
-	latitude: initialRegion.latitude - initialRegion.latitudeDelta / 2,
-	longitude: initialRegion.longitude + initialRegion.longitudeDelta / 2
-};
-let southeast = {
-	latitude: initialRegion.latitude + initialRegion.latitudeDelta / 2,
-	longitude: initialRegion.longitude - initialRegion.longitudeDelta / 2
-};
 
 /**
  * Handles clustring of markers on map.
@@ -50,98 +28,112 @@ class MapContainer extends Component {
 			incidentsOfCluster: [],
 			emergencyPlacesOfCluster: []
 		};
+		this.northeast = {
+			latitude:
+				this.state.curr_region.latitude +
+				this.state.curr_region.latitudeDelta / 2,
+			longitude:
+				this.state.curr_region.longitude +
+				this.state.curr_region.longitudeDelta / 2
+		};
+		this.southwest = {
+			latitude:
+				this.state.curr_region.latitude -
+				this.state.curr_region.latitudeDelta / 2,
+			longitude:
+				this.state.curr_region.longitude -
+				this.state.curr_region.longitudeDelta / 2
+		};
+		this.northwest = {
+			latitude:
+				this.state.curr_region.latitude -
+				this.state.curr_region.latitudeDelta / 2,
+			longitude:
+				this.state.curr_region.longitude +
+				this.state.curr_region.longitudeDelta / 2
+		};
+		this.southeast = {
+			latitude:
+				this.state.curr_region.latitude +
+				this.state.curr_region.latitudeDelta / 2,
+			longitude:
+				this.state.curr_region.longitude -
+				this.state.curr_region.longitudeDelta / 2
+		};
 	}
 
 	/**
-	 * Used to fetch incidents from store and transform the incident array
-	 * so that the geo json library can parse the incidents
+	 * Used to fetch incidents from store and transform them so that the geo json
+	 * library can parse the incidents
 	 * @param  {String} domain Used for filtering
 	 * @return {Array} Returns incidents
 	 */
 	generateIncidents(domain) {
 		incidents = [];
-		if (this.props.all_incidents !== null) {
-			//logic for filter
-			var incidents_marker = this.props.all_incidents.filter(function(
-				item
-			) {
-				if (domain === 'all') {
-					return true;
-				} else {
-					return item.value.category === domain;
-				}
-			});
-			for (var i = 0; i < incidents_marker.length; i++) {
-				var obj = {
-					latitude: null,
-					longitude: null,
-					incident: null
-				};
-				obj.latitude =
-					incidents_marker[i].value.location.coordinates.latitude;
-				obj.longitude =
-					incidents_marker[i].value.location.coordinates.longitude;
-				obj.incident = incidents_marker[i];
-				incidents.push(obj);
+		//logic for filter
+		var incidents_marker = this.props.all_incidents.filter(function(item) {
+			if (domain === 'all') {
+				return true;
+			} else {
+				return item.value.category === domain;
 			}
-			return incidents;
+		});
+		for (var i = 0; i < incidents_marker.length; i++) {
+			var obj = {
+				latitude: null,
+				longitude: null,
+				incident: null
+			};
+			obj.latitude =
+				incidents_marker[i].value.location.coordinates.latitude;
+			obj.longitude =
+				incidents_marker[i].value.location.coordinates.longitude;
+			obj.incident = incidents_marker[i];
+			incidents.push(obj);
 		}
+		return incidents;
 	}
 
 	/**
-	 * Used to fetch  hospitals from store and transform
+	 * Used to fetch  hospitals and police stations from store and transform them
 	 * so that the geo json library can parse the nearby hospitals.
 	 * @return {Array} Returns incidents
 	 */
-	generateEmergencyPlacesHospitals() {
-		emergencyPlacesHospitals = [];
-		if (this.props.emergencyPlaces.hospitals !== null) {
-			var data = this.props.emergencyPlaces.hospitals;
-			for (var i = 0; i < data.length; i++) {
-				var obj = {
-					latitude: null,
-					longitude: null,
-					name: null,
-					vicinity: null,
-					icon: null
-				};
-				obj.latitude = data[i].geometry.location.lat;
-				obj.longitude = data[i].geometry.location.lng;
-				obj.name = data[i].name;
-				obj.vicinity = data[i].vicinity;
-				obj.icon = data[i].icon;
-				emergencyPlacesHospitals.push(obj);
-			}
-			return emergencyPlacesHospitals;
+	generateEmergencyPlaces() {
+		emergencyPlaces = [];
+		var data = this.props.emergencyPlaces.hospitals;
+		for (var i = 0; i < data.length; i++) {
+			var obj = {
+				latitude: null,
+				longitude: null,
+				name: null,
+				vicinity: null,
+				icon: null
+			};
+			obj.latitude = data[i].geometry.location.lat;
+			obj.longitude = data[i].geometry.location.lng;
+			obj.name = data[i].name;
+			obj.vicinity = data[i].vicinity;
+			obj.icon = data[i].icon;
+			emergencyPlaces.push(obj);
 		}
-	}
-
-	/**
-	 * Used to fetch  police stations from store and transform
-	 * so that the geo json library can parse the nearby police stations.
-	 * @return {Array} Returns incidents
-	 */
-	generateEmergencyPlacesPoliceStations() {
-		emergencyPlacesPoliceStations = [];
-		if (this.props.emergencyPlaces.policeStations !== null) {
-			var data = this.props.emergencyPlaces.policeStations;
-			for (var i = 0; i < data.length; i++) {
-				var obj = {
-					latitude: null,
-					longitude: null,
-					name: null,
-					vicinity: null,
-					icon: null
-				};
-				obj.latitude = data[i].geometry.location.lat;
-				obj.longitude = data[i].geometry.location.lng;
-				obj.name = data[i].name;
-				obj.vicinity = data[i].vicinity;
-				obj.icon = data[i].icon;
-				emergencyPlacesPoliceStations.push(obj);
-			}
-			return emergencyPlacesPoliceStations;
+		var data = this.props.emergencyPlaces.policeStations;
+		for (var i = 0; i < data.length; i++) {
+			var obj = {
+				latitude: null,
+				longitude: null,
+				name: null,
+				vicinity: null,
+				icon: null
+			};
+			obj.latitude = data[i].geometry.location.lat;
+			obj.longitude = data[i].geometry.location.lng;
+			obj.name = data[i].name;
+			obj.vicinity = data[i].vicinity;
+			obj.icon = data[i].icon;
+			emergencyPlaces.push(obj);
 		}
+		return emergencyPlaces;
 	}
 
 	/**
@@ -181,35 +173,22 @@ class MapContainer extends Component {
 	 * @param  {JSON} region Region of map
 	 * @return Makes clusters.
 	 */
-	_createRegions(
-		region,
-		incidents,
-		emergencyPlacesHospitals,
-		emergencyPlacesPoliceStations
-	) {
-		this.setState({ emergencyPlacesOfCluster: [], incidentsOfCluster: [] });
-
+	_createRegions(region, incidents, emergencyPlaces) {
 		// clustering of incidents
 		const clusterIncident = this._createCluster(incidents);
 		var itemsIncident = null;
-		if (clusterIncident !== null) {
-			itemsIncident = clusterIncident.getClusters(
-				[
-					southwest.longitude,
-					southwest.latitude,
-					northeast.longitude,
-					northeast.latitude
-				],
-				this._getZoomLevel(region)
-			);
-			this.setState({
-				clustersIncidents: itemsIncident
-			});
-		}
-		leavesOfIncidents = [];
-		leavesOfEmergencyPlaces = [];
+		itemsIncident = clusterIncident.getClusters(
+			[
+				this.southwest.longitude,
+				this.southwest.latitude,
+				this.northeast.longitude,
+				this.northeast.latitude
+			],
+			this._getZoomLevel(region)
+		);
 
 		//Gets leaves of cluster i.e individual incidents.
+		leavesOfIncidents = [];
 		for (var i = 0; i < itemsIncident.length; i++) {
 			if ('cluster' in itemsIncident[i].properties) {
 				const clusterLeaves = clusterIncident.getLeaves(
@@ -220,38 +199,22 @@ class MapContainer extends Component {
 				leavesOfIncidents.push(clusterLeaves);
 			}
 		}
-		this.setState({ incidentsOfCluster: leavesOfIncidents });
 
 		// clustering of emergency places.
-		emergencyPlaces = [];
-		if (emergencyPlacesHospitals !== null) {
-			for (var i = 0; i < emergencyPlacesHospitals.length; i++) {
-				emergencyPlaces.push(emergencyPlacesHospitals[i]);
-			}
-		}
-		if (emergencyPlacesPoliceStations !== null) {
-			for (var i = 0; i < emergencyPlacesPoliceStations.length; i++) {
-				emergencyPlaces.push(emergencyPlacesPoliceStations[i]);
-			}
-		}
 		const clusterEmergencyPlaces = this._createCluster(emergencyPlaces);
 		var itemsEmergencyPlaces = null;
-		if (clusterEmergencyPlaces !== null) {
-			itemsEmergencyPlaces = clusterEmergencyPlaces.getClusters(
-				[
-					southwest.longitude,
-					southwest.latitude,
-					northeast.longitude,
-					northeast.latitude
-				],
-				this._getZoomLevel(region)
-			);
-			this.setState({
-				clustersPlaces: itemsEmergencyPlaces
-			});
-		}
+		itemsEmergencyPlaces = clusterEmergencyPlaces.getClusters(
+			[
+				this.southwest.longitude,
+				this.southwest.latitude,
+				this.northeast.longitude,
+				this.northeast.latitude
+			],
+			this._getZoomLevel(region)
+		);
 
 		// gets leaves of emergency places.
+		leavesOfEmergencyPlaces = [];
 		for (var i = 0; i < itemsEmergencyPlaces.length; i++) {
 			if ('cluster' in itemsEmergencyPlaces[i].properties) {
 				const clusterLeaves = clusterEmergencyPlaces.getLeaves(
@@ -262,113 +225,118 @@ class MapContainer extends Component {
 				leavesOfEmergencyPlaces.push(clusterLeaves);
 			}
 		}
-		this.setState({ emergencyPlacesOfCluster: leavesOfEmergencyPlaces });
+
+		this.setState({
+			curr_region: region,
+			emergencyPlacesOfCluster: leavesOfEmergencyPlaces,
+			clustersPlaces: itemsEmergencyPlaces,
+			incidentsOfCluster: leavesOfIncidents,
+			clustersIncidents: itemsIncident
+		});
 	}
 
 	/**
 	 * Determines the region being viewed by the user.
 	 * @param  {JSON} region Region in vire of user.
+	 * @param  {Object} props  Passing the latest props(if there) to update this.props
 	 * @return On change the map is updated and clustering takes place.
 	 */
-	onRegionChangeComplete(
-		region,
-		incidents,
-		emergencyPlacesHospitals,
-		emergencyPlacesPoliceStations
-	) {
-		northeast = {
+	onRegionChangeComplete(region, props) {
+		this.northeast = {
 			latitude: region.latitude + region.latitudeDelta / 2,
 			longitude: region.longitude + region.longitudeDelta / 2
 		};
-		southwest = {
+		this.southwest = {
 			latitude: region.latitude - region.latitudeDelta / 2,
 			longitude: region.longitude - region.longitudeDelta / 2
 		};
-		northwest = {
+		this.northwest = {
 			latitude: region.latitude - region.latitudeDelta / 2,
 			longitude: region.longitude + region.longitudeDelta / 2
 		};
-		southeast = {
+		this.southeast = {
 			latitude: region.latitude + region.latitudeDelta / 2,
 			longitude: region.longitude - region.longitudeDelta / 2
 		};
-		this._createRegions(
-			region,
-			incidents,
-			emergencyPlacesHospitals,
-			emergencyPlacesPoliceStations
-		);
+
+		props !== null ? (this.props = props) : null;
+		if (
+			this.props.all_incidents !== null &&
+			this.props.emergencyPlaces.hospitals !== null &&
+			this.props.emergencyPlaces.policeStations !== null
+		) {
+			this._createRegions(
+				region,
+				this.generateIncidents(this.props.incident.domain),
+				this.generateEmergencyPlaces()
+			);
+		}
+	}
+
+	//Triggerinng on propChange like filtering/adding/modifying incidents.
+	componentWillReceiveProps(nextProps) {
+		if (nextProps.incident !== this.props.incident) {
+			this.onRegionChangeComplete(this.state.curr_region, nextProps);
+		}
 	}
 
 	render() {
-		var incidents = null;
-		var emergencyPlacesHospitals = null;
-		var emergencyPlacesPoliceStations = null;
-		if (this.props.all_incidents !== null) {
-			incidents = this.generateIncidents(this.props.domain);
-		}
-		if (this.props.emergencyPlaces.hospitals !== null) {
-			emergencyPlacesHospitals = this.generateEmergencyPlacesHospitals();
-		}
-		if (this.props.emergencyPlaces.policeStations !== null) {
-			emergencyPlacesPoliceStations = this.generateEmergencyPlacesPoliceStations();
-		}
-
-		return (
-			<MapView
-				initialRegion={this.state.curr_region}
-				onRegionChangeComplete={x => {
-					this.onRegionChangeComplete(
-						x,
-						incidents,
-						emergencyPlacesHospitals,
-						emergencyPlacesPoliceStations
-					);
-				}}
-				{...this.props}
-			>
-				{/* Maps incidents */}
-				{this.state.clustersIncidents.map(
-					(item, i) =>
-						item.properties.cluster === true ? (
-							<Cluster
-								key={i}
-								item={item}
-								itemsInCluster={this.state.incidentsOfCluster}
-								type={'incidents'}
-							/>
-						) : (
-							<MapMarker key={i} item={item} />
-						)
-				)}
-				{/* Maps emergency places */}
-				{this.state.clustersPlaces.map(
-					(item, i) =>
-						item.properties.cluster === true ? (
-							<Cluster
-								key={i}
-								item={item}
-								itemsInCluster={
-									this.state.emergencyPlacesOfCluster
-								}
-								type={'places'}
-							/>
-						) : (
-							<MapMarker key={i} item={item} />
-						)
-				)}
-				{/* Maps current location */}
-				<Marker.Animated
-					ref={marker => {
-						this.marker = marker;
+		if (this.props.incident.loading && this.props.emergencyPlaces.loading) {
+			return <ActivityIndicator size={'large'} />;
+		} else {
+			return (
+				<MapView
+					initialRegion={this.state.curr_region}
+					onRegionChangeComplete={region => {
+						this.onRegionChangeComplete(region, null);
 					}}
-					coordinate={{
-						latitude: this.props.curr_location.latitude,
-						longitude: this.props.curr_location.longitude
-					}}
-				/>
-			</MapView>
-		);
+					{...this.props}
+				>
+					{/* Maps incidents */}
+					{this.state.clustersIncidents.map(
+						(item, i) =>
+							item.properties.cluster === true ? (
+								<Cluster
+									key={i}
+									item={item}
+									itemsInCluster={
+										this.state.incidentsOfCluster
+									}
+									type={'incidents'}
+								/>
+							) : (
+								<MapMarker key={i} item={item} />
+							)
+					)}
+					{/* Maps emergency places */}
+					{this.state.clustersPlaces.map(
+						(item, i) =>
+							item.properties.cluster === true ? (
+								<Cluster
+									key={i}
+									item={item}
+									itemsInCluster={
+										this.state.emergencyPlacesOfCluster
+									}
+									type={'places'}
+								/>
+							) : (
+								<MapMarker key={i} item={item} />
+							)
+					)}
+					{/* Maps current location */}
+					<Marker.Animated
+						ref={marker => {
+							this.marker = marker;
+						}}
+						coordinate={{
+							latitude: this.props.curr_location.latitude,
+							longitude: this.props.curr_location.longitude
+						}}
+					/>
+				</MapView>
+			);
+		}
 	}
 }
 
@@ -379,6 +347,7 @@ class MapContainer extends Component {
 MapContainer.propTypes = {
 	curr_location: PropTypes.object,
 	emergencyPlaces: PropTypes.object,
+	incident: PropTypes.object,
 	all_incidents: PropTypes.array
 };
 

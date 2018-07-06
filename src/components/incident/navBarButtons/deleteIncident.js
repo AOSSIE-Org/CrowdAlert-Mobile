@@ -34,7 +34,7 @@ class DeleteButtonIncident extends Component {
 								{ visible: false }
 							)
 							.then(() => {
-								Actions.profile();
+								Actions.pop();
 							});
 					}
 				}

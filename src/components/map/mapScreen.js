@@ -26,8 +26,8 @@ import {
 } from '../../actions/locationAction';
 import {
 	getAllIncidents,
-	viewIncident,
-	updateIndvNotification
+	updateIndvNotification,
+	updateDomain
 } from '../../actions/incidentsAction';
 import { styles, searchBarStyle } from '../../assets/styles/map_styles.js';
 import { GooglePlacesAutocomplete } from '../googleSearchBar';
@@ -44,18 +44,6 @@ class MapScreen extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			curr_region: {
-				latitude: this.props.curr_location.latitude,
-				longitude: this.props.curr_location.longitude,
-				latitudeDelta: 0.0052,
-				longitudeDelta: 0.0052
-			},
-			curr_location_marker: {
-				latitude: this.props.curr_location.latitude,
-				longitude: this.props.curr_location.longitude
-			},
-			domain: 'all',
-			incidents_marker: null,
 			visibleModal: false
 		};
 	}
@@ -63,17 +51,17 @@ class MapScreen extends Component {
 	componentWillMount() {
 		this.props.getAllIncidents();
 		this.props.getEmergencyPlaces(this.props.settings.emergency_radius);
-		this.setState({
-			curr_region: {
-				...this.state.curr_region,
-				latitude: this.props.curr_location.latitude,
-				longitude: this.props.curr_location.longitude
-			},
-			curr_location_marker: {
-				latitude: this.props.curr_location.latitude,
-				longitude: this.props.curr_location.longitude
-			}
-		});
+		// this.setState({
+		// 	curr_region: {
+		// 		...this.state.curr_region,
+		// 		latitude: this.props.curr_location.latitude,
+		// 		longitude: this.props.curr_location.longitude
+		// 	},
+		// 	curr_location_marker: {
+		// 		latitude: this.props.curr_location.latitude,
+		// 		longitude: this.props.curr_location.longitude
+		// 	}
+		// });
 	}
 
 	componentWillUpdate(nextProps) {
@@ -217,7 +205,7 @@ class MapScreen extends Component {
 
 	//Sets the filter category
 	alertItemName = item => {
-		this.setState({ domain: item.category });
+		this.props.updateDomain(item.category);
 		this.closeModal();
 	};
 
@@ -266,9 +254,7 @@ class MapScreen extends Component {
 				<MapContainer
 					// showsMyLocationButton={true}
 					style={styles.map}
-					domain={this.state.domain}
 				/>
-
 				<TouchableOpacity
 					style={styles.filterButton}
 					onPress={() => this.openModal()}
@@ -329,9 +315,6 @@ class MapScreen extends Component {
 					styles={searchBarStyle}
 					renderLeftButton={() => sideMenu()}
 				/>
-				{this.props.incident.loading ? (
-					<ActivityIndicator size={'large'} />
-				) : null}
 			</View>
 		);
 	}
@@ -353,7 +336,6 @@ MapScreen.propTypes = {
 	// watchCurrLocation: PropTypes.func.isRequired,
 	getAllIncidents: PropTypes.func.isRequired,
 	getAllIncidents: PropTypes.func.isRequired,
-	viewIncident: PropTypes.func.isRequired,
 	getEmergencyPlaces: PropTypes.func.isRequired,
 	updateIndvNotification: PropTypes.func.isRequired
 };
@@ -370,8 +352,8 @@ function matchDispatchToProps(dispatch) {
 			setLocationOnCustomSearch: setLocationOnCustomSearch,
 			// watchCurrLocation: watchCurrLocation,
 			getAllIncidents: getAllIncidents,
-			viewIncident: viewIncident,
 			getEmergencyPlaces: getEmergencyPlaces,
+			updateDomain: updateDomain,
 			updateIndvNotification: updateIndvNotification
 		},
 		dispatch

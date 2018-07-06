@@ -10,44 +10,33 @@ import PropTypes from 'prop-types';
  * @param {String} colorIncidents Cluster color for incidents
  * @param {String} colorEmergencyPlaces	Cluster color for emergency places.
  * @param {String} type Type of cluster place or incident
- * @param {Array} itemsInCluster Items within a cluster.
  */
-const Cluster = ({
-	item,
-	colorIncidents,
-	colorEmergencyPlaces,
-	type,
-	itemsInCluster
-}) => {
+export default (Cluster = ({ item, type }) => {
 	const { point_count, cluster_id } = item.properties;
-	const coordinates = item.geometry.coordinates;
-	var pointColor = null;
-
-	// If incident than cluster color must be black else red.
-	if (type === 'incidents') {
-		pointColor = colorIncidents;
-	} else {
-		pointColor = colorEmergencyPlaces;
-	}
+	const coords = item.geometry.coordinates;
 	return (
 		<MapView.Marker
-			coordinate={{ latitude: coordinates[1], longitude: coordinates[0] }}
-			width={41}
-			height={41}
-			anchor={{ x: 0.5, y: 0.5 }}
-			title={'Tap here to see all incidents'}
+			coordinate={{ latitude: coords[1], longitude: coords[0] }}
+			// width={41}
+			// height={41}
+			// anchor={{ x: 0.5, y: 0.5 }}
+			// title={'Tap here to see all incidents'}
 			onCalloutPress={() => {}}
 		>
 			<View
 				style={[
 					styles.clusterOuter,
-					{ backgroundColor: `rgba(${pointColor}, 0.25)` }
+					type === 'incidents'
+						? styles.colorIncidentsOuter
+						: styles.colorEmergencyPlacesOuter
 				]}
 			>
 				<View
 					style={[
 						styles.cluster,
-						{ backgroundColor: `rgb(${pointColor})` }
+						type === 'incidents'
+							? styles.colorIncidents
+							: styles.colorEmergencyPlaces
 					]}
 				>
 					<TouchableOpacity>
@@ -57,7 +46,7 @@ const Cluster = ({
 			</View>
 		</MapView.Marker>
 	);
-};
+});
 
 /**
  * Checks that the functions specified as isRequired are present and warns if
@@ -65,14 +54,5 @@ const Cluster = ({
  */
 Cluster.propTypes = {
 	item: PropTypes.object,
-	colorIncidents: PropTypes.string,
-	colorEmergencyPlaces: PropTypes.string,
-	type: PropTypes.string,
-	itemsInCluster: PropTypes.array
+	type: PropTypes.string
 };
-Cluster.defaultProps = {
-	colorIncidents: '0,0,0',
-	colorEmergencyPlaces: '180,0,0'
-};
-
-export default Cluster;
