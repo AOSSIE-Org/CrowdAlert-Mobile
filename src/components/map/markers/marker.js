@@ -7,6 +7,7 @@ import { viewIncident } from '../../../actions/incidentsAction';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import getDirections from 'react-native-google-maps-directions';
+import PropTypes from 'prop-types';
 
 /**
  * Class for displaying individual marker on map
@@ -19,7 +20,7 @@ class MapMarker extends Component {
 
 	/**
 	 * This function checks if the user viewing the incident page is
-	 * the uers who created the incident. If yes than it will display the
+	 * the one who created the incident. If yes than it will display the
 	 * edit and delete button on navigation bar else no.
 	 * @param  {JSON} incident It contains the incident details.
 	 * @return Navigates to incident page
@@ -78,7 +79,7 @@ class MapMarker extends Component {
 				/>
 			);
 		} else {
-			// If marker is an incident.
+			// If the marker is an incident.
 			return (
 				<MapView.Marker
 					coordinate={{
@@ -98,6 +99,15 @@ class MapMarker extends Component {
 		}
 	}
 }
+
+/**
+ * Checks that the functions specified as isRequired are present and warns if
+ * the props used on this page does not meet the specified type.
+ */
+MapMarker.propTypes = {
+	user: PropTypes.object,
+	viewIncident: PropTypes.func.isRequired
+};
 
 /**
  * Mapping dispatchable actions to props so that actions can be used
@@ -121,13 +131,7 @@ function matchDispatchToProps(dispatch) {
  * @return Returns states as props.
  */
 const mapStateToProps = state => ({
-	location: state.location.coordinates,
-	curr_location: state.location.curr_coordinates,
-	all_incidents: state.incident.all_incidents,
-	incident: state.incident,
-	user: state.login.userDetails,
-	emergencyPlaces: state.emergencyPlaces,
-	settings: state.settings
+	user: state.login.userDetails
 });
 
 export default connect(mapStateToProps, matchDispatchToProps)(MapMarker);

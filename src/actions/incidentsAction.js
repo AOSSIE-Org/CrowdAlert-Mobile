@@ -4,7 +4,8 @@ import {
 	INCIDENTS_LOADING,
 	USERS_INCIDENTS,
 	VIEW_INCIDENT,
-	NOTIFICATION_INCIDENTS
+	NOTIFICATION_INCIDENTS,
+	TOGGLE_DOMAINS
 } from './types';
 import { handleError } from './errorAction';
 import firebase from 'react-native-firebase';
@@ -192,6 +193,19 @@ export const getIndvIncident = key => {
 			});
 	};
 };
+
+export const updateDomain = domain => {
+	return dispatch => {
+		dispatch(updateDomainHelper(domain));
+	};
+};
+
+export function updateDomainHelper(domain) {
+	return {
+		type: TOGGLE_DOMAINS,
+		domain: domain
+	};
+}
 
 /**
  * Called when an incident is clicked to be viewed for its details
