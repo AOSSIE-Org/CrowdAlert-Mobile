@@ -14,14 +14,15 @@ import PropTypes from 'prop-types';
 export default (Cluster = ({ item, type }) => {
 	const { point_count, cluster_id } = item.properties;
 	const coords = item.geometry.coordinates;
+
 	return (
 		<MapView.Marker
 			coordinate={{ latitude: coords[1], longitude: coords[0] }}
-			// width={41}
-			// height={41}
-			// anchor={{ x: 0.5, y: 0.5 }}
-			// title={'Tap here to see all incidents'}
-			onCalloutPress={() => {}}
+			anchor={{ x: 0.5, y: 0.5 }}
+			title={'Tap here to see all emergency places'}
+			onCalloutPress={() => {
+				console.log(item);
+			}}
 		>
 			<View
 				style={[

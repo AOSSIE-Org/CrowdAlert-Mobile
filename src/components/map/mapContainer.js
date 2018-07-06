@@ -1,16 +1,24 @@
 import React, { Component } from 'react';
 import GeoJSON from 'geojson';
 import supercluster from 'supercluster';
-import { ActivityIndicator } from 'react-native';
+import {
+	ActivityIndicator,
+	View,
+	TouchableOpacity,
+	Keyboard
+} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import MapView, { Marker } from 'react-native-maps';
 import MapMarker from './markers/marker';
 import Cluster from './markers/cluster';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
+import { styles, searchBarStyle } from '../../assets/styles/map_styles.js';
 
 /**
- * Handles clustring of markers on map.
+ * Main Map screen along with the relocation button.
+ * Also handles the clustering of the incidents.
  * @extends Component
  */
 class MapContainer extends Component {
@@ -22,11 +30,9 @@ class MapContainer extends Component {
 			curr_region: {
 				latitude: this.props.curr_location.latitude,
 				longitude: this.props.curr_location.longitude,
-				latitudeDelta: 0.0052,
-				longitudeDelta: 0.0052
-			},
-			incidentsOfCluster: [],
-			emergencyPlacesOfCluster: []
+				latitudeDelta: this.props.curr_location.latitudeDelta,
+				longitudeDelta: this.props.curr_location.longitudeDelta
+			}
 		};
 		this.northeast = {
 			latitude:
@@ -70,7 +76,7 @@ class MapContainer extends Component {
 	 */
 	generateIncidents(domain) {
 		incidents = [];
-		//logic for filter
+		//Logic for filter
 		var incidents_marker = this.props.all_incidents.filter(function(item) {
 			if (domain === 'all') {
 				return true;
@@ -188,15 +194,13 @@ class MapContainer extends Component {
 		);
 
 		//Gets leaves of cluster i.e individual incidents.
-		leavesOfIncidents = [];
 		for (var i = 0; i < itemsIncident.length; i++) {
 			if ('cluster' in itemsIncident[i].properties) {
-				const clusterLeaves = clusterIncident.getLeaves(
+				itemsIncident[i]['leaves'] = clusterIncident.getLeaves(
 					itemsIncident[i].properties.cluster_id,
 					(limit = 10),
 					(offset = 0)
 				);
-				leavesOfIncidents.push(clusterLeaves);
 			}
 		}
 
@@ -214,23 +218,20 @@ class MapContainer extends Component {
 		);
 
 		// gets leaves of emergency places.
-		leavesOfEmergencyPlaces = [];
 		for (var i = 0; i < itemsEmergencyPlaces.length; i++) {
 			if ('cluster' in itemsEmergencyPlaces[i].properties) {
-				const clusterLeaves = clusterEmergencyPlaces.getLeaves(
+				itemsEmergencyPlaces[i][
+					'leaves'
+				] = clusterEmergencyPlaces.getLeaves(
 					itemsEmergencyPlaces[i].properties.cluster_id,
 					(limit = 10),
 					(offset = 0)
 				);
-				leavesOfEmergencyPlaces.push(clusterLeaves);
 			}
 		}
-
 		this.setState({
 			curr_region: region,
-			emergencyPlacesOfCluster: leavesOfEmergencyPlaces,
 			clustersPlaces: itemsEmergencyPlaces,
-			incidentsOfCluster: leavesOfIncidents,
 			clustersIncidents: itemsIncident
 		});
 	}
@@ -273,10 +274,78 @@ class MapContainer extends Component {
 		}
 	}
 
+	/**
+	 * Setting up the region upon relocation
+	 * @param {JSON} region Region to be updated with.
+	 */
+	setRegion(region) {
+		var self = this;
+		setTimeout(function() {
+			self.setState({
+				curr_region: region
+			});
+		}, 500);
+	}
+
+	/**
+	 * Handling the relocation of the map screen from the current location to another location or vice-versa
+	 * @param  {[type]} coordinates Relocation to this coordinate.
+	 * @param  {[type]} type        Whether its a 'search' relocation or a 'curr_location' relocation
+	 * @return Relocates the map to the particular region along with the marker.
+	 */
+	handleRelocation(coordinates, type) {
+		const mapRef = this.map;
+		const markerRef = this.marker;
+
+		if (type === 'search') {
+			var region = {
+				latitude: coordinates.latitude,
+				longitude: coordinates.longitude,
+				latitudeDelta: this.props.location.search_coordinates
+					.latitudeDelta,
+				longitudeDelta: this.props.location.search_coordinates
+					.longitudeDelta
+			};
+			mapRef.animateToRegion(region, 1000);
+			markerRef._component.animateMarkerToCoordinate({
+				latitude: coordinates.latitude,
+				longitude: coordinates.longitude
+			});
+			this.setRegion(region);
+			Keyboard.dismiss();
+		} else if (type === 'curr_location') {
+			var region = {
+				latitude: this.props.curr_location.latitude,
+				longitude: this.props.curr_location.longitude,
+				latitudeDelta: this.props.curr_location.latitudeDelta,
+				longitudeDelta: this.props.curr_location.longitudeDelta
+			};
+			mapRef.animateToRegion(region, 1000);
+			markerRef._component.animateMarkerToCoordinate({
+				latitude: this.props.curr_location.latitude,
+				longitude: this.props.curr_location.longitude
+			});
+			this.setRegion(region);
+		}
+	}
+
 	//Triggerinng on propChange like filtering/adding/modifying incidents.
 	componentWillReceiveProps(nextProps) {
-		if (nextProps.incident !== this.props.incident) {
+		if (
+			nextProps.incident.all_incidents !==
+				this.props.incident.all_incidents ||
+			nextProps.incident.domain !== this.props.incident.domain
+		) {
 			this.onRegionChangeComplete(this.state.curr_region, nextProps);
+		}
+		if (
+			nextProps.location.search_coordinates !==
+			this.props.location.search_coordinates
+		) {
+			this.handleRelocation(
+				nextProps.location.search_coordinates,
+				'search'
+			);
 		}
 	}
 
@@ -285,56 +354,68 @@ class MapContainer extends Component {
 			return <ActivityIndicator size={'large'} />;
 		} else {
 			return (
-				<MapView
-					initialRegion={this.state.curr_region}
-					onRegionChangeComplete={region => {
-						this.onRegionChangeComplete(region, null);
-					}}
-					{...this.props}
-				>
-					{/* Maps incidents */}
-					{this.state.clustersIncidents.map(
-						(item, i) =>
-							item.properties.cluster === true ? (
-								<Cluster
-									key={i}
-									item={item}
-									itemsInCluster={
-										this.state.incidentsOfCluster
-									}
-									type={'incidents'}
-								/>
-							) : (
-								<MapMarker key={i} item={item} />
-							)
-					)}
-					{/* Maps emergency places */}
-					{this.state.clustersPlaces.map(
-						(item, i) =>
-							item.properties.cluster === true ? (
-								<Cluster
-									key={i}
-									item={item}
-									itemsInCluster={
-										this.state.emergencyPlacesOfCluster
-									}
-									type={'places'}
-								/>
-							) : (
-								<MapMarker key={i} item={item} />
-							)
-					)}
-					{/* Maps current location */}
-					<Marker.Animated
-						ref={marker => {
-							this.marker = marker;
+				<View style={styles.map}>
+					<MapView
+						ref={ref => {
+							this.map = ref;
 						}}
-						coordinate={{
-							latitude: this.props.curr_location.latitude,
-							longitude: this.props.curr_location.longitude
+						initialRegion={this.state.curr_region}
+						onRegionChangeComplete={region => {
+							this.onRegionChangeComplete(region, null);
 						}}
-					/>
-				</MapView>
+						style={styles.map}
+					>
+						{/* Maps incidents */}
+						{this.state.clustersIncidents.map(
+							(item, i) =>
+								item.properties.cluster === true ? (
+									<Cluster
+										key={i}
+										item={item}
+										type={'incidents'}
+									/>
+								) : (
+									<MapMarker key={i} item={item} />
+								)
+						)}
+						{/* Maps emergency places */}
+						{this.state.clustersPlaces.map(
+							(item, i) =>
+								item.properties.cluster === true ? (
+									<Cluster
+										key={i}
+										item={item}
+										type={'places'}
+									/>
+								) : (
+									<MapMarker key={i} item={item} />
+								)
+						)}
+						{/* Maps current location */}
+						<Marker.Animated
+							ref={marker => {
+								this.marker = marker;
+							}}
+							coordinate={{
+								latitude: this.props.curr_location.latitude,
+								longitude: this.props.curr_location.longitude
+							}}
+						/>
+					</MapView>
+					{/* Relocation Button */}
+					<TouchableOpacity
+						style={styles.repositionButton}
+						onPress={() => {
+							this.handleRelocation(null, 'curr_location');
+						}}
+					>
+						<Icon
+							name="crosshairs"
+							size={30}
+							style={styles.fabButton}
+						/>
+					</TouchableOpacity>
+				</View>
 			);
 		}
 	}
@@ -348,6 +429,7 @@ MapContainer.propTypes = {
 	curr_location: PropTypes.object,
 	emergencyPlaces: PropTypes.object,
 	incident: PropTypes.object,
+	location: PropTypes.object,
 	all_incidents: PropTypes.array
 };
 
@@ -361,7 +443,8 @@ const mapStateToProps = state => ({
 	curr_location: state.location.curr_coordinates,
 	emergencyPlaces: state.emergencyPlaces,
 	all_incidents: state.incident.all_incidents,
-	incident: state.incident
+	incident: state.incident,
+	location: state.location
 });
 
 export default connect(mapStateToProps)(MapContainer);

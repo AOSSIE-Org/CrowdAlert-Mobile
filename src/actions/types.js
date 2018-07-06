@@ -8,7 +8,7 @@ export const SIGN_OUT = 'SIGN_OUT';
 export const ERROR_HANDLING = 'ERROR_HANDLING';
 
 //Map
-export const LOCATION = 'LOCATION';
+export const SEARCH_LOCATION = 'SEARCH_LOCATION';
 export const CURR_LOCATION = 'CURR_LOCATION';
 
 //INCIDENT

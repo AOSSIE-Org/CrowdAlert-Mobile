@@ -1,4 +1,4 @@
-import { LOCATION, CURR_LOCATION } from './types';
+import { SEARCH_LOCATION, CURR_LOCATION } from './types';
 import { handleError } from './errorAction';
 
 /**
@@ -54,8 +54,8 @@ export const setLocationOnCustomSearch = (latitude, longitude, name) => {
  */
 function set_location(location, name) {
 	return {
-		type: LOCATION,
-		coordinates: location,
+		type: SEARCH_LOCATION,
+		search_coordinates: location,
 		location_name: name
 	};
 }

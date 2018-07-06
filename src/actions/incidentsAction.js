@@ -49,12 +49,12 @@ export const addIncidentToFirebase = incident => {
  */
 export const getAllIncidents = () => {
 	return dispatch => {
-		dispatch(incidentsLoading(true));
 		return new Promise((resolve, reject) => {
 			firebase
 				.database()
 				.ref('incidents')
 				.on('value', snap => {
+					dispatch(incidentsLoading(true));
 					var all_incidents = [];
 					var notificationStack = store.getState().incident
 						.notificationStack;
@@ -109,6 +109,7 @@ export const getUserIncidents = userID => {
 			.orderByChild('user_id')
 			.equalTo(userID)
 			.on('value', function(snapshot) {
+				dispatch(incidentsLoading(true));
 				var items = [];
 				snapshot.forEach(item => {
 					if (item.val().visible) {

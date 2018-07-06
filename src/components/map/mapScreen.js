@@ -20,10 +20,7 @@ import getDirections from 'react-native-google-maps-directions';
 import Config from 'react-native-config';
 import MapContainer from './mapContainer';
 import { getMarkerImage, categories } from '../../utils/categoryUtil.js';
-import {
-	setLocationOnCustomSearch
-	// watchCurrLocation
-} from '../../actions/locationAction';
+import { setLocationOnCustomSearch } from '../../actions/locationAction';
 import {
 	getAllIncidents,
 	updateIndvNotification,
@@ -51,17 +48,6 @@ class MapScreen extends Component {
 	componentWillMount() {
 		this.props.getAllIncidents();
 		this.props.getEmergencyPlaces(this.props.settings.emergency_radius);
-		// this.setState({
-		// 	curr_region: {
-		// 		...this.state.curr_region,
-		// 		latitude: this.props.curr_location.latitude,
-		// 		longitude: this.props.curr_location.longitude
-		// 	},
-		// 	curr_location_marker: {
-		// 		latitude: this.props.curr_location.latitude,
-		// 		longitude: this.props.curr_location.longitude
-		// 	}
-		// });
 	}
 
 	componentWillUpdate(nextProps) {
@@ -142,67 +128,6 @@ class MapScreen extends Component {
 		}
 	}
 
-	//Setting up the region upon relocation
-	setRegion(lat, lng) {
-		var self = this;
-		setTimeout(function() {
-			self.setState({
-				curr_region: {
-					...self.state.curr_region,
-					latitude: lat,
-					longitude: lng
-				}
-			});
-		}, 500);
-	}
-
-	// Handling the relocation of the map screen from the current location
-	// to another location or vice-versa
-	handleRelocation(coordinates, type) {
-		const mapRef = this.map;
-		const markerRef = this.marker;
-
-		if (type === 'search') {
-			this.props.setLocationOnCustomSearch(
-				coordinates['lat'],
-				coordinates['lng'],
-				coordinates['name']
-			);
-			mapRef.animateToRegion(
-				{
-					...this.state.curr_region,
-					latitude: this.props.location.latitude,
-					longitude: this.props.location.longitude
-				},
-				1000
-			);
-			markerRef._component.animateMarkerToCoordinate({
-				latitude: this.props.location.latitude,
-				longitude: this.props.location.longitude
-			});
-			this.setRegion(coordinates['lat'], coordinates['lng']);
-			Keyboard.dismiss();
-		} else if (type === 'curr_location') {
-			var self = this;
-			mapRef.animateToRegion(
-				{
-					...this.state.curr_region,
-					latitude: this.props.curr_location.latitude,
-					longitude: this.props.curr_location.longitude
-				},
-				1000
-			);
-			markerRef._component.animateMarkerToCoordinate({
-				latitude: this.props.curr_location.latitude,
-				longitude: this.props.curr_location.longitude
-			});
-			this.setRegion(
-				this.props.curr_location.latitude,
-				this.props.curr_location.longitude
-			);
-		}
-	}
-
 	//Sets the filter category
 	alertItemName = item => {
 		this.props.updateDomain(item.category);
@@ -251,27 +176,12 @@ class MapScreen extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<MapContainer
-					// showsMyLocationButton={true}
-					style={styles.map}
-				/>
+				<MapContainer />
 				<TouchableOpacity
 					style={styles.filterButton}
 					onPress={() => this.openModal()}
 				>
 					<Icon name="filter" size={30} style={styles.fabButton} />
-				</TouchableOpacity>
-				<TouchableOpacity
-					style={styles.repositionButton}
-					onPress={() => {
-						this.handleRelocation(null, 'curr_location');
-					}}
-				>
-					<Icon
-						name="crosshairs"
-						size={30}
-						style={styles.fabButton}
-					/>
 				</TouchableOpacity>
 				<TouchableOpacity
 					style={styles.addIncidentButton}
@@ -305,12 +215,11 @@ class MapScreen extends Component {
 						}
 					}}
 					onPress={(data, details = null) => {
-						var coordinates = {
-							lat: details.geometry.location.lat,
-							lng: details.geometry.location.lng,
-							name: details.name
-						};
-						this.handleRelocation(coordinates, 'search');
+						this.props.setLocationOnCustomSearch(
+							details.geometry.location.lat,
+							details.geometry.location.lng,
+							details.name
+						);
 					}}
 					styles={searchBarStyle}
 					renderLeftButton={() => sideMenu()}
@@ -329,11 +238,8 @@ MapScreen.propTypes = {
 	curr_location: PropTypes.object,
 	all_incidents: PropTypes.array,
 	incident: PropTypes.object,
-	user: PropTypes.object,
-	emergencyPlaces: PropTypes.object,
 	settings: PropTypes.object,
 	setLocationOnCustomSearch: PropTypes.func.isRequired,
-	// watchCurrLocation: PropTypes.func.isRequired,
 	getAllIncidents: PropTypes.func.isRequired,
 	getAllIncidents: PropTypes.func.isRequired,
 	getEmergencyPlaces: PropTypes.func.isRequired,
@@ -350,7 +256,6 @@ function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{
 			setLocationOnCustomSearch: setLocationOnCustomSearch,
-			// watchCurrLocation: watchCurrLocation,
 			getAllIncidents: getAllIncidents,
 			getEmergencyPlaces: getEmergencyPlaces,
 			updateDomain: updateDomain,
@@ -367,12 +272,9 @@ function matchDispatchToProps(dispatch) {
  * @return Returns states as props.
  */
 const mapStateToProps = state => ({
-	location: state.location.coordinates,
 	curr_location: state.location.curr_coordinates,
 	all_incidents: state.incident.all_incidents,
 	incident: state.incident,
-	user: state.login.userDetails,
-	emergencyPlaces: state.emergencyPlaces,
 	settings: state.settings
 });
 
