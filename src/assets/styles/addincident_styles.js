@@ -36,15 +36,14 @@ export const styles = StyleSheet.create({
 		marginTop: height / 50,
 		height: 40
 	},
-	CheckBox: {
+	checkBox: {
 		flexDirection: 'row',
-		marginHorizontal: width / 20,
-		marginTop: height / 47,
+		marginTop: height / 50,
 		marginLeft: width / 20
 	},
-	CheckBoxText: {
-		marginTop: height / 72,
-		marginLeft: width / 20
+	checkBoxText: {
+		marginLeft: width / 20,
+		alignSelf: 'center'
 	},
 	field_title: {
 		marginHorizontal: width / 20,

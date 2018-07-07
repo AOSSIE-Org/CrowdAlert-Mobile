@@ -37,7 +37,8 @@ export const styles = StyleSheet.create({
 		backgroundColor: 'black',
 		borderRadius: 4,
 		justifyContent: 'center',
-		alignSelf: 'center'
+		alignSelf: 'center',
+		marginTop: height / 100
 	},
 	cameraText: {
 		color: 'white',

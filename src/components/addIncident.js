@@ -164,23 +164,23 @@ class AddIncident extends Component {
 						returnKeyType="next"
 						placeholder="Details [Optional]"
 					/>
-					<View style={styles.CheckBox}>
+					<View style={styles.checkBox}>
 						<CheckBox
 							value={this.state.visible}
 							onValueChange={() =>
 								this.setState({ visible: !this.state.visible })
 							}
 						/>
-						<Text style={styles.CheckBoxText}>Share Publicly</Text>
+						<Text style={styles.checkBoxText}>Share Publicly</Text>
 					</View>
-					<View style={styles.CheckBox}>
+					<View style={styles.checkBox}>
 						<CheckBox
 							value={this.state.getHelp}
 							onValueChange={() =>
 								this.setState({ getHelp: !this.state.getHelp })
 							}
 						/>
-						<Text style={styles.CheckBoxText}>Get Help!</Text>
+						<Text style={styles.checkBoxText}>Get Help!</Text>
 					</View>
 				</View>
 				{this.state.image.isPresent ? (

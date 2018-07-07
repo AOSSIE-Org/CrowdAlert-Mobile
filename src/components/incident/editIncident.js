@@ -7,12 +7,14 @@ import {
 	TouchableOpacity,
 	TextInput,
 	ActivityIndicator,
-	ToastAndroid
+	ToastAndroid,
+	CheckBox
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { styles } from '../../assets/styles/editScreen_styles';
+import { styles as addincident_styles } from '../../assets/styles/addincident_styles';
 import PropTypes from 'prop-types';
 import {
 	updateIncidentFirebase,
@@ -34,7 +36,8 @@ class EditIncident extends Component {
 				isPresent: this.props.incidentDetails.image.isPresent,
 				base64: this.props.incidentDetails.image.base64,
 				uri: this.props.incidentDetails.image.uri
-			}
+			},
+			getHelp: this.props.incidentDetails.getHelp
 		};
 	}
 
@@ -128,6 +131,17 @@ class EditIncident extends Component {
 					placeholder="Description"
 					value={this.state.details}
 				/>
+				<View style={addincident_styles.checkBox}>
+					<CheckBox
+						value={this.state.getHelp}
+						onValueChange={() =>
+							this.setState({ getHelp: !this.state.getHelp })
+						}
+					/>
+					<Text style={addincident_styles.checkBoxText}>
+						Get Help!
+					</Text>
+				</View>
 				{this.state.image.isPresent ? (
 					<Image
 						style={styles.image}
