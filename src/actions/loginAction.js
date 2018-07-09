@@ -77,7 +77,7 @@ export const onPressSignIn = (email, password) => {
  * @param  {string} password carries password entered by the user on signin screen.
  * @return signs up in the user successfully or triggers an error.
  */
-export const onPressSignUp = (email, password) => {
+export const onPressSignUp = (email, password, name) => {
 	return dispatch => {
 		dispatch(loginLoading(true));
 		firebase
@@ -86,6 +86,7 @@ export const onPressSignUp = (email, password) => {
 			.then(data => {
 				//on success
 				dispatch(getUserAuthFirebase(data.user, 'email'));
+				data.user.providerData[0]['displayName'] = name;
 				dispatch(addUserFirebase(userFirebaseStructure(data.user)));
 			})
 			.catch(error => {

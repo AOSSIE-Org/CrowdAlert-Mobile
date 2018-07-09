@@ -5,6 +5,7 @@ import { PersistGate } from 'redux-persist/lib/integration/react';
 import Route from './src/utils/routes';
 import { ActivityIndicator } from 'react-native';
 import LinkedRouter from './src/utils/LinkedRouter';
+import SplashScreen from './src/components/splashScreen';
 
 import configureStore from './src/utils/store';
 let { store, persistor } = configureStore();
@@ -20,7 +21,7 @@ export default class App extends Component {
 				<PersistGate loading={null} persistor={persistor}>
 					{isLoaded => {
 						if (!isLoaded) {
-							return <ActivityIndicator size={'large'} />;
+							return <SplashScreen />;
 						} else {
 							return <LinkedRouter scheme="https" />;
 						}

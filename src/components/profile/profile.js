@@ -97,7 +97,7 @@ class Profile extends Component {
 	}
 
 	render() {
-		if (this.props.user.length === 0) {
+		if (this.props.user === null) {
 			return <ActivityIndicator size={'large'} />;
 		} else {
 			return (

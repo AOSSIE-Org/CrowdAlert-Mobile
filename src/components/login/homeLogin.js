@@ -55,45 +55,37 @@ class HomeLogin extends Component {
 		return (
 			<View style={styles.container}>
 				{/* <ActivityIndicator animating={this.props.login.loading} size={'large'}/> */}
-				<View style={styles.headerImage}>
+				<View style={styles.heading}>
 					<Image
-						source={require('../../assets/images/earthquake-30-512.png')}
+						source={require('../../assets/images/earthquake.png')}
 						style={styles.logo}
 					/>
-				</View>
-				<Text style={styles.welcome}>Crowd Alert</Text>
-				<View style={styles.button_container}>
-					<TouchableOpacity
-						style={styles.button_signin}
-						onPress={() => Actions.signin()}
-					>
-						<Text style={styles.button_text}> SignIn </Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={styles.button_register}
-						onPress={() => Actions.signup()}
-					>
-						<Text style={styles.button_text}> Register </Text>
-					</TouchableOpacity>
-				</View>
-				<Text style={styles.Text}>More login options :</Text>
-				<View style={styles.button_container}>
-					<TouchableOpacity
-						style={styles.button_fb}
-						onPress={() => this.props.fbSignIn()}
-					>
-						<Text style={styles.button_text_social}>Facebook</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={styles.button_google}
-						onPress={() => this.props.googleSignin()}
-					>
-						<Text style={styles.button_text_social}>Google</Text>
-					</TouchableOpacity>
+					<Text style={styles.welcome}>Crowd Alert</Text>
 				</View>
 				{this.props.login.loading ? (
-					<ActivityIndicator size={'large'} />
+					<ActivityIndicator size={'large'} color="white" />
 				) : null}
+				<View style={styles.button_container}>
+					<Text style={styles.login_text_heading}>LOGIN WITH</Text>
+					<TouchableOpacity
+						style={[styles.button_google, styles.loginButton]}
+						onPress={() => this.props.googleSignin()}
+					>
+						<Text style={styles.button_login_text}>Google</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={[styles.button_fb, styles.loginButton]}
+						onPress={() => this.props.fbSignIn()}
+					>
+						<Text style={styles.button_login_text}>Facebook</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={[styles.button_email, styles.loginButton]}
+						onPress={() => Actions.signin()}
+					>
+						<Text style={styles.button_login_text}> Email </Text>
+					</TouchableOpacity>
+				</View>
 			</View>
 		);
 	}

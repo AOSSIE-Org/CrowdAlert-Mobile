@@ -5,36 +5,63 @@ const { width, height } = Dimensions.get('window');
 export const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#F5FCFF'
+		backgroundColor: '#63a4ff'
 	},
-	field_Pass: {
+	backButton: {
+		paddingTop: height / 50,
+		paddingLeft: width / 60
+	},
+	box: {
+		backgroundColor: 'white',
+		marginTop: height / 20,
+		marginHorizontal: width / 10,
+		elevation: 10,
+		borderRadius: 10
+	},
+	heading: {
+		fontSize: 30,
+		fontWeight: 'bold',
+		color: '#2d2d2d',
+		textAlign: 'center',
+		marginVertical: height / 40
+	},
+	input_field: {
 		marginHorizontal: width / 20,
-		width: width * 0.9,
 		marginTop: height / 50,
-		height: 40
+		color: '#1c76cb',
+		fontSize: 15.5
 	},
 	button_send: {
 		alignItems: 'center',
-		backgroundColor: '#000',
-		padding: width / 30,
-		width: width / 3,
-		marginHorizontal: width / 3,
-		marginTop: height / 50,
-		marginBottom: height / 20,
+		backgroundColor: '#00897b',
+		marginHorizontal: width / 4.5,
+		marginVertical: height / 40,
 		borderRadius: 10
 	},
-	field: {
-		marginTop: height / 50
-	},
 	button_text: {
+		padding: width / 30,
 		color: 'white'
 	},
-	button_text_forgot: {
-		color: 'grey',
-		fontSize: 12
-	},
 	button_forgot: {
-		marginHorizontal: width / 20,
-		marginTop: height / 30
+		marginBottom: height / 50,
+		alignItems: 'center'
+	},
+	button_text_forgot: {
+		fontSize: 13
+	},
+	button_signup: {
+		flexDirection: 'row',
+		backgroundColor: 'white',
+		marginTop: height / 100,
+		marginHorizontal: width / 10,
+		padding: height / 50,
+		elevation: 10,
+		justifyContent: 'center',
+		borderRadius: 10
+	},
+	signup_text: {
+		fontWeight: 'bold',
+		textDecorationLine: 'underline',
+		fontSize: 15
 	}
 });

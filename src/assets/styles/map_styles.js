@@ -36,13 +36,15 @@ const styles = StyleSheet.create({
 	map: {
 		...StyleSheet.absoluteFillObject
 	},
-	repositionButton: {
+	fabButtonContainer: {
 		width: width / 10,
 		height: width / 10,
 		backgroundColor: 'white',
 		borderRadius: 30,
 		justifyContent: 'center',
-		position: 'absolute',
+		position: 'absolute'
+	},
+	repositionButton: {
 		left: width / 40,
 		bottom: height / 25
 	},
@@ -52,22 +54,14 @@ const styles = StyleSheet.create({
 		paddingRight: width / 30
 	},
 	addIncidentButton: {
-		width: width / 10,
-		height: width / 10,
-		backgroundColor: 'white',
-		borderRadius: 30,
-		justifyContent: 'center',
-		position: 'absolute',
-		right: width / 40,
-		bottom: height / 30
+		right: width / 25,
+		bottom: height / 30,
+		elevation: 10,
+		width: width / 7.5,
+		height: width / 7.5,
+		borderRadius: 35
 	},
 	filterButton: {
-		width: width / 10,
-		height: width / 10,
-		backgroundColor: 'white',
-		borderRadius: 30,
-		justifyContent: 'center',
-		position: 'absolute',
 		right: width / 40,
 		top: height / 10
 	},

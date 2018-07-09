@@ -52,19 +52,15 @@ export default class Route extends Component {
 		return (
 			<ConnectedRouter backAndroidHandler={this.onBackPress}>
 				<Scene key="root">
-					<Scene key="signin" title="Log in" component={Signin} />
-					<Scene key="signup" title="Register" component={Signup} />
 					<Scene
 						key="homeLogin"
-						title="Welcome"
+						hideNavBar={true}
 						component={HomeLogin}
 						initial={this.props.initial}
 					/>
-					<Scene
-						key="forgot"
-						title="Reset Password"
-						component={Forgot}
-					/>
+					<Scene key="signin" hideNavBar={true} component={Signin} />
+					<Scene key="signup" hideNavBar={true} component={Signup} />
+					<Scene key="forgot" hideNavBar={true} component={Forgot} />
 					<Scene
 						drawer
 						hideNavBar

@@ -1,26 +1,22 @@
 import React, { Component } from 'react';
 import {
-	StyleSheet,
 	Image,
 	Text,
 	View,
-	ScrollView,
 	TouchableOpacity,
 	Alert,
 	TextInput,
-	Button,
 	ToastAndroid,
 	Keyboard,
 	ActivityIndicator
 } from 'react-native';
-import firebase from 'react-native-firebase';
-import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { onPressSignIn } from '../../actions/loginAction';
 import { Actions } from 'react-native-router-flux';
 import { styles } from '../../assets/styles/signin_styles';
 import PropTypes from 'prop-types';
+import Icon from 'react-native-vector-icons/Feather';
 
 /**
  * Screen for login using login id and password.
@@ -48,15 +44,68 @@ class Signin extends Component {
 	 */
 	handleSignIn() {
 		Keyboard.dismiss();
-		this.props.onPressSignIn(this.state.email, this.state.password);
+
+		if (
+			this.validateEmail(this.state.email) &&
+			this.validatePassword(this.state.password)
+		) {
+			this.props.onPressSignIn(this.state.email, this.state.password);
+		}
+	}
+
+	validateEmail(inputEmail) {
+		if (inputEmail === '') {
+			ToastAndroid.show(
+				'You can leave the email field blank!',
+				ToastAndroid.SHORT
+			);
+			return false;
+		} else {
+			var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+			if (!inputEmail.match(mailformat)) {
+				ToastAndroid.show(
+					'Please check your email format',
+					ToastAndroid.SHORT
+				);
+				return false;
+			} else {
+				return true;
+			}
+		}
+	}
+
+	validatePassword(inputPassword) {
+		if (inputPassword === '') {
+			ToastAndroid.show(
+				'You can leave the password field blank!',
+				ToastAndroid.SHORT
+			);
+			return false;
+		} else if (inputPassword.length < 8) {
+			ToastAndroid.show(
+				'Your password should be of minimum 8 characters!',
+				ToastAndroid.SHORT
+			);
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	render() {
 		return (
 			<View style={styles.container}>
-				<View style={styles.field}>
+				<TouchableOpacity onPress={() => Actions.pop()}>
+					<Icon
+						name="chevron-left"
+						size={40}
+						style={styles.backButton}
+					/>
+				</TouchableOpacity>
+				<View style={styles.box}>
+					<Text style={styles.heading}>Sign in</Text>
 					<TextInput
-						style={styles.field_Pass}
+						style={styles.input_field}
 						ref={input => (this.emailInput = input)}
 						onChangeText={email => this.setState({ email })}
 						onSubmitEditing={() => this.passwordInput.focus()}
@@ -68,31 +117,40 @@ class Signin extends Component {
 					/>
 					<TextInput
 						ref={input => (this.passwordInput = input)}
-						style={styles.field_Pass}
+						style={styles.input_field}
 						onChangeText={password => this.setState({ password })}
-						// onSubmitEditing={() => this.passwordConfirmInput.focus()}
-						returnKeyType="next"
+						autoCapitalize="none"
+						autoCorrect={false}
+						enablesReturnKeyAutomatically={true}
 						secureTextEntry={true}
 						placeholder="Password"
 					/>
+					<TouchableOpacity
+						style={styles.button_send}
+						onPress={() => this.handleSignIn()}
+					>
+						<Text style={styles.button_text}> Login </Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={styles.button_forgot}
+						onPress={() => Actions.forgot()}
+					>
+						<Text style={styles.button_text_forgot}>
+							Forgot password?
+						</Text>
+					</TouchableOpacity>
 				</View>
-				<TouchableOpacity
-					style={styles.button_send}
-					onPress={() => this.handleSignIn()}
-				>
-					<Text style={styles.button_text}> Login </Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					style={styles.button_forgot}
-					onPress={() => Actions.forgot()}
-				>
-					<Text style={styles.button_text_forgot}>
-						{' '}
-						Forgot password ?{' '}
-					</Text>
-				</TouchableOpacity>
+				<View style={styles.button_signup}>
+					<Text>Not a member?{'   '}</Text>
+					<TouchableOpacity
+						// style={styles.button_forgot}
+						onPress={() => Actions.signup()}
+					>
+						<Text style={styles.signup_text}>Register</Text>
+					</TouchableOpacity>
+				</View>
 				{this.props.login.loading ? (
-					<ActivityIndicator size={'large'} />
+					<ActivityIndicator size={'large'} color="white" />
 				) : null}
 			</View>
 		);

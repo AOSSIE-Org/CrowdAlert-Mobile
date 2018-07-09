@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import {
-	StyleSheet,
 	Image,
 	Text,
 	View,
-	ScrollView,
 	TouchableOpacity,
 	Alert,
 	TextInput,
-	Button,
 	Keyboard,
 	ToastAndroid,
 	ActivityIndicator
@@ -18,6 +15,8 @@ import { connect } from 'react-redux';
 import { onPressSignUp } from '../../actions/loginAction';
 import { styles } from '../../assets/styles/signin_styles';
 import PropTypes from 'prop-types';
+import { Actions } from 'react-native-router-flux';
+import Icon from 'react-native-vector-icons/Feather';
 
 /**
  * Screen for signup.
@@ -46,22 +45,90 @@ class Signup extends Component {
 	 */
 	handleSignUp() {
 		Keyboard.dismiss();
-		this.props.onPressSignUp(this.state.email, this.state.password);
+		if (
+			this.validateEmail(this.state.email) &&
+			this.validatePassword(this.state.password) &&
+			this.validateName(this.state.name)
+		) {
+			this.props.onPressSignUp(
+				this.state.email,
+				this.state.password,
+				this.state.name
+			);
+		}
+	}
+
+	validateName(inputName) {
+		if (inputName === '') {
+			ToastAndroid.show(
+				'You can leave the name field blank!',
+				ToastAndroid.SHORT
+			);
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	validateEmail(inputEmail) {
+		if (inputEmail === '') {
+			ToastAndroid.show(
+				'You can leave the email field blank!',
+				ToastAndroid.SHORT
+			);
+			return false;
+		} else {
+			var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+			if (!inputEmail.match(mailformat)) {
+				ToastAndroid.show(
+					'Please check your email format',
+					ToastAndroid.SHORT
+				);
+				return false;
+			} else {
+				return true;
+			}
+		}
+	}
+
+	validatePassword(inputPassword) {
+		if (inputPassword === '') {
+			ToastAndroid.show(
+				'You can leave the password field blank!',
+				ToastAndroid.SHORT
+			);
+			return false;
+		} else if (inputPassword.length < 8) {
+			ToastAndroid.show(
+				'Your password should be of minimum 8 characters!',
+				ToastAndroid.SHORT
+			);
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	render() {
 		return (
 			<View style={styles.container}>
-				<View style={styles.field}>
+				<TouchableOpacity onPress={() => Actions.pop()}>
+					<Icon
+						name="chevron-left"
+						size={40}
+						style={styles.backButton}
+					/>
+				</TouchableOpacity>
+				<View style={styles.box}>
+					<Text style={styles.heading}>Register</Text>
 					<TextInput
-						autoCapitalize="none"
 						autoCorrect={false}
 						ref={input => (this.nameInput = input)}
 						onChangeText={name => this.setState({ name })}
 						onSubmitEditing={() => this.emailInput.focus()}
 						returnKeyType="next"
-						style={styles.field_Pass}
-						placeholder={'Name'}
+						style={styles.input_field}
+						placeholder="Account name"
 					/>
 					<TextInput
 						autoCapitalize="none"
@@ -71,27 +138,27 @@ class Signup extends Component {
 						onSubmitEditing={() => this.passwordInput.focus()}
 						keyboardType="email-address"
 						returnKeyType="next"
-						style={styles.field_Pass}
+						style={styles.input_field}
 						placeholder="Email"
 					/>
 					<TextInput
 						ref={input => (this.passwordInput = input)}
-						style={styles.field_Pass}
+						style={styles.input_field}
 						onChangeText={password => this.setState({ password })}
 						// onSubmitEditing={() => this.passwordConfirmInput.focus()}
 						returnKeyType="next"
 						secureTextEntry={true}
 						placeholder="Password"
 					/>
+					<TouchableOpacity
+						style={styles.button_send}
+						onPress={() => this.handleSignUp()}
+					>
+						<Text style={styles.button_text}> Register </Text>
+					</TouchableOpacity>
 				</View>
-				<TouchableOpacity
-					style={styles.button_send}
-					onPress={() => this.handleSignUp()}
-				>
-					<Text style={styles.button_text}> Register </Text>
-				</TouchableOpacity>
 				{this.props.login.loading ? (
-					<ActivityIndicator size={'large'} />
+					<ActivityIndicator size={'large'} color="white" />
 				) : null}
 			</View>
 		);

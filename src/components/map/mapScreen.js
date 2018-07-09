@@ -178,13 +178,16 @@ class MapScreen extends Component {
 			<View style={styles.container}>
 				<MapContainer />
 				<TouchableOpacity
-					style={styles.filterButton}
+					style={[styles.filterButton, styles.fabButtonContainer]}
 					onPress={() => this.openModal()}
 				>
 					<Icon name="filter" size={30} style={styles.fabButton} />
 				</TouchableOpacity>
 				<TouchableOpacity
-					style={styles.addIncidentButton}
+					style={[
+						styles.fabButtonContainer,
+						styles.addIncidentButton
+					]}
 					onPress={() => Actions.addIncident()}
 				>
 					<Icon name="plus" size={30} style={styles.fabButton} />
