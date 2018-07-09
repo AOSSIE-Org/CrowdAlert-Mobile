@@ -75,19 +75,16 @@ export default class Route extends Component {
 						<Scene
 							key="profile"
 							title="Profile"
-							renderRightButton={editButtonProfile}
+							// renderRightButton={editButtonProfile}
 							renderLeftButton={sideMenu}
 							component={Profile}
 						/>
 						<Scene
-							back={true}
-							key="editProfile"
-							title="Edit Profile"
-							component={EditProfile}
-						/>
-						<Scene
 							key="mapFeed"
 							tabs={true}
+							// tabBarComponent={() => {
+							// 	<Text>hi</Text>;
+							// }}
 							lazy={true}
 							swipeEnabled={false}
 							tabBarPosition="bottom"
@@ -109,24 +106,24 @@ export default class Route extends Component {
 							/>
 						</Scene>
 						<Scene
-							back={true}
-							key="addIncident"
-							title="Add incident"
-							component={AddIncident}
-						/>
-						<Scene
 							key="emergencylocation"
 							title="Emergency places nearby"
 							renderLeftButton={sideMenu}
 							component={EmergencyLocation}
 						/>
-						<Scene
-							back={true}
-							key="settingsOption"
-							title="Settings"
-							component={SettingsOption}
-						/>
 					</Scene>
+					<Scene
+						back={true}
+						key="settingsOption"
+						hideNavBar={true}
+						component={SettingsOption}
+					/>
+					<Scene
+						back={true}
+						key="addIncident"
+						title="Add incident"
+						component={AddIncident}
+					/>
 					<Scene
 						key="incident"
 						title="Incident Details"
@@ -136,7 +133,12 @@ export default class Route extends Component {
 							<DeleteButtonIncident key={2} />,
 							<ShareButtonIncident key={3} />
 						]}
-						// renderRightButton={moreOptions}
+					/>
+					<Scene
+						back={true}
+						key="editProfile"
+						title="Edit Profile"
+						component={EditProfile}
 					/>
 					<Scene
 						back={true}

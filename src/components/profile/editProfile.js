@@ -37,7 +37,7 @@ class EditProfile extends Component {
 	handleUpdate() {
 		this.props.updateUserFirebase(this.state).then(() => {
 			ToastAndroid.show('Profile Updated', ToastAndroid.SHORT);
-			Actions.profile();
+			Actions.pop();
 		});
 	}
 

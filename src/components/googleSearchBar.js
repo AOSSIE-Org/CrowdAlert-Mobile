@@ -806,7 +806,7 @@ export default class GooglePlacesAutocomplete extends Component {
 							<Icon
 								name="remove"
 								size={15}
-								style={styles.fabButton}
+								style={{ color: 'black' }}
 							/>
 						</TouchableOpacity>
 						{this._renderRightButton()}

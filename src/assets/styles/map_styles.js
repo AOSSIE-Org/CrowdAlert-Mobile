@@ -11,6 +11,7 @@ const searchBarStyle = {
 		backgroundColor: 'white',
 		borderTopWidth: 0,
 		borderBottomWidth: 0,
+		elevation: 7,
 		width: width * 0.95,
 		height: height * 0.07
 	},
@@ -36,38 +37,46 @@ const styles = StyleSheet.create({
 	map: {
 		...StyleSheet.absoluteFillObject
 	},
-	fabButtonContainer: {
-		width: width / 10,
-		height: width / 10,
-		backgroundColor: 'white',
-		borderRadius: 30,
-		justifyContent: 'center',
-		position: 'absolute'
-	},
-	repositionButton: {
-		left: width / 40,
-		bottom: height / 25
-	},
 	clearButton: {
 		backgroundColor: 'rgba(0,0,0,0)',
 		justifyContent: 'center',
 		paddingRight: width / 30
 	},
+	repositionButton: {
+		width: width / 11,
+		height: width / 11,
+		borderRadius: 30,
+		justifyContent: 'center',
+		position: 'absolute',
+		backgroundColor: '#000',
+		left: width / 25,
+		bottom: height / 23
+	},
 	addIncidentButton: {
-		right: width / 25,
-		bottom: height / 30,
-		elevation: 10,
 		width: width / 7.5,
 		height: width / 7.5,
+		backgroundColor: '#4ebaaa',
+		justifyContent: 'center',
+		position: 'absolute',
+		right: width / 20,
+		bottom: height / 25,
+		elevation: 15,
 		borderRadius: 35
 	},
 	filterButton: {
-		right: width / 40,
-		top: height / 10
+		width: width / 8.5,
+		height: width / 8.5,
+		backgroundColor: '#4ebaaa',
+		borderRadius: 30,
+		elevation: 6,
+		justifyContent: 'center',
+		position: 'absolute',
+		right: width / 25,
+		top: height / 9
 	},
-	fabButton: {
+	fabButtonIcon: {
 		alignSelf: 'center',
-		color: '#000000'
+		color: '#fff'
 	},
 	modalField: {
 		padding: 7,
