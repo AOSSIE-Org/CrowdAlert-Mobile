@@ -3,52 +3,87 @@ import {
 	Image,
 	Text,
 	View,
-	ScrollView,
 	TouchableOpacity,
 	Alert,
 	TextInput,
-	ActivityIndicator,
-	Button
+	ToastAndroid,
+	ActivityIndicator
 } from 'react-native';
-import firebase from 'react-native-firebase';
-import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { onForget } from '../../actions/loginAction';
 import { Actions } from 'react-native-router-flux';
 import { styles } from '../../assets/styles/signin_styles';
 import PropTypes from 'prop-types';
+import Icon from 'react-native-vector-icons/Feather';
 
+/**
+ * Renders the forget password screen
+ * @extends Component
+ */
 class Forgot extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			email: '',
-			password: ''
+			email: ''
 		};
 	}
+
+	handleForget() {
+		if (this.validateEmail(this.state.email)) {
+			this.props.onForget(this.state.email);
+		}
+	}
+
+	validateEmail(inputEmail) {
+		if (inputEmail === '') {
+			ToastAndroid.show(
+				'You can leave the email field blank!',
+				ToastAndroid.SHORT
+			);
+			return false;
+		} else {
+			var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+			if (!inputEmail.match(mailformat)) {
+				ToastAndroid.show(
+					'Please check your email format',
+					ToastAndroid.SHORT
+				);
+				return false;
+			} else {
+				return true;
+			}
+		}
+	}
+
 	render() {
 		return (
 			<View style={styles.container}>
-				<View style={styles.field}>
+				<TouchableOpacity onPress={() => Actions.pop()}>
+					<Icon
+						name="chevron-left"
+						size={40}
+						style={styles.backButton}
+					/>
+				</TouchableOpacity>
+				<View style={styles.box}>
+					<Text style={styles.heading}>Forget Password</Text>
 					<TextInput
 						placeholder="Email"
-						style={styles.field_Pass}
+						style={styles.input_field}
 						autoCapitalize="none"
 						onChangeText={email => this.setState({ email })}
 					/>
+					<TouchableOpacity
+						style={styles.button_send}
+						onPress={() => this.handleForget()}
+					>
+						<Text style={styles.button_text}> Send email </Text>
+					</TouchableOpacity>
 				</View>
-				<TouchableOpacity
-					style={styles.button_send}
-					onPress={() => this.props.onForget(this.state.email)}
-				>
-					<Text style={styles.button_text}> Send email </Text>
-				</TouchableOpacity>
-				<View>
-					{this.props.login.loading ? (
-						<ActivityIndicator size={'large'} />
-					) : null}
-				</View>
+				{this.props.login.loading ? (
+					<ActivityIndicator size={'large'} color="white" />
+				) : null}
 			</View>
 		);
 	}

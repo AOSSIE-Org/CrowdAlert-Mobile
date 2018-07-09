@@ -404,7 +404,10 @@ class MapContainer extends Component {
 					</MapView>
 					{/* Relocation Button */}
 					<TouchableOpacity
-						style={styles.repositionButton}
+						style={[
+							styles.repositionButton,
+							styles.fabButtonContainer
+						]}
 						onPress={() => {
 							this.handleRelocation(null, 'curr_location');
 						}}
