@@ -3,6 +3,7 @@ import {
 	Text,
 	View,
 	Platform,
+	TouchableHighlight,
 	TouchableOpacity,
 	Keyboard,
 	ActivityIndicator,
@@ -147,9 +148,9 @@ class MapScreen extends Component {
 	//Modal to be displayed for the filter menu.
 	_renderModalContent = () => (
 		<View>
-			<TouchableOpacity onPress={() => this.closeModal()}>
+			<TouchableHighlight onPress={() => this.closeModal()}>
 				<Icon name="close" size={20} style={styles.modalIcon} />
-			</TouchableOpacity>
+			</TouchableHighlight>
 			<Text style={styles.modalHeadText}>
 				Select category from below :
 			</Text>
@@ -177,26 +178,28 @@ class MapScreen extends Component {
 		return (
 			<View style={styles.container}>
 				<MapContainer />
-				<TouchableOpacity
-					style={[styles.filterButton, styles.fabButtonContainer]}
+				<TouchableHighlight
+					underlayColor="#005b4f"
+					style={styles.filterButton}
 					onPress={() => this.openModal()}
 				>
-					<Icon name="filter" size={30} style={styles.fabButton} />
-				</TouchableOpacity>
+					<Icon
+						name="filter"
+						size={27}
+						style={styles.fabButtonIcon}
+					/>
+				</TouchableHighlight>
 				<TouchableOpacity
-					style={[
-						styles.fabButtonContainer,
-						styles.addIncidentButton
-					]}
+					activeOpacity={0.5}
+					style={styles.addIncidentButton}
 					onPress={() => Actions.addIncident()}
 				>
-					<Icon name="plus" size={30} style={styles.fabButton} />
+					<Icon name="plus" size={30} style={styles.fabButtonIcon} />
 				</TouchableOpacity>
 				<Modal
 					visible={this.state.visibleModal}
 					onRequestClose={() => {
 						this.closeModal();
-						alert('Modal has been closed.');
 					}}
 				>
 					{this._renderModalContent()}

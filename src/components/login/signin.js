@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import {
-	Image,
 	Text,
 	View,
 	TouchableOpacity,
-	Alert,
 	TextInput,
 	ToastAndroid,
 	Keyboard,
@@ -17,6 +15,7 @@ import { Actions } from 'react-native-router-flux';
 import { styles } from '../../assets/styles/signin_styles';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/Feather';
+import { Header, Title, Left, Body } from 'native-base';
 
 /**
  * Screen for login using login id and password.
@@ -95,13 +94,16 @@ class Signin extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<TouchableOpacity onPress={() => Actions.pop()}>
-					<Icon
-						name="chevron-left"
-						size={40}
-						style={styles.backButton}
-					/>
-				</TouchableOpacity>
+				<Header transparent androidStatusBarColor="#1c76cb">
+					<Left>
+						<TouchableOpacity onPress={() => Actions.pop()}>
+							<Icon name="chevron-left" size={40} />
+						</TouchableOpacity>
+					</Left>
+					<Body>
+						<Title />
+					</Body>
+				</Header>
 				<View style={styles.box}>
 					<Text style={styles.heading}>Sign in</Text>
 					<TextInput

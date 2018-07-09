@@ -15,6 +15,7 @@ import { styles } from '../assets/styles/drawer_styles';
 import PropTypes from 'prop-types';
 import { logout } from '../actions/loginAction';
 import FilesystemStorage from 'redux-persist-filesystem-storage';
+import Icon from 'react-native-vector-icons/Feather';
 
 /**
  * Content for the side drawer
@@ -76,7 +77,15 @@ class DrawerContent extends Component {
 							this.handleLogout();
 						}}
 					>
-						<Text style={styles.option}>Logout</Text>
+						<View style={styles.logout}>
+							<Icon
+								name="log-out"
+								size={22}
+								style={styles.logoutIcon}
+								color="white"
+							/>
+							<Text style={styles.logoutOption}>Logout</Text>
+						</View>
 					</TouchableHighlight>
 				</ScrollView>
 			);

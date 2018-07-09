@@ -7,13 +7,9 @@ export const styles = StyleSheet.create({
 		flex: 1,
 		backgroundColor: '#63a4ff'
 	},
-	backButton: {
-		paddingTop: height / 50,
-		paddingLeft: width / 60
-	},
 	box: {
 		backgroundColor: 'white',
-		marginTop: height / 20,
+		marginTop: height / 27,
 		marginHorizontal: width / 10,
 		elevation: 10,
 		borderRadius: 10

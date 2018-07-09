@@ -350,11 +350,12 @@ class MapContainer extends Component {
 	}
 
 	render() {
-		if (this.props.incident.loading && this.props.emergencyPlaces.loading) {
-			return <ActivityIndicator size={'large'} />;
-		} else {
-			return (
-				<View style={styles.map}>
+		return (
+			<View style={styles.map}>
+				{this.props.incident.loading &&
+				this.props.emergencyPlaces.loading ? (
+					<ActivityIndicator size={'large'} />
+				) : (
 					<MapView
 						ref={ref => {
 							this.map = ref;
@@ -402,25 +403,23 @@ class MapContainer extends Component {
 							}}
 						/>
 					</MapView>
-					{/* Relocation Button */}
-					<TouchableOpacity
-						style={[
-							styles.repositionButton,
-							styles.fabButtonContainer
-						]}
-						onPress={() => {
-							this.handleRelocation(null, 'curr_location');
-						}}
-					>
-						<Icon
-							name="crosshairs"
-							size={30}
-							style={styles.fabButton}
-						/>
-					</TouchableOpacity>
-				</View>
-			);
-		}
+				)}
+
+				{/* Relocation Button */}
+				<TouchableOpacity
+					style={styles.repositionButton}
+					onPress={() => {
+						this.handleRelocation(null, 'curr_location');
+					}}
+				>
+					<Icon
+						name="crosshairs"
+						size={24}
+						style={styles.fabButtonIcon}
+					/>
+				</TouchableOpacity>
+			</View>
+		);
 	}
 }
 
