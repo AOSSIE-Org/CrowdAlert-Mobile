@@ -13,7 +13,7 @@ import {
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { styles } from '../../assets/styles/editScreen_styles';
+import { styles } from '../../assets/styles/editProfile_styles';
 import { styles as addincident_styles } from '../../assets/styles/addincident_styles';
 import PropTypes from 'prop-types';
 import {

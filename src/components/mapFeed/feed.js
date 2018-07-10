@@ -10,8 +10,8 @@ import {
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { getAllIncidents, viewIncident } from '../actions/incidentsAction';
-import { styles } from '../assets/styles/feed_styles';
+import { getAllIncidents, viewIncident } from '../../actions/incidentsAction';
+import { styles } from '../../assets/styles/feed_styles';
 import Timeline from 'react-native-timeline-listview';
 import PropTypes from 'prop-types';
 

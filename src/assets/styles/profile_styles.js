@@ -4,24 +4,29 @@ const { width, height } = Dimensions.get('window');
 //Styling for the Profile screen.
 export const styles = StyleSheet.create({
 	container: {
-		flex: 1
+		flex: 1,
+		backgroundColor: '#63a4ff'
+	},
+	header: {
+		marginLeft: width * 0.18
+	},
+	heading: {
+		fontSize: 25
 	},
 	avatarContainer: {
-		backgroundColor: '#7fa7e8',
 		alignItems: 'center',
-		height: width / 3.5 + 3 * height / 30 + height / 60
+		justifyContent: 'center',
+		marginTop: height / 30
 	},
 	avatar: {
-		// justifyContent: 'center',
-		marginTop: height / 30,
-		height: width / 3.5,
-		width: width / 3.5,
+		height: width / 2.7,
+		width: width / 2.7,
 		borderRadius: 100
 	},
 	userName: {
-		marginTop: height / 60,
-		fontSize: 17,
-		color: 'black'
+		marginTop: height / 50,
+		fontSize: 19,
+		color: '#1e1e1e'
 	},
 	otherInfoContainer: {
 		marginHorizontal: width / 30,

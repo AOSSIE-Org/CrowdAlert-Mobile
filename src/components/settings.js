@@ -66,9 +66,9 @@ class SettingsOption extends Component {
 
 	toggleSliderIcon(value) {
 		if (value) {
-			return <Icon name="chevron-up" />;
+			return <Icon name="chevron-up" size={16} color="#005b4f" />;
 		} else {
-			return <Icon name="chevron-down" />;
+			return <Icon name="chevron-down" size={16} color="#005b4f" />;
 		}
 	}
 
@@ -81,7 +81,7 @@ class SettingsOption extends Component {
 							style={styles.backButton}
 							onPress={() => Actions.pop()}
 						>
-							<Icon name="angle-left" size={30} color="white" />
+							<Icon name="angle-left" size={40} color="white" />
 						</TouchableOpacity>
 					</Left>
 					<Body>
@@ -109,8 +109,9 @@ class SettingsOption extends Component {
 									<Right>
 										<View style={styles.rightSection}>
 											<Icon
-												size={19}
+												size={18}
 												name="chevron-right"
+												color="#005b4f"
 											/>
 										</View>
 									</Right>
@@ -143,6 +144,7 @@ class SettingsOption extends Component {
 							</Body>
 							<Right>
 								<Switch
+									thumbTintColor="#1c76cb"
 									onValueChange={enable_notifications => {
 										this.handleNotifications(
 											enable_notifications
@@ -194,9 +196,9 @@ class SettingsOption extends Component {
 								<Body>
 									<Slider
 										value={this.state.emergency_radius}
-										minimumTrackTintColor="#00897b"
-										thumbTintColor="#005b4f"
-										maximumTrackTintColor="#6ed1c2"
+										minimumTrackTintColor="#4c93f7"
+										thumbTintColor="#1c76cb"
+										maximumTrackTintColor="#9bd5ff"
 										thumbTouchSize={{
 											width: 50,
 											height: 50
@@ -210,7 +212,9 @@ class SettingsOption extends Component {
 											)
 										}
 										onValueChange={emergency_radius =>
-											this.setState({ emergency_radius })
+											this.setState({
+												emergency_radius
+											})
 										}
 									/>
 								</Body>
@@ -265,9 +269,9 @@ class SettingsOption extends Component {
 										value={
 											this.state.notification_min_radius
 										}
-										minimumTrackTintColor="#00897b"
-										thumbTintColor="#005b4f"
-										maximumTrackTintColor="#6ed1c2"
+										minimumTrackTintColor="#4c93f7"
+										thumbTintColor="#1c76cb"
+										maximumTrackTintColor="#9bd5ff"
 										step={500}
 										minimumValue={1000}
 										maximumValue={7000}
@@ -336,9 +340,9 @@ class SettingsOption extends Component {
 								<Body>
 									<Slider
 										value={this.state.notification_timeout}
-										minimumTrackTintColor="#00897b"
-										thumbTintColor="#005b4f"
-										maximumTrackTintColor="#6ed1c2"
+										minimumTrackTintColor="#4c93f7"
+										thumbTintColor="#1c76cb"
+										maximumTrackTintColor="#9bd5ff"
 										step={2}
 										minimumValue={6}
 										maximumValue={60}

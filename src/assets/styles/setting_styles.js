@@ -8,13 +8,13 @@ export const styles = StyleSheet.create({
 		backgroundColor: 'white'
 	},
 	backButton: {
-		width: width / 7,
+		width: width / 8,
 		height: height / 13,
-		justifyContent: 'center'
+		justifyContent: 'center',
+		alignItems: 'center'
 	},
 	header: {
-		height: height / 10,
-		backgroundColor: '#63a4ff'
+		height: height / 10
 	},
 	slider: {
 		width: width,

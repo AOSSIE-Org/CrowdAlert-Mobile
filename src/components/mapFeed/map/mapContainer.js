@@ -9,12 +9,12 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import MapView, { Marker } from 'react-native-maps';
-import MapMarker from './markers/marker';
-import Cluster from './markers/cluster';
+import MapMarker from '../markers/marker';
+import Cluster from '../markers/cluster';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import PropTypes from 'prop-types';
-import { styles, searchBarStyle } from '../../assets/styles/map_styles.js';
+import { styles, searchBarStyle } from '../../../assets/styles/map_styles.js';
 
 /**
  * Main Map screen along with the relocation button.
@@ -354,7 +354,10 @@ class MapContainer extends Component {
 			<View style={styles.map}>
 				{this.props.incident.loading &&
 				this.props.emergencyPlaces.loading ? (
-					<ActivityIndicator size={'large'} />
+					<MapView
+						initialRegion={this.state.curr_region}
+						style={styles.map}
+					/>
 				) : (
 					<MapView
 						ref={ref => {

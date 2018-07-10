@@ -20,17 +20,17 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import getDirections from 'react-native-google-maps-directions';
 import Config from 'react-native-config';
 import MapContainer from './mapContainer';
-import { getMarkerImage, categories } from '../../utils/categoryUtil.js';
-import { setLocationOnCustomSearch } from '../../actions/locationAction';
+import { getMarkerImage, categories } from '../../../utils/categoryUtil.js';
+import { setLocationOnCustomSearch } from '../../../actions/locationAction';
 import {
 	getAllIncidents,
 	updateIndvNotification,
 	updateDomain
-} from '../../actions/incidentsAction';
-import { styles, searchBarStyle } from '../../assets/styles/map_styles.js';
-import { GooglePlacesAutocomplete } from '../googleSearchBar';
-import { sideMenu } from '../profile/navBarButtons';
-import { getEmergencyPlaces } from '../../actions/emergencyPlacesAction';
+} from '../../../actions/incidentsAction';
+import { styles, searchBarStyle } from '../../../assets/styles/map_styles.js';
+import { GooglePlacesAutocomplete } from '../../googleSearchBar';
+import { sideMenu } from '../../profile/navBarButtons';
+import { getEmergencyPlaces } from '../../../actions/emergencyPlacesAction';
 var PushNotification = require('react-native-push-notification');
 var haversine = require('haversine-distance');
 

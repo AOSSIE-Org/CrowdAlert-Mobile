@@ -130,7 +130,7 @@ class Signup extends Component {
 						onSubmitEditing={() => this.emailInput.focus()}
 						returnKeyType="next"
 						style={styles.input_field}
-						placeholder="Account name"
+						placeholder="Full name"
 					/>
 					<TextInput
 						autoCapitalize="none"
