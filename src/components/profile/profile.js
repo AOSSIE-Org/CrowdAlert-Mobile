@@ -9,7 +9,9 @@ import {
 	ToastAndroid,
 	ActivityIndicator,
 	FlatList,
-	Platform
+	Platform,
+	Dimensions,
+	StyleSheet
 } from 'react-native';
 import LocationServicesDialogBox from 'react-native-android-location-services-dialog-box';
 import { bindActionCreators } from 'redux';
@@ -21,16 +23,26 @@ import { getUserIncidents, viewIncident } from '../../actions/incidentsAction';
 import { watchCurrLocation } from '../../actions/locationAction';
 import { getColor } from '../../utils/categoryUtil';
 var PushNotification = require('react-native-push-notification');
+import {
+	Header,
+	Content,
+	List,
+	ListItem,
+	Title,
+	Left,
+	Body,
+	Right,
+	Button,
+	Footer,
+	FooterTab
+} from 'native-base';
+import { sideMenu } from './navBarButtons';
 
 /**
  * Screen showing the profile along with his/her incidents.
  * @extends Component
  */
 class Profile extends Component {
-	constructor(props) {
-		super(props);
-	}
-
 	componentWillMount() {
 		//Used to check if location services are enabled and
 		//if not than asks to enables them by redirecting to location settings.
@@ -105,16 +117,19 @@ class Profile extends Component {
 					style={styles.container}
 					showsVerticalScrollIndicator={false}
 				>
+					<Header androidStatusBarColor="#1c76cb">
+						<Left>{sideMenu()}</Left>
+						<Body style={styles.header}>
+							<Title style={styles.heading}>Profile</Title>
+						</Body>
+					</Header>
 					<View style={styles.avatarContainer}>
 						<Image
 							style={styles.avatar}
 							source={
 								this.props.user.photo.url === ''
 									? this.props.user.photo.base64 === ''
-										? {
-												uri:
-													'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZA_wIwT-DV4G3E3jdNZScRLQnH4faqTH2a7PrNwlhqP4W1Zjh'
-										  }
+										? require('../../assets/images/boy.png')
 										: {
 												uri:
 													'data:image/jpeg;base64, ' +
@@ -127,33 +142,8 @@ class Profile extends Component {
 							{this.props.user.name}
 						</Text>
 					</View>
-					<View style={styles.otherInfoContainer}>
-						<Text style={styles.otherInfoValue}>
-							<Text style={styles.otherInfoHead}>Email ID: </Text>
-							{this.props.user.email}
-						</Text>
-						<Text style={styles.otherInfoValue}>
-							<Text style={styles.otherInfoHead}>Phone No: </Text>
-							{this.props.user.phone_no}
-						</Text>
-						<Text style={styles.otherInfoValue}>
-							<Text style={styles.otherInfoHead}>
-								Emergency contact name:{' '}
-							</Text>
-							{this.props.user.emergency_contact_name === ''
-								? 'NA'
-								: this.props.user.emergency_contact_name}
-						</Text>
-						<Text style={styles.otherInfoValue}>
-							<Text style={styles.otherInfoHead}>
-								Emergency contact phone no:{' '}
-							</Text>
-							{this.props.user.emergency_contact_phone_no === ''
-								? 'NA'
-								: this.props.user.emergency_contact_phone_no}
-						</Text>
-					</View>
-					{this.props.incident.loading ? (
+					{this.props.incident.user_incidents === null ||
+					this.props.incident.loading ? (
 						<ActivityIndicator size={'large'} />
 					) : null}
 					<FlatList
@@ -162,6 +152,16 @@ class Profile extends Component {
 						renderItem={this.renderItem.bind(this)}
 						keyExtractor={item => item.key}
 					/>
+					<Text
+						style={{
+							textAlign: 'center',
+							fontSize: 20,
+							fontWeight: 'bold',
+							textDecorationLine: 'underline'
+						}}
+					>
+						Your incidents
+					</Text>
 				</ScrollView>
 			);
 		}

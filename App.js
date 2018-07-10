@@ -10,6 +10,10 @@ import SplashScreen from './src/components/splashScreen';
 import configureStore from './src/utils/store';
 let { store, persistor } = configureStore();
 
+import { StyleProvider } from 'native-base';
+import getTheme from './src/assets/styles/native-base-theme/components';
+import platform from './src/assets/styles/native-base-theme/variables/platform';
+
 /**
  * Navigator using React-Native-Router-Flux
  * @extends Component
@@ -23,7 +27,12 @@ export default class App extends Component {
 						if (!isLoaded) {
 							return <SplashScreen />;
 						} else {
-							return <LinkedRouter scheme="https" />;
+							return (
+								//Loading custom Native Base styling to the app
+								<StyleProvider style={getTheme(platform)}>
+									<LinkedRouter scheme="https" />
+								</StyleProvider>
+							);
 						}
 					}}
 				</PersistGate>

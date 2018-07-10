@@ -14,9 +14,8 @@ import Forgot from '../components/login/forgot';
 
 import DrawerContent from '../components/drawer';
 
-import MapScreen from '../components/map/mapScreen';
+import MapFeedScreen from '../components/mapFeed/mapFeedTabular';
 import AddIncident from '../components/addIncident';
-import FeedScreen from '../components/feed';
 
 import Profile from '../components/profile/profile';
 import EditProfile from '../components/profile/editProfile';
@@ -28,7 +27,9 @@ import DeleteButtonIncident from '../components/incident/navBarButtons/deleteInc
 import EditButtonIncident from '../components/incident/navBarButtons/editIncidentButton.js';
 import ShareButtonIncident from '../components/incident/navBarButtons/ShareIncidentButton.js';
 import EditIncident from '../components/incident/editIncident';
+
 import EmergencyLocation from '../components/emergencyPlaces';
+
 import SettingsOption from '../components/settings';
 
 const ConnectedRouter = connect()(Router);
@@ -74,17 +75,20 @@ export default class Route extends Component {
 					>
 						<Scene
 							key="profile"
-							title="Profile"
+							hideNavBar={true}
+							// title="Profile"
 							// renderRightButton={editButtonProfile}
-							renderLeftButton={sideMenu}
+							// renderLeftButton={sideMenu}
 							component={Profile}
 						/>
 						<Scene
 							key="mapFeed"
+							hideNavBar={true}
+							component={MapFeedScreen}
+						/>
+						{/* <Scene
+							key="mapFeed"
 							tabs={true}
-							// tabBarComponent={() => {
-							// 	<Text>hi</Text>;
-							// }}
 							lazy={true}
 							swipeEnabled={false}
 							tabBarPosition="bottom"
@@ -104,7 +108,7 @@ export default class Route extends Component {
 								icon={() => <Icon name="feed" size={20} />}
 								component={FeedScreen}
 							/>
-						</Scene>
+						</Scene> */}
 						<Scene
 							key="emergencylocation"
 							title="Emergency places nearby"
@@ -137,7 +141,7 @@ export default class Route extends Component {
 					<Scene
 						back={true}
 						key="editProfile"
-						title="Edit Profile"
+						hideNavBar={true}
 						component={EditProfile}
 					/>
 					<Scene

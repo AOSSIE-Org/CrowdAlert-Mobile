@@ -69,7 +69,7 @@ class Forgot extends Component {
 					</Body>
 				</Header>
 				<View style={styles.box}>
-					<Text style={styles.heading}>Forget Password</Text>
+					<Text style={styles.heading}>Recover Password</Text>
 					<TextInput
 						placeholder="Email"
 						style={styles.input_field}
