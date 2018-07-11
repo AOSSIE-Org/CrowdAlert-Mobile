@@ -4,13 +4,12 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import PropTypes from 'prop-types';
-import { ParallaxImage } from 'react-native-snap-carousel';
-import { styles } from '../../assets/styles/carousel_styles';
+import { styles } from '../../assets/styles/profileIncident_styles';
 import { viewIncident } from '../../actions/incidentsAction';
 
 import { getMarkerImage, categories } from '../../utils/categoryUtil.js';
 
-class SliderItem extends Component {
+class ProfileIncident extends Component {
 	viewClickedIncident(item) {
 		if (item.value.user_id === this.props.user.email) {
 			this.props.viewIncident(item, true);
@@ -58,7 +57,7 @@ class SliderItem extends Component {
  * Checks that the functions specified as isRequired are present and warns if the
  * props used on this page does not meet the specified type.
  */
-SliderItem.propTypes = {
+ProfileIncident.propTypes = {
 	data: PropTypes.object.isRequired,
 	even: PropTypes.bool
 };
@@ -88,4 +87,4 @@ const mapStateToProps = state => ({
 	user: state.login.userDetails
 });
 
-export default connect(mapStateToProps, matchDispatchToProps)(SliderItem);
+export default connect(mapStateToProps, matchDispatchToProps)(ProfileIncident);

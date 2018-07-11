@@ -25,7 +25,7 @@ import { getColor } from '../../utils/categoryUtil';
 var PushNotification = require('react-native-push-notification');
 import { Header, Title, Left, Body } from 'native-base';
 import { sideMenu } from './navBarButtons';
-import SliderItem from './carousel';
+import ProfileIncident from './profileIncident';
 
 /**
  * Screen showing the profile along with his/her incidents.
@@ -64,7 +64,7 @@ class Profile extends Component {
 	}
 
 	_renderItem({ item, index }) {
-		return <SliderItem data={item} even={(index + 1) % 2 === 0} />;
+		return <ProfileIncident data={item} even={(index + 1) % 2 === 0} />;
 	}
 
 	render() {
