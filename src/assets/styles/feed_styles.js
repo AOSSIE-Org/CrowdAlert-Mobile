@@ -1,7 +1,7 @@
 import { Dimensions, StyleSheet } from 'react-native';
 const { width, height } = Dimensions.get('window');
 
-//styling used on individual incident page
+//styling used on global feed screen
 export const styles = StyleSheet.create({
 	container: {
 		flex: 1
@@ -12,38 +12,44 @@ export const styles = StyleSheet.create({
 		fontSize: 25,
 		marginVertical: 10
 	},
-	timeContainerStyle: {
-		minWidth: width * 0.25
-	},
-	iconStyle: {
-		minWidth: width * 0.25
+	loader: {
+		flex: 1,
+		justifyContent: 'center'
 	},
 	circleStyle: {
-		marginTop: height / 30
+		marginTop: height / 25
 	},
 	timelineContainer: {
-		// backgroundColor: 'yellow',
-		marginHorizontal: width / 40
+		marginLeft: width / 20,
+		marginRight: width / 13
 	},
-	timeStyle: {
-		textAlign: 'center',
-		backgroundColor: '#0288D1',
-		color: 'white',
-		marginTop: height * 0.015,
-		paddingVertical: height * 0.007
-		// borderRadius: 13
+	eventContainer: {
+		paddingLeft: width / 50,
+		paddingVertical: height / 100,
+		flex: 1,
+		flexDirection: 'row',
+		marginBottom: height / 50
 	},
-	detailContainerStyle: {
-		backgroundColor: '#B3E5FC',
-		marginBottom: height * 0.025,
-		// marginHorizontal: 10,
-		borderRadius: 15
+	timeContainer: {
+		flex: 3,
+		justifyContent: 'center',
+		alignItems: 'center'
 	},
-	descriptionStyle: {
-		color: 'gray',
-		paddingLeft: width * 0.03
+	time: {
+		fontSize: 12,
+		color: '#419b8e'
 	},
-	titleStyle: {
-		paddingLeft: width * 0.03
+	infoContainer: {
+		flex: 7,
+		marginLeft: width / 20
+	},
+	title: {
+		fontSize: 17,
+		color: '#005b4f',
+		marginBottom: 3.8
+	},
+	details: {
+		color: '#1c76cb',
+		fontSize: 13
 	}
 });

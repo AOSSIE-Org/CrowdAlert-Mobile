@@ -112,7 +112,7 @@ export default class Route extends Component {
 						<Scene
 							key="emergencylocation"
 							title="Emergency places nearby"
-							renderLeftButton={sideMenu}
+							renderLeftButton={() => sideMenu()}
 							component={EmergencyLocation}
 						/>
 					</Scene>

@@ -14,16 +14,47 @@ import { getAllIncidents, viewIncident } from '../../actions/incidentsAction';
 import { styles } from '../../assets/styles/feed_styles';
 import Timeline from 'react-native-timeline-listview';
 import PropTypes from 'prop-types';
+import { Header, Title, Left, Body } from 'native-base';
+import { sideMenu } from '../profile/navBarButtons';
+import { getMarkerImage } from '../../utils/categoryUtil';
 
 /**
  * Global incidents feed showing all the incidents from around the globe.
  * @extends Component
  */
 class FeedScreen extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			data: null
+		};
+	}
+
+	//fetches all incidents if not fetched earlier and generates data for the timeline
 	componentWillMount() {
 		if (this.props.incident.all_incidents === null) {
-			this.props.getAllIncidents();
+			this.props.getAllIncidents().then(() => {
+				this.generateData();
+			});
+		} else {
+			this.generateData();
 		}
+	}
+
+	//Creates the incidents into 'data' that can be passed to the Timeline component.
+	generateData() {
+		const all_incidents = [];
+		this.props.incident.all_incidents.map(incident => {
+			all_incidents.push({
+				time: this.getTime(incident.value.timestamp),
+				title: incident.value.title,
+				description: incident.value.details,
+				incident: incident,
+				icon: getMarkerImage(incident.value.category)
+			});
+		});
+		console.log(this.props.incident.all_incidents, all_incidents);
+		this.setState({ data: all_incidents });
 	}
 
 	//Converts a timestamp to a presentable date and time
@@ -64,10 +95,10 @@ class FeedScreen extends Component {
 		hours = hours ? hours : 12; // the hour '0' should be '12'
 		minutes = minutes < 10 ? '0' + minutes : minutes;
 
-		var strTime = hours + ':' + minutes + ' ' + ampm;
+		var time = hours + ':' + minutes + ' ' + ampm;
 		var day =
 			curr_date + sup + ' ' + m_names[curr_month] + ', ' + curr_year;
-		return day + '\n' + strTime;
+		return { day, time };
 	}
 
 	//Handles an incident click and redirects to its particulat incident screen
@@ -80,42 +111,52 @@ class FeedScreen extends Component {
 		Actions.incident();
 	}
 
+	//Incident details container
+	renderDetail(rowData, sectionID, rowID) {
+		return (
+			<View style={styles.eventContainer}>
+				<View style={styles.timeContainer}>
+					<Text style={styles.time}>{rowData.time.day}</Text>
+					<Text style={styles.time}>{rowData.time.time}</Text>
+				</View>
+				<View style={styles.infoContainer}>
+					<Text style={styles.title}>{rowData.title}</Text>
+					<Text numberOfLines={2} style={styles.details}>
+						{rowData.description}
+					</Text>
+				</View>
+			</View>
+		);
+	}
+
 	render() {
-		if (this.props.incident.loading) {
-			return <ActivityIndicator size={'large'} />;
-		} else {
-			//Creates the 'data', to be passed to the Timeline Component.
-			const all_incidents = [];
-			this.props.incident.all_incidents.map(incident => {
-				all_incidents.push({
-					time: this.getTime(incident.value.timestamp),
-					title: incident.value.title,
-					description: incident.value.details,
-					incident: incident
-				});
-			});
-			console.log(this.props.incident.all_incidents, all_incidents);
-			return (
-				<View style={styles.container}>
-					<Text style={styles.heading}>Global Feed</Text>
+		return (
+			<View style={styles.container}>
+				<Header androidStatusBarColor="#1c76cb" style={styles.header}>
+					<Left>{sideMenu('white')}</Left>
+					<Body style={styles.body}>
+						<Title style={styles.heading}>Global Feed</Title>
+					</Body>
+				</Header>
+				{this.props.incident.loading || this.state.data === null ? (
+					<ActivityIndicator
+						size={'large'}
+						style={styles.loader}
+						color="black"
+					/>
+				) : (
 					<Timeline
-						data={all_incidents}
-						circleSize={22}
-						innerCircle="dot"
-						dotColor="white"
-						circleColor="#004f7a"
-						lineColor="#004f7a"
-						// separator={true}
+						data={this.state.data}
+						lineWidth={3.5}
+						circleSize={30}
+						innerCircle="icon"
+						circleColor="transparent"
+						lineColor="#099683"
+						separator={true}
 						renderFullLine={true}
-						// columnFormat="two-column"
-						timeContainerStyle={styles.timeContainerStyle}
-						iconStyle={styles.iconStyle}
 						circleStyle={styles.circleStyle}
 						style={styles.timelineContainer}
-						timeStyle={styles.timeStyle}
-						detailContainerStyle={styles.detailContainerStyle}
-						titleStyle={styles.titleStyle}
-						descriptionStyle={styles.descriptionStyle}
+						renderDetail={this.renderDetail}
 						options={{
 							showsVerticalScrollIndicator: false
 						}}
@@ -123,10 +164,11 @@ class FeedScreen extends Component {
 							console.log(event.incident);
 							this.viewClickedIncident(event.incident);
 						}}
+						showTime={false}
 					/>
-				</View>
-			);
-		}
+				)}
+			</View>
+		);
 	}
 }
 
