@@ -25,13 +25,13 @@ export const editButtonProfile = () => {
  * @return {React Component} Returns the side menu button component
  */
 
-export const sideMenu = () => {
+export const sideMenu = color => {
 	return (
 		<TouchableOpacity
 			style={styles.sideMenu}
 			onPress={() => Actions.drawerOpen()}
 		>
-			<Icon name="bars" size={23} />
+			<Icon name="bars" size={23} color={color} />
 		</TouchableOpacity>
 	);
 };

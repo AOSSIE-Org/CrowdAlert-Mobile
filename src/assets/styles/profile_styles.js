@@ -8,15 +8,39 @@ export const styles = StyleSheet.create({
 		backgroundColor: '#63a4ff'
 	},
 	header: {
-		marginLeft: width * 0.18
+		height: height / 10
+	},
+	body: {
+		marginLeft: width * 0.08
 	},
 	heading: {
-		fontSize: 25
+		fontSize: 27
+	},
+	empty: {
+		height: height * 0.11
+	},
+	box: {
+		backgroundColor: 'white',
+		borderRadius: 20,
+		marginTop: height * 0.015,
+		marginHorizontal: width / 20,
+		paddingBottom: height / 20
 	},
 	avatarContainer: {
 		alignItems: 'center',
 		justifyContent: 'center',
 		marginTop: height / 30
+	},
+	avatarOutline: {
+		borderRadius: 100,
+		position: 'absolute',
+		top: 2 * height / 17,
+		alignSelf: 'center',
+		borderWidth: 3,
+		borderColor: 'white'
+	},
+	noAvatarOutline: {
+		borderWidth: 0
 	},
 	avatar: {
 		height: width / 2.7,
@@ -24,45 +48,12 @@ export const styles = StyleSheet.create({
 		borderRadius: 100
 	},
 	userName: {
-		marginTop: height / 50,
-		fontSize: 19,
-		color: '#1e1e1e'
+		marginBottom: height / 20,
+		fontSize: 25,
+		fontWeight: 'bold',
+		color: '#005b4f'
 	},
-	otherInfoContainer: {
-		marginHorizontal: width / 30,
-		marginVertical: height / 80
-	},
-	otherInfoHead: {
-		fontSize: 15,
-		color: 'black'
-	},
-	otherInfoValue: {
-		fontSize: 15
-	},
-	flatListContainer: {
-		marginVertical: height / 50
-	},
-	incidentContainer: {
-		padding: width / 30,
-		flex: 1,
-		flexDirection: 'row',
-		justifyContent: 'center',
-		marginBottom: width / 50,
-		marginHorizontal: width / 50
-	},
-	incidentsImage: {
-		flex: 1,
-		alignSelf: 'center',
-		width: width / 9,
-		height: width / 9,
-		marginHorizontal: width / 20,
-		borderRadius: 150
-	},
-	incidentTextContainer: {
-		flex: 6
-	},
-	incident: {
-		padding: width * 0.005,
-		fontSize: 17
+	loader: {
+		alignSelf: 'center'
 	}
 });
