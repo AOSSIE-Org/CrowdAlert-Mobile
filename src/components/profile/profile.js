@@ -6,7 +6,6 @@ import {
 	ScrollView,
 	TouchableOpacity,
 	TextInput,
-	ToastAndroid,
 	ActivityIndicator,
 	FlatList,
 	Platform,

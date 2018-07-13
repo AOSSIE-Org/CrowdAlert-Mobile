@@ -20,26 +20,33 @@
 	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.googleusercontent.apps.443270569292-7dd0bkm9q8fbkve59q0c82k1sqivln3f</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.443270569292-7dd0bkm9q8fbkve59q0c82k1sqivln3f</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.aossie.crowdalert</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.aossie.crowdalert</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
-	<key>UIRequiredDeviceCapabilities</key>
-	<array>
-		<string>armv7</string>
-	</array>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
-	</array>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSExceptionDomains</key>
@@ -51,6 +58,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string></string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Entypo.ttf</string>
@@ -68,5 +77,39 @@
 		<string>Feather.ttf</string>
 		<string>MaterialCommunityIcons.ttf</string>
 	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
+
+  <key>CFBundleURLTypes</key>
+  <array>
+    <dict>
+      <key>CFBundleURLSchemes</key>
+      <array>
+        <string>fb371986966622702</string>
+      </array>
+    </dict>
+  </array>
+  <key>FacebookAppID</key>
+  <string>371986966622702</string>
+  <key>FacebookDisplayName</key>
+  <string>crowdalert</string>
+  <key>NSPhotoLibraryUsageDescription</key>
+  <string>$(PRODUCT_NAME) would like access to your photo gallery</string>
+  <key>NSCameraUsageDescription</key>
+  <string>$(PRODUCT_NAME) would like to use your camera</string>
+  <key>NSPhotoLibraryAddUsageDescription</key>
+  <string>$(PRODUCT_NAME) would like to save photos to your photo gallery</string>
 </dict>
 </plist>
