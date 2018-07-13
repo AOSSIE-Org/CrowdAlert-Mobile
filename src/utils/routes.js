@@ -19,7 +19,7 @@ import AddIncident from '../components/addIncident';
 
 import Profile from '../components/profile/profile';
 import EditProfile from '../components/profile/editProfile';
-import { editButtonProfile } from '../components/profile/navBarButtons';
+// import { editButtonProfile } from '../components/profile/navBarButtons';
 import { sideMenu } from '../components/profile/navBarButtons';
 
 import Incident from '../components/incident/incidentScreen';

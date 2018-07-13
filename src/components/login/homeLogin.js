@@ -39,7 +39,8 @@ class HomeLogin extends Component {
 	componentDidMount() {
 		GoogleSignin.configure({
 			webClientId: Config.GOOGLE_WEB_CLIENT_ID,
-			iosClientId: Config.IOS_GOOGLE_CLIENT_ID // only for iOS
+			iosClientId:
+				'443270569292-7dd0bkm9q8fbkve59q0c82k1sqivln3f.apps.googleusercontent.com' // only for iOS
 		});
 	}
 

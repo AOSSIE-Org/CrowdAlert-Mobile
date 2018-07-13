@@ -78,7 +78,8 @@ class Incident extends Component {
 
 	//Handles the navigation by opening the Google Maps
 	handleDirections() {
-		var coordinates = this.props.incidentDetails.location.coordinates;
+		var coordinates = this.props.incident.incident.value.location
+			.coordinates;
 		getDirections({
 			source: {
 				latitude: '',
