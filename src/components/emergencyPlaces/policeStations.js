@@ -10,23 +10,29 @@ import {
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { getEmergencyPlaces } from '../actions/emergencyPlacesAction';
-import { styles } from '../assets/styles/emergencyPlaces_styles';
+import { getEmergencyPlaces } from '../../actions/emergencyPlacesAction';
+import { styles } from '../../assets/styles/emergencyPlaces_styles';
 import {
 	Content,
 	Container,
-	Card,
-	CardItem,
+	List,
+	ListItem,
 	Left,
 	Right,
-	Thumbnail
+	Body,
+	Thumbnail,
+	Button
 } from 'native-base';
 import getDirections from 'react-native-google-maps-directions';
-import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 import PropTypes from 'prop-types';
 
-//Screen for displaying list of Emergency places near by.
-class Emergency extends React.Component {
+/**
+ * Screen for displaying police stations near a user.
+ * @extends React
+ */
+class PoliceStations extends React.Component {
 	componentDidMount() {
 		this.props.getEmergencyPlaces(this.props.emergency_radius);
 	}
@@ -57,46 +63,44 @@ class Emergency extends React.Component {
 
 	/**
 	 * UI for displaying each item in the list.
-	 * @param  {String} val if  val is 'hospitals' than render the
-	 * hospitals list else render the police stations list
 	 * @return  returns the UI of list
 	 */
-	_renderCard(val) {
-		if (val === 'hospitals') {
-			items = this.props.emergencyPlaces.hospitals;
-		} else if (val === 'policeStations') {
-			items = this.props.emergencyPlaces.policeStations;
-		}
+	_renderCard() {
+		items = this.props.emergencyPlaces.policeStations;
 		return (
 			<View>
-				{items.map(item => (
-					<TouchableOpacity
-						key={item.id}
-						onPress={() =>
-							this.handleNavigation(item.geometry.location)
-						}
-					>
-						<Card>
-							<CardItem>
+				<List>
+					{items.map(item => (
+						<TouchableOpacity key={item.id}>
+							<ListItem thumbnail style={styles.card}>
 								<Left>
-									<Image
-										source={{ uri: item.icon }}
+									<Thumbnail
 										style={styles.image}
+										source={{ uri: item.icon }}
 									/>
-									<Text style={styles.cardText}>
-										{'  ' + item.name}
-									</Text>
 								</Left>
-							</CardItem>
-							<CardItem>
-								<Text>{item.vicinity}</Text>
+								<Body>
+									<Text style={styles.cardText}>
+										{item.name}
+									</Text>
+									<Text note>{item.vicinity}</Text>
+								</Body>
 								<Right>
-									<Icon size={22} name="near-me" />
+									<Button
+										transparent
+										onPress={() =>
+											this.handleNavigation(
+												item.geometry.location
+											)
+										}
+									>
+										<Icon size={22} name="directions" />
+									</Button>
 								</Right>
-							</CardItem>
-						</Card>
-					</TouchableOpacity>
-				))}
+							</ListItem>
+						</TouchableOpacity>
+					))}
+				</List>
 			</View>
 		);
 	}
@@ -107,12 +111,8 @@ class Emergency extends React.Component {
 				<Container>
 					<Content>
 						<View>
-							<Text style={styles.headText}>Hospitals</Text>
-							{this._renderCard('hospitals')}
-						</View>
-						<View>
 							<Text style={styles.headText}>Police Stations</Text>
-							{this._renderCard('policeStations')}
+							{this._renderCard()}
 						</View>
 					</Content>
 				</Container>
@@ -127,7 +127,7 @@ class Emergency extends React.Component {
  * Checks that the functions specified as isRequired are present and warns if the
  * props used on this page does not meet the specified type.
  */
-Emergency.propTypes = {
+PoliceStations.propTypes = {
 	getEmergencyPlaces: PropTypes.func.isRequired,
 	emergencyPlaces: PropTypes.object,
 	emergency_radius: PropTypes.number
@@ -159,4 +159,4 @@ const mapStateToProps = state => ({
 	emergency_radius: state.settings.emergency_radius
 });
 
-export default connect(mapStateToProps, matchDispatchToProps)(Emergency);
+export default connect(mapStateToProps, matchDispatchToProps)(PoliceStations);

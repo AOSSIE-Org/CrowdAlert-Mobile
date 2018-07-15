@@ -1,76 +1,133 @@
 import { StyleSheet, Dimensions } from 'react-native';
 const { width, height } = Dimensions.get('window');
 
-//styling used in Add incident page.
+//Styling for the add incident screen.
 export const styles = StyleSheet.create({
 	container: {
-		flex: 1,
-		backgroundColor: '#F5FCFF'
+		flex: 1
 	},
-	row_container: {
-		flexDirection: 'row'
-	},
-	cameraContainer: {
-		padding: height / 50
-	},
-	button_camera: {
-		height: 40,
-		backgroundColor: '#EEEEEE',
-		marginHorizontal: width / 20,
-		borderRadius: 4
-	},
-	cameraText: {
-		color: 'black',
-		marginTop: height / 50,
-		marginLeft: width / 3
-	},
-	image: {
-		flex: 1,
-		height: height / 4,
-		width: null,
-		margin: height / 30
+	textInput: {
+		flex: 2,
+		textAlign: 'right',
+		color: '#4ebaaa'
+		// borderBottomWidth: 1,
+		// borderColor: 'black'
 	},
 	picker: {
-		marginHorizontal: width / 20,
-		width: width * 0.9,
-		marginTop: height / 50,
-		height: 40
+		marginTop: height / 60,
+		marginBottom: height / 60,
+		marginLeft: width / 30,
+		width: width * 0.9
 	},
-	checkBox: {
-		flexDirection: 'row',
-		marginTop: height / 50,
+	avatarContainer: {
+		backgroundColor: '#63a4ff',
+		alignItems: 'center',
+		paddingTop: height / 100,
+		paddingBottom: height / 80,
+		marginBottom: height / 200
+	},
+	title: {
+		marginLeft: width / 20,
+		fontWeight: 'bold',
+		fontSize: 25,
+		color: '#fff'
+	},
+	imageText: {
+		marginLeft: width / 80,
+		paddingBottom: height / 50,
+		fontWeight: 'bold',
+		fontSize: 20,
+		color: '#fff'
+	},
+	imageChangeText: {
+		marginLeft: width / 80,
+		paddingTop: height / 40,
+		fontWeight: 'bold',
+		fontSize: 20,
+		color: '#fff'
+	},
+	incidentTitle: {
+		width: width * 0.9,
+		marginLeft: width / 20,
+		paddingTop: height / 300
+	},
+	incidentDetail: {
+		paddingTop: height / 300,
+		width: width * 0.9,
 		marginLeft: width / 20
 	},
-	checkBoxText: {
+	incidentTitleTextContainer: {
 		marginLeft: width / 20,
-		alignSelf: 'center'
+		paddingTop: height / 40,
+		paddingBottom: height / 100
 	},
-	field_title: {
-		marginHorizontal: width / 20,
-		width: width * 0.9,
-		marginTop: height / 50,
-		height: 40
+	incidentDetailTextContainer: {
+		marginLeft: width / 20,
+		paddingTop: height / 60,
+		paddingBottom: height / 100
 	},
-	field_details: {
-		marginHorizontal: width / 20,
-		width: width * 0.9,
-		marginTop: height / 50,
-		height: 40
+	incidentTitleText: {
+		color: '#555',
+		fontWeight: 'bold',
+		fontSize: 17
 	},
-	button_send: {
+	incidentDetailText: {
+		color: '#555',
+		fontWeight: 'bold',
+		fontSize: 17
+	},
+	image: {
+		height: width / 2.2,
+		width: width / 1.2,
+		paddingTop: height / 300
+	},
+	getHelp: {
+		flexDirection: 'row',
+		marginLeft: width / 20,
+		paddingTop: height / 40
+	},
+	Share: {
+		flexDirection: 'row',
+		marginLeft: width / 20,
+		paddingTop: height / 30
+	},
+	getHelpText: {
+		color: '#555',
+		fontWeight: 'bold',
+		fontSize: 17
+	},
+	Switch: {
+		marginLeft: width / 2
+	},
+	SwitchShare: {
+		marginLeft: width / 2.5
+	},
+	userName: {
+		paddingTop: height / 30,
+		fontSize: 17,
+		color: 'black'
+	},
+	valueItem: {
+		flexDirection: 'row',
+		justifyContent: 'center',
+		marginHorizontal: width / 15
+	},
+	valueTextContainer: {
+		// flex: 3,
+		justifyContent: 'center'
+	},
+	valueText: {
+		color: '#005b4f'
+	},
+	updateButton: {
 		alignItems: 'center',
-		backgroundColor: '#000',
+		backgroundColor: '#1e1e1e',
 		padding: width / 30,
-		width: width / 3,
 		marginHorizontal: width / 3,
-		marginTop: height / 50,
-		marginBottom: height / 20,
-		borderRadius: 10
+		marginTop: height / 30,
+		borderRadius: 17
 	},
-	field: {
-		marginTop: height / 50
-	},
-	button_text: {
+	updateText: {
 		color: 'white'
 	}
 });

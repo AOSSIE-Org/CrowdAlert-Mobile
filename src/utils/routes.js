@@ -28,7 +28,7 @@ import EditButtonIncident from '../components/incident/navBarButtons/editInciden
 import ShareButtonIncident from '../components/incident/navBarButtons/ShareIncidentButton.js';
 import EditIncident from '../components/incident/editIncident';
 
-import EmergencyLocation from '../components/emergencyPlaces';
+import EmergencyLocation from '../components/emergencyPlaces/emergencyPlacesTabular';
 
 import SettingsOption from '../components/settings';
 
@@ -111,6 +111,7 @@ export default class Route extends Component {
 						</Scene> */}
 						<Scene
 							key="emergencylocation"
+							hideNavBar={true}
 							title="Emergency places nearby"
 							renderLeftButton={() => sideMenu()}
 							component={EmergencyLocation}
@@ -125,6 +126,7 @@ export default class Route extends Component {
 					<Scene
 						back={true}
 						key="addIncident"
+						hideNavBar={true}
 						title="Add incident"
 						component={AddIncident}
 					/>
@@ -147,6 +149,7 @@ export default class Route extends Component {
 					<Scene
 						back={true}
 						key="editIncident"
+						hideNavBar={true}
 						title="Edit Incident"
 						component={EditIncident}
 					/>
