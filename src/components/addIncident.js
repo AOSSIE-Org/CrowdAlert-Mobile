@@ -14,6 +14,16 @@ import {
 	CheckBox
 } from 'react-native';
 import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
+import {
+	Header,
+	Title,
+	Left,
+	Body,
+	Switch,
+	Right,
+	Card,
+	Icon
+} from 'native-base';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { addIncidentToFirebase } from '../actions/incidentsAction';
@@ -127,7 +137,53 @@ class AddIncident extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<View style={styles.field}>
+				<Header androidStatusBarColor="#1c76cb">
+					<Left>
+						<TouchableOpacity
+							style={styles.backButton}
+							onPress={() => Actions.pop()}
+						>
+							<Icon name="close" size={40} color="white" />
+						</TouchableOpacity>
+					</Left>
+					<Body>
+						<Text style={styles.title}>Add Incident</Text>
+					</Body>
+				</Header>
+				<ScrollView
+					keyboardShouldPersistTaps="always"
+					showsVerticalScrollIndicator={false}
+				>
+					{this.state.image.isPresent ? (
+						<View style={styles.avatarContainer}>
+							<Image
+								style={styles.image}
+								resizeMethod={'resize'}
+								source={{
+									uri:
+										'data:image/jpeg;base64, ' +
+										this.state.image.base64
+								}}
+							/>
+							<TouchableOpacity
+								onPress={() => this._cameraImage()}
+							>
+								<Text style={styles.imageChangeText}>
+									Change Image
+								</Text>
+							</TouchableOpacity>
+						</View>
+					) : (
+						<View style={styles.avatarContainer}>
+							<TouchableOpacity
+								onPress={() => this._cameraImage()}
+							>
+								<Text style={styles.imageText}>
+									+ Add Image
+								</Text>
+							</TouchableOpacity>
+						</View>
+					)}
 					<Picker
 						selectedValue={this.state.category}
 						onValueChange={category => {
@@ -148,77 +204,67 @@ class AddIncident extends Component {
 						<Picker.Item label="Fire" value="fire" />
 						<Picker.Item label="Flood" value="flood" />
 					</Picker>
-					<View style={styles.row_container}>
-						<TextInput
-							style={styles.field_title}
-							ref={input => (this.titleInput = input)}
-							onChangeText={title => this.setState({ title })}
-							onSubmitEditing={() => this.detailsInput.focus()}
-							autoCapitalize="none"
-							autoCorrect={false}
-							keyboardType="email-address"
-							returnKeyType="next"
-							placeholder="Title"
-						/>
+					<View style={styles.incidentTitleTextContainer}>
+						<Text style={styles.incidentTitleText}>
+							Incident Title
+						</Text>
+					</View>
+
+					<TextInput
+						style={styles.incidentTitle}
+						ref={input => (this.titleInput = input)}
+						onChangeText={title => this.setState({ title })}
+						onSubmitEditing={() => this.detailsInput.focus()}
+						autoCapitalize="none"
+						autoCorrect={false}
+						keyboardType="email-address"
+						returnKeyType="next"
+						placeholder="Title"
+					/>
+					<View style={styles.incidentDetailTextContainer}>
+						<Text style={styles.incidentDetailText}>
+							Incident Details
+						</Text>
 					</View>
 					<TextInput
 						ref={input => (this.detailsInput = input)}
-						style={styles.field_details}
+						style={styles.incidentDetail}
 						onChangeText={details => this.setState({ details })}
 						returnKeyType="next"
 						placeholder="Description"
 					/>
-					<View style={styles.checkBox}>
-						<CheckBox
-							value={this.state.visible}
-							onValueChange={() =>
-								this.setState({ visible: !this.state.visible })
-							}
-						/>
-						<Text style={styles.checkBoxText}>Share Publicly</Text>
-					</View>
-					<View style={styles.checkBox}>
-						<CheckBox
+					<View style={styles.getHelp}>
+						<Text style={styles.getHelpText}>Get Help!</Text>
+						<Switch
+							thumbTintColor="#1c76cb"
+							style={styles.Switch}
+							onValueChange={getHelp => {
+								this.setState({ getHelp: getHelp });
+							}}
 							value={this.state.getHelp}
-							onValueChange={() =>
-								this.setState({ getHelp: !this.state.getHelp })
-							}
 						/>
-						<Text style={styles.checkBoxText}>Get Help!</Text>
 					</View>
-				</View>
-				{this.state.image.isPresent ? (
-					<Image
-						style={styles.image}
-						resizeMethod={'resize'}
-						source={{
-							uri:
-								'data:image/jpeg;base64, ' +
-								this.state.image.base64
-						}}
-					/>
-				) : null}
-				<View style={styles.cameraContainer}>
+					<View style={styles.Share}>
+						<Text style={styles.getHelpText}>Share Publicly!</Text>
+						<Switch
+							thumbTintColor="#1c76cb"
+							style={styles.SwitchShare}
+							onValueChange={getHelp => {
+								this.setState({ getHelp: getHelp });
+							}}
+							value={this.state.getHelp}
+						/>
+					</View>
 					<TouchableOpacity
-						style={styles.button_camera}
-						onPress={() => this._cameraImage()}
+						style={styles.updateButton}
+						onPress={() => this.handleAddIncident()}
 					>
-						{this.state.image.isPresent ? (
-							<Text style={styles.cameraText}>Change Image</Text>
-						) : (
-							<Text style={styles.cameraText}> Add Image </Text>
-						)}
+						<Text style={styles.updateText}> Update </Text>
 					</TouchableOpacity>
-				</View>
-				<TouchableOpacity
-					style={styles.button_send}
-					onPress={() => this.handleAddIncident()}
-				>
-					<Text style={styles.button_text}> Update </Text>
-				</TouchableOpacity>
-				{this.props.incident.loading ? (
-					<ActivityIndicator size={'large'} />
-				) : null}
+					{this.props.incident.loading ? (
+						<ActivityIndicator size={'large'} />
+					) : null}
+				</ScrollView>
 			</View>
 		);
 	}

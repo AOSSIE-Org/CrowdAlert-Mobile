@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions } from 'react-native';
 const { width, height } = Dimensions.get('window');
 
-//Styling for the add incident screen.
+//Styling for the edit incident screen.
 export const styles = StyleSheet.create({
 	container: {
 		flex: 1
@@ -12,12 +12,6 @@ export const styles = StyleSheet.create({
 		color: '#4ebaaa'
 		// borderBottomWidth: 1,
 		// borderColor: 'black'
-	},
-	picker: {
-		marginTop: height / 60,
-		marginBottom: height / 60,
-		marginLeft: width / 30,
-		width: width * 0.9
 	},
 	avatarContainer: {
 		backgroundColor: '#63a4ff',
