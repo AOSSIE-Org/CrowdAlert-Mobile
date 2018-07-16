@@ -1,7 +1,7 @@
 import { StyleSheet, Dimensions } from 'react-native';
 const { width, height } = Dimensions.get('window');
 
-//Styling for the add incident screen.
+//Styling for the emergencyPlaces screen.
 export const styles = StyleSheet.create({
 	menuButton: {
 		paddingLeft: width / 20

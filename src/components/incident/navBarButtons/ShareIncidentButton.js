@@ -42,7 +42,7 @@ class ShareButtonIncident extends Component {
 					this.handleShare();
 				}}
 			>
-				<Icon name="share" size={23} />
+				<Icon name="share" size={25} color={'white'} />
 			</TouchableOpacity>
 		);
 	}
