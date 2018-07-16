@@ -109,10 +109,7 @@ class Hospitals extends React.Component {
 			return (
 				<Container>
 					<Content>
-						<View>
-							<Text style={styles.headText}>Hospitals</Text>
-							{this._renderCard()}
-						</View>
+						<View>{this._renderCard()}</View>
 					</Content>
 				</Container>
 			);

@@ -21,7 +21,7 @@ class EditButtonIncident extends Component {
 						Actions.editIncident();
 					}}
 				>
-					<Icon name="pencil" size={23} />
+					<Icon name="pencil" size={23} color={'white'} />
 				</TouchableOpacity>
 			);
 		} else {

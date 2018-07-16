@@ -31,7 +31,7 @@ import EditIncident from '../components/incident/editIncident';
 import EmergencyLocation from '../components/emergencyPlaces/emergencyPlacesTabular';
 
 import SettingsOption from '../components/settings';
-
+import Filter from '../components/filter';
 const ConnectedRouter = connect()(Router);
 const { width, height } = Dimensions.get('window');
 
@@ -134,6 +134,7 @@ export default class Route extends Component {
 						key="incident"
 						title="Incident Details"
 						component={Incident}
+						hideNavBar={true}
 						right={[
 							<EditButtonIncident key={1} />,
 							<DeleteButtonIncident key={2} />,
@@ -145,6 +146,13 @@ export default class Route extends Component {
 						key="editProfile"
 						hideNavBar={true}
 						component={EditProfile}
+					/>
+					<Scene
+						back={true}
+						key="filter"
+						title="Filter"
+						hideNavBar={true}
+						component={Filter}
 					/>
 					<Scene
 						back={true}

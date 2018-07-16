@@ -41,9 +41,6 @@ var haversine = require('haversine-distance');
 class MapScreen extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			visibleModal: false
-		};
 	}
 
 	componentWillMount() {
@@ -128,51 +125,6 @@ class MapScreen extends Component {
 		}
 	}
 
-	//Sets the filter category
-	alertItemName = item => {
-		this.props.updateDomain(item.category);
-		this.closeModal();
-	};
-
-	//Opens the modal
-	openModal() {
-		this.setState({ visibleModal: true });
-	}
-
-	//Closes the modal
-	closeModal() {
-		this.setState({ visibleModal: false });
-	}
-
-	//Modal to be displayed for the filter menu.
-	_renderModalContent = () => (
-		<View>
-			<TouchableHighlight onPress={() => this.closeModal()}>
-				<Icon name="close" size={20} style={styles.modalIcon} />
-			</TouchableHighlight>
-			<Text style={styles.modalHeadText}>
-				Select category from below :
-			</Text>
-			<View style={styles.modalContainer}>
-				{Object.keys(categories).map((key, index) => (
-					<TouchableOpacity
-						key={categories[key].category}
-						style={styles.modalField}
-						onPress={() => this.alertItemName(categories[key])}
-					>
-						<Image
-							style={styles.modalImage}
-							source={getMarkerImage(categories[key].category)}
-						/>
-						<Text style={styles.modalText}>
-							{categories[key].title}
-						</Text>
-					</TouchableOpacity>
-				))}
-			</View>
-		</View>
-	);
-
 	render() {
 		return (
 			<View style={styles.container}>
@@ -180,7 +132,7 @@ class MapScreen extends Component {
 				<TouchableHighlight
 					underlayColor="#005b4f"
 					style={styles.filterButton}
-					onPress={() => this.openModal()}
+					onPress={() => Actions.filter()}
 				>
 					<Icon
 						name="filter"
@@ -195,14 +147,6 @@ class MapScreen extends Component {
 				>
 					<Icon name="plus" size={30} style={styles.fabButtonIcon} />
 				</TouchableOpacity>
-				<Modal
-					visible={this.state.visibleModal}
-					onRequestClose={() => {
-						this.closeModal();
-					}}
-				>
-					{this._renderModalContent()}
-				</Modal>
 				<GooglePlacesAutocomplete
 					minLength={2}
 					listViewDisplayed="auto"

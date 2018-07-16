@@ -4,21 +4,37 @@ import {
 	View,
 	Image,
 	TouchableOpacity,
-	ActivityIndicator
+	ActivityIndicator,
+	ScrollView
 } from 'react-native';
 import PropTypes from 'prop-types';
 import MapView, { Marker } from 'react-native-maps';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Container, Content, Card, CardItem } from 'native-base';
+import {
+	Container,
+	Content,
+	Card,
+	CardItem,
+	Header,
+	Left,
+	Body,
+	Right,
+	Fab
+} from 'native-base';
 import { styles } from '../../assets/styles/incident_styles';
 import getDirections from 'react-native-google-maps-directions';
+import { Actions } from 'react-native-router-flux';
+import DeleteButtonIncident from './navBarButtons/deleteIncident.js';
+import EditButtonIncident from './navBarButtons/editIncidentButton.js';
+import ShareButtonIncident from './navBarButtons/ShareIncidentButton.js';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {
 	viewIncident,
 	getIndvIncident
 } from '../../actions/incidentsAction.js';
 import firebase from 'react-native-firebase';
+import IconDirection from 'react-native-vector-icons/MaterialCommunityIcons';
 
 /**
  * Screen for showing individual incidents.
@@ -91,11 +107,38 @@ class Incident extends Component {
 		} else {
 			var incidentDetails = this.props.incident.incident.value;
 			return (
-				<Container>
+				<Container style={styles.container}>
 					<Content>
-						{incidentDetails.image.isPresent ? (
-							<Card>
-								<CardItem>
+						<Header androidStatusBarColor="#1c76cb">
+							<Left>
+								<TouchableOpacity
+									style={styles.backButton}
+									onPress={() => Actions.pop()}
+								>
+									<Icon
+										name="close"
+										size={25}
+										color="white"
+									/>
+								</TouchableOpacity>
+							</Left>
+							<Body>
+								<Text style={styles.title}>
+									Incident Details
+								</Text>
+							</Body>
+							<Right>
+								<EditButtonIncident key={1} />
+								<DeleteButtonIncident key={2} />
+								<ShareButtonIncident key={3} />
+							</Right>
+						</Header>
+						<ScrollView
+							keyboardShouldPersistTaps="always"
+							showsVerticalScrollIndicator={false}
+						>
+							{incidentDetails.image.isPresent ? (
+								<View style={styles.avatarContainer}>
 									<Image
 										style={styles.image}
 										resizeMethod={'resize'}
@@ -105,83 +148,85 @@ class Incident extends Component {
 												incidentDetails.image.base64
 										}}
 									/>
-								</CardItem>
-							</Card>
-						) : null}
-						<Card>
-							<CardItem>
-								<Text style={styles.titleTextHeader}>
-									Title
-								</Text>
-							</CardItem>
-							<CardItem>
-								<Text style={styles.titleTextDescription}>
-									{incidentDetails.title}
-								</Text>
-							</CardItem>
-							{incidentDetails.details !== '' ? (
-								<View>
-									<CardItem>
-										<Text style={styles.titleTextHeader}>
-											Description
-										</Text>
-									</CardItem>
-									<CardItem>
-										<Text
-											style={styles.titleTextDescription}
-										>
-											{incidentDetails.details}
-										</Text>
-									</CardItem>
 								</View>
 							) : null}
-						</Card>
-						<Card>
-							<CardItem>
-								<MapView
-									region={{
-										latitude:
-											incidentDetails.location.coordinates
-												.latitude,
-										longitude:
-											incidentDetails.location.coordinates
-												.longitude,
-										latitudeDelta: 0.0052,
-										longitudeDelta: 0.0052
-									}}
-									onLayout={this.onMapLayout}
-									style={styles.map}
-								>
-									{this.state.isMapReady && (
-										<MapView.Marker
-											coordinate={{
-												latitude:
-													incidentDetails.location
-														.coordinates.latitude,
-												longitude:
-													incidentDetails.location
-														.coordinates.longitude
-											}}
-										/>
-									)}
-								</MapView>
-							</CardItem>
-						</Card>
-						<Card>
-							<CardItem>
-								<TouchableOpacity
-									style={styles.navigationContainer}
-									onPress={() => this.handleDirections()}
-								>
-									<Text>Navigate</Text>
-									<Icon
-										name="map-pin"
-										size={23}
-										style={styles.navigationIcon}
-									/>
-								</TouchableOpacity>
-							</CardItem>
-						</Card>
+							<Card style={styles.card}>
+								<CardItem>
+									<Text style={styles.titleTextHeader}>
+										Title
+									</Text>
+								</CardItem>
+								<CardItem>
+									<Text style={styles.titleTextDescription}>
+										{incidentDetails.title}
+									</Text>
+								</CardItem>
+								{incidentDetails.details !== '' ? (
+									<View>
+										<CardItem>
+											<Text
+												style={styles.titleTextHeader}
+											>
+												Description
+											</Text>
+										</CardItem>
+										<CardItem>
+											<Text
+												style={
+													styles.titleTextDescription
+												}
+											>
+												{incidentDetails.details}
+											</Text>
+										</CardItem>
+									</View>
+								) : null}
+							</Card>
+							<Card style={styles.card}>
+								<CardItem>
+									<MapView
+										region={{
+											latitude:
+												incidentDetails.location
+													.coordinates.latitude,
+											longitude:
+												incidentDetails.location
+													.coordinates.longitude,
+											latitudeDelta: 0.0052,
+											longitudeDelta: 0.0052
+										}}
+										onLayout={this.onMapLayout}
+										style={styles.map}
+									>
+										{this.state.isMapReady && (
+											<MapView.Marker
+												coordinate={{
+													latitude:
+														incidentDetails.location
+															.coordinates
+															.latitude,
+													longitude:
+														incidentDetails.location
+															.coordinates
+															.longitude
+												}}
+											/>
+										)}
+									</MapView>
+								</CardItem>
+							</Card>
+							<TouchableOpacity
+								activeOpacity={0.5}
+								style={styles.button}
+								onPress={() => this.handleDirections()}
+							>
+								<IconDirection
+									name="directions"
+									size={30}
+									style={styles.fabButtonIcon}
+								/>
+							</TouchableOpacity>
+						</ScrollView>
 					</Content>
 				</Container>
 			);

@@ -34,7 +34,9 @@ import PropTypes from 'prop-types';
  */
 class PoliceStations extends React.Component {
 	componentDidMount() {
-		this.props.getEmergencyPlaces(this.props.emergency_radius);
+		if (this.props.emergencyPlaces !== null) {
+			this.props.getEmergencyPlaces(this.props.emergency_radius);
+		}
 	}
 
 	/**
@@ -110,10 +112,7 @@ class PoliceStations extends React.Component {
 			return (
 				<Container>
 					<Content>
-						<View>
-							<Text style={styles.headText}>Police Stations</Text>
-							{this._renderCard()}
-						</View>
+						<View>{this._renderCard()}</View>
 					</Content>
 				</Container>
 			);

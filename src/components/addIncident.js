@@ -14,16 +14,8 @@ import {
 	CheckBox
 } from 'react-native';
 import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
-import {
-	Header,
-	Title,
-	Left,
-	Body,
-	Switch,
-	Right,
-	Card,
-	Icon
-} from 'native-base';
+import { Header, Title, Left, Body, Switch, Right, Card } from 'native-base';
+import Icon from 'react-native-vector-icons/EvilIcons';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { addIncidentToFirebase } from '../actions/incidentsAction';

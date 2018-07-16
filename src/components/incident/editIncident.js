@@ -45,6 +45,10 @@ class EditIncident extends Component {
 		};
 	}
 
+	/**
+	 * Updates the incident in firebase.
+	 * @return Updated incident
+	 */
 	handleUpdate() {
 		this.props.viewIncident(
 			{
