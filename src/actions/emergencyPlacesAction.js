@@ -26,11 +26,21 @@ export const getEmergencyPlaces = radius => {
 				.longitude;
 			const urlHospital =
 				NEARBY_PLACES_GOOGLE_URL +
-				`${latitude},${longitude}&radius=${radius}&type=hospital&key=` +
+				latitude +
+				',' +
+				longitude +
+				'&radius=' +
+				radius +
+				'&type=hospital&key=' +
 				Config.GOOGLE_MAPS_KEY;
 			const urlPoliceStation =
 				NEARBY_PLACES_GOOGLE_URL +
-				`${latitude},${longitude}&radius=${radius}&type=police&key=` +
+				latitude +
+				',' +
+				longitude +
+				'&radius=' +
+				radius +
+				'&type=police&key=' +
 				Config.GOOGLE_MAPS_KEY;
 			//fetches hospitals
 			fetch(urlHospital)
