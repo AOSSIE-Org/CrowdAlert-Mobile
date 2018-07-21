@@ -10,7 +10,7 @@ import SplashScreen from './src/components/splashScreen';
 import configureStore from './src/utils/store';
 let { store, persistor } = configureStore();
 
-import { StyleProvider } from 'native-base';
+import { StyleProvider, Root } from 'native-base';
 import getTheme from './src/assets/styles/native-base-theme/components';
 import platform from './src/assets/styles/native-base-theme/variables/platform';
 
@@ -29,9 +29,11 @@ export default class App extends Component {
 						} else {
 							return (
 								//Loading custom Native Base styling to the app
-								<StyleProvider style={getTheme(platform)}>
-									<LinkedRouter scheme="https" />
-								</StyleProvider>
+								<Root>
+									<StyleProvider style={getTheme(platform)}>
+										<LinkedRouter scheme="https" />
+									</StyleProvider>
+								</Root>
 							);
 						}
 					}}

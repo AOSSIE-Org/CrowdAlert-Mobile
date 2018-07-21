@@ -7,7 +7,6 @@ import {
 	TouchableOpacity,
 	TextInput,
 	ActivityIndicator,
-	ToastAndroid,
 	CheckBox
 } from 'react-native';
 import { bindActionCreators } from 'redux';
@@ -25,6 +24,7 @@ import {
 } from '../../actions/incidentsAction';
 
 var ImagePicker = require('react-native-image-picker');
+import { Toast } from 'native-base';
 
 /**
  * Screen showing the edit options for the profile and personal information.
@@ -83,21 +83,11 @@ class EditIncident extends Component {
 			}
 		};
 		ImagePicker.showImagePicker(options, response => {
-			if (response.didCancel) {
-				ToastAndroid.show(
-					'User cancelled image picker',
-					ToastAndroid.SHORT
-				);
-			} else if (response.error) {
-				ToastAndroid.show(
-					'ImagePicker Error: ' + response.error,
-					ToastAndroid.SHORT
-				);
-			} else if (response.customButton) {
-				ToastAndroid.show(
-					'User tapped custom button: ' + response.customButton,
-					ToastAndroid.SHORT
-				);
+			if (response.error) {
+				Toast.show({
+					text: 'ImagePicker Error: ' + response.error,
+					duration: 2000
+				});
 			} else {
 				this.setState({
 					image: {
@@ -106,7 +96,11 @@ class EditIncident extends Component {
 						uri: response.uri
 					}
 				});
-				ToastAndroid.show('Image Added', ToastAndroid.SHORT);
+				Toast.show({
+					text: 'Image Added!' + response.error,
+					type: 'success',
+					duration: 2000
+				});
 			}
 		});
 	};

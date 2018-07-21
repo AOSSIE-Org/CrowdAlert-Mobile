@@ -4,7 +4,6 @@ import {
 	View,
 	TouchableOpacity,
 	TextInput,
-	ToastAndroid,
 	ActivityIndicator
 } from 'react-native';
 import { bindActionCreators } from 'redux';
@@ -14,7 +13,7 @@ import { Actions } from 'react-native-router-flux';
 import { styles } from '../../assets/styles/signin_styles';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/Feather';
-import { Header, Title, Left, Body } from 'native-base';
+import { Header, Title, Left, Body, Toast } from 'native-base';
 
 /**
  * Renders the forget password screen
@@ -36,18 +35,20 @@ class Forgot extends Component {
 
 	validateEmail(inputEmail) {
 		if (inputEmail === '') {
-			ToastAndroid.show(
-				'You can leave the email field blank!',
-				ToastAndroid.SHORT
-			);
+			Toast.show({
+				text: 'You can leave the email field blank!',
+				type: 'warning',
+				duration: 2000
+			});
 			return false;
 		} else {
 			var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 			if (!inputEmail.match(mailformat)) {
-				ToastAndroid.show(
-					'Please check your email format',
-					ToastAndroid.SHORT
-				);
+				Toast.show({
+					text: 'Please check your email format',
+					type: 'warning',
+					duration: 2000
+				});
 				return false;
 			} else {
 				return true;

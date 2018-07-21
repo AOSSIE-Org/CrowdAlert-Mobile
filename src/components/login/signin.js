@@ -4,7 +4,6 @@ import {
 	View,
 	TouchableOpacity,
 	TextInput,
-	ToastAndroid,
 	Keyboard,
 	ActivityIndicator
 } from 'react-native';
@@ -15,7 +14,7 @@ import { Actions } from 'react-native-router-flux';
 import { styles } from '../../assets/styles/signin_styles';
 import PropTypes from 'prop-types';
 import Icon from 'react-native-vector-icons/Feather';
-import { Header, Title, Left, Body } from 'native-base';
+import { Header, Title, Left, Body, Toast } from 'native-base';
 
 /**
  * Screen for login using login id and password.
@@ -33,7 +32,11 @@ class Signin extends Component {
 	componentDidUpdate() {
 		// Typical usage (don't forget to compare props):
 		if (!this.props.login.loading && this.props.login.signInType !== null) {
-			ToastAndroid.show('You are logged in', ToastAndroid.SHORT);
+			Toast.show({
+				text: 'You are logged in',
+				type: 'success',
+				duration: 2000
+			});
 			Actions.profile();
 		}
 	}
@@ -54,18 +57,20 @@ class Signin extends Component {
 
 	validateEmail(inputEmail) {
 		if (inputEmail === '') {
-			ToastAndroid.show(
-				'You can leave the email field blank!',
-				ToastAndroid.SHORT
-			);
+			Toast.show({
+				text: "You can't leave the email field blank!",
+				type: 'warning',
+				duration: 2000
+			});
 			return false;
 		} else {
 			var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 			if (!inputEmail.match(mailformat)) {
-				ToastAndroid.show(
-					'Please check your email format',
-					ToastAndroid.SHORT
-				);
+				Toast.show({
+					text: 'Please check your email format',
+					type: 'warning',
+					duration: 2000
+				});
 				return false;
 			} else {
 				return true;
@@ -75,16 +80,18 @@ class Signin extends Component {
 
 	validatePassword(inputPassword) {
 		if (inputPassword === '') {
-			ToastAndroid.show(
-				'You can leave the password field blank!',
-				ToastAndroid.SHORT
-			);
+			Toast.show({
+				text: 'You can leave the password field blank!',
+				type: 'warning',
+				duration: 2000
+			});
 			return false;
 		} else if (inputPassword.length < 8) {
-			ToastAndroid.show(
-				'Your password should be of minimum 8 characters!',
-				ToastAndroid.SHORT
-			);
+			Toast.show({
+				text: 'Your password should be of minimum 8 characters!',
+				type: 'warning',
+				duration: 2000
+			});
 			return false;
 		} else {
 			return true;
