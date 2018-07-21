@@ -40,7 +40,7 @@ class HomeLogin extends Component {
 		GoogleSignin.configure({
 			webClientId: Config.GOOGLE_WEB_CLIENT_ID,
 			iosClientId:
-				'443270569292-7dd0bkm9q8fbkve59q0c82k1sqivln3f.apps.googleusercontent.com', // only for iOS
+				'443270569292-7dd0bkm9q8fbkve59q0c82k1sqivln3f.apps.googleusercontent.com',
 			forceConsentPrompt: true
 		});
 	}

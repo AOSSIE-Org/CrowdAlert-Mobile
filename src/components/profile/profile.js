@@ -49,19 +49,29 @@ class Profile extends Component {
 		} else {
 			this.props.watchCurrLocation();
 		}
-		//Gets user submitted incidents
-		this.props.getUserIncidents(this.props.user.email);
+
 		//Configures the push notification
 		PushNotification.configure({
 			//Called when a remote or local notification is opened or received
 			onNotification: notification => {
 				console.log('NOTIFICATION:', notification);
 				this.viewClickedIncident(notification.tag);
-				// Actions.incident({ incident_key: notification.tag });
 				// process the notification
 			},
 			requestPermissions: this.props.enable_notifications
 		});
+
+		//Gets user submitted incidents
+		this.props.getUserIncidents(this.props.user.email);
+	}
+
+	viewClickedIncident(item) {
+		if (item.value.user_id === this.props.user.email) {
+			this.props.viewIncident(item, true);
+		} else {
+			this.props.viewIncident(item, false);
+		}
+		Actions.incident();
 	}
 
 	_renderItem({ item, index }) {

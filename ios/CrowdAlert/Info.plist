@@ -43,6 +43,10 @@
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
 			<string>com.aossie.crowdalert</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.aossie.crowdalert</string>
+			</array>
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
