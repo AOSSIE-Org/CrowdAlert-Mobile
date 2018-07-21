@@ -18,10 +18,13 @@ const config = {
 	debug: true,
 	// whitelist: ['login', 'incident'],
 	transforms: [
-		createWhitelistFilter('incident', ['notificationStack']),
+		createWhitelistFilter('incident', [
+			'notificationStack',
+			'user_incidents'
+		]),
 		createWhitelistFilter('login'),
 		createWhitelistFilter('emergencyPlaces', []),
-		createWhitelistFilter('location', []),
+		createWhitelistFilter('location', ['curr_coordinates']),
 		createWhitelistFilter('settings')
 	]
 };

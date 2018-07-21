@@ -48,6 +48,12 @@ class EditProfile extends Component {
 				type: 'warning',
 				duration: 2000
 			});
+		} else if (this.state.phone_no.length !== 10) {
+			Toast.show({
+				text: 'Please enter a 10 digit contact number',
+				type: 'warning',
+				duration: 2000
+			});
 		} else {
 			this.props.updateUserFirebase(this.state).then(() => {
 				Toast.show({
