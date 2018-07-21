@@ -10,7 +10,6 @@ import {
 	Keyboard,
 	ActivityIndicator,
 	Picker,
-	ToastAndroid,
 	CheckBox
 } from 'react-native';
 import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
@@ -23,6 +22,7 @@ import { Actions } from 'react-native-router-flux';
 import { styles } from '../assets/styles/addincident_styles';
 import PropTypes from 'prop-types';
 var ImagePicker = require('react-native-image-picker');
+import { Toast } from 'native-base';
 
 /**
  * Screen for adding an incident.
@@ -71,15 +71,20 @@ class AddIncident extends Component {
 			this.state.details === null ||
 			this.state.category === null
 		) {
-			ToastAndroid.show(
-				'Please dont leave any field blank',
-				ToastAndroid.SHORT
-			);
+			Toast.show({
+				text: 'Please dont leave any field blank',
+				type: 'warning',
+				duration: 2000
+			});
 		} else {
 			this.props
 				.addIncidentToFirebase(this.state) // waits till incident details are updated in redux
 				.then(result => {
-					ToastAndroid.show('Incident Updated', ToastAndroid.SHORT);
+					Toast.show({
+						text: 'Incident updated!',
+						type: 'success',
+						duration: 2000
+					});
 					Actions.pop(); // set markers on map page to result from firebase.
 				});
 		}
@@ -98,21 +103,11 @@ class AddIncident extends Component {
 			}
 		};
 		ImagePicker.showImagePicker(options, response => {
-			if (response.didCancel) {
-				ToastAndroid.show(
-					'User cancelled image picker',
-					ToastAndroid.SHORT
-				);
-			} else if (response.error) {
-				ToastAndroid.show(
-					'ImagePicker Error: ' + response.error,
-					ToastAndroid.SHORT
-				);
-			} else if (response.customButton) {
-				ToastAndroid.show(
-					'User tapped custom button: ' + response.customButton,
-					ToastAndroid.SHORT
-				);
+			if (response.error) {
+				Toast.show({
+					text: 'ImagePicker Error: ' + response.error,
+					duration: 2000
+				});
 			} else {
 				this.setState({
 					image: {
@@ -121,7 +116,11 @@ class AddIncident extends Component {
 						uri: response.uri
 					}
 				});
-				ToastAndroid.show('Image Added', ToastAndroid.SHORT);
+				Toast.show({
+					text: 'Image Added!' + response.error,
+					type: 'success',
+					duration: 2000
+				});
 			}
 		});
 	};

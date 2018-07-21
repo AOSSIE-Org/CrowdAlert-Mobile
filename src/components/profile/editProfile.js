@@ -5,8 +5,7 @@ import {
 	View,
 	ScrollView,
 	TouchableOpacity,
-	TextInput,
-	ToastAndroid
+	TextInput
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -15,7 +14,7 @@ import { styles } from '../../assets/styles/editProfile_styles';
 import PropTypes from 'prop-types';
 import { updateUserFirebase } from '../../actions/loginAction';
 import Icon from 'react-native-vector-icons/EvilIcons';
-import { Header, Title, Left, Body } from 'native-base';
+import { Header, Title, Left, Body, Toast } from 'native-base';
 var ImagePicker = require('react-native-image-picker');
 
 /**
@@ -38,18 +37,24 @@ class EditProfile extends Component {
 
 	handleUpdate() {
 		if (this.state.email === '') {
-			ToastAndroid.show(
-				'You cannot leave your email field blank',
-				ToastAndroid.SHORT
-			);
+			Toast.show({
+				text: 'You cannot leave your email field blank',
+				type: 'warning',
+				duration: 2000
+			});
 		} else if (this.state.name === '') {
-			ToastAndroid.show(
-				'You cannot leave your name field blank',
-				ToastAndroid.SHORT
-			);
+			Toast.show({
+				text: 'You cannot leave your name field blank',
+				type: 'warning',
+				duration: 2000
+			});
 		} else {
 			this.props.updateUserFirebase(this.state).then(() => {
-				ToastAndroid.show('Profile Updated', ToastAndroid.SHORT);
+				Toast.show({
+					text: 'Profile Updated',
+					type: 'success',
+					duration: 2000
+				});
 				Actions.pop();
 			});
 		}
@@ -68,21 +73,11 @@ class EditProfile extends Component {
 			}
 		};
 		ImagePicker.showImagePicker(options, response => {
-			if (response.didCancel) {
-				ToastAndroid.show(
-					'User cancelled image picker',
-					ToastAndroid.SHORT
-				);
-			} else if (response.error) {
-				ToastAndroid.show(
-					'ImagePicker Error: ' + response.error,
-					ToastAndroid.SHORT
-				);
-			} else if (response.customButton) {
-				ToastAndroid.show(
-					'User tapped custom button: ' + response.customButton,
-					ToastAndroid.SHORT
-				);
+			if (response.error) {
+				Toast.show({
+					text: 'ImagePicker Error: ' + response.error,
+					duration: 2000
+				});
 			} else {
 				this.setState({
 					photo: {
@@ -90,7 +85,11 @@ class EditProfile extends Component {
 						base64: response.data
 					}
 				});
-				ToastAndroid.show('Image Added', ToastAndroid.SHORT);
+				Toast.show({
+					text: 'Image Added!' + response.error,
+					type: 'success',
+					duration: 2000
+				});
 			}
 		});
 	};

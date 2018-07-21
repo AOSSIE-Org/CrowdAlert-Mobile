@@ -7,7 +7,7 @@ import {
 import firebase from 'react-native-firebase';
 import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
 import { GoogleSignin } from 'react-native-google-signin';
-import { ToastAndroid } from 'react-native';
+import { Toast } from 'native-base';
 import { handleError } from './errorAction';
 
 /**
@@ -51,20 +51,23 @@ export const onPressSignIn = (email, password) => {
 				dispatch(handleError(error));
 				const { code, message } = error;
 				if (code == 'auth/wrong-password') {
-					ToastAndroid.show(
-						'Wrong Password ' + message,
-						ToastAndroid.SHORT
-					);
+					Toast.show({
+						text: 'Wrong password!' + message,
+						type: 'warning',
+						duration: 2000
+					});
 				} else if (code == 'auth/user-not-found') {
-					ToastAndroid.show(
-						'Please register first ' + message,
-						ToastAndroid.SHORT
-					);
+					Toast.show({
+						text: 'Please register first! ' + message,
+						type: 'warning',
+						duration: 2000
+					});
 				} else {
-					ToastAndroid.show(
-						'Could not complete signin ' + message,
-						ToastAndroid.SHORT
-					);
+					Toast.show({
+						text: 'Could not complete signin ' + message,
+						type: 'danger',
+						duration: 2000
+					});
 				}
 				console.log(error);
 			});
@@ -95,15 +98,16 @@ export const onPressSignUp = (email, password, name) => {
 				console.log(error);
 				const { code, message } = error;
 				if (code == 'auth/email-already-in-use') {
-					ToastAndroid.show(
-						'Email in use ' + message,
-						ToastAndroid.SHORT
-					);
+					Toast.show({
+						text: 'Email in use ' + message,
+						type: 'danger',
+						duration: 2000
+					});
 				} else {
-					ToastAndroid.show(
-						'Could not sign you up! ' + message,
-						ToastAndroid.SHORT
-					);
+					Toast.show({
+						text: 'Could not sign you up! ' + message,
+						duration: 2000
+					});
 				}
 			});
 	};
@@ -122,7 +126,11 @@ export const onForget = email => {
 			.sendPasswordResetEmail(email)
 			.then(function() {
 				dispatch(loginLoading(false));
-				ToastAndroid.show('Email sent', ToastAndroid.SHORT);
+				Toast.show({
+					text: 'Email sent!',
+					type: 'success',
+					duration: 2000
+				});
 			})
 			.catch(function(error) {
 				dispatch(loginLoading(false));
@@ -166,10 +174,11 @@ export const fbSignIn = () => {
 				dispatch(loginLoading(false));
 				dispatch(handleError(error));
 				console.log(error);
-				ToastAndroid.show(
-					'Could not complete signin',
-					ToastAndroid.SHORT
-				);
+				Toast.show({
+					text: 'Could not complete signin',
+					type: 'warning',
+					duration: 2000
+				});
 			});
 	};
 };
@@ -202,10 +211,11 @@ export const googleSignin = () => {
 				dispatch(loginLoading(false));
 				dispatch(handleError(error));
 				console.log(error);
-				ToastAndroid.show(
-					'Could not complete login',
-					ToastAndroid.SHORT
-				);
+				Toast.show({
+					text: 'Could not complete signin',
+					type: 'warning',
+					duration: 2000
+				});
 			});
 	};
 };

@@ -8,7 +8,6 @@ import {
 	TouchableOpacity,
 	Alert,
 	TextInput,
-	ToastAndroid,
 	Button,
 	ActivityIndicator
 } from 'react-native';
@@ -22,6 +21,7 @@ import { styles } from '../../assets/styles/login_styles';
 import { GoogleSignin } from 'react-native-google-signin';
 import Config from 'react-native-config';
 import PropTypes from 'prop-types';
+import { Toast } from 'native-base';
 
 /**
  * Screen showing all login options.
@@ -47,7 +47,11 @@ class HomeLogin extends Component {
 	componentDidUpdate() {
 		// Typical usage (don't forget to compare props):
 		if (!this.props.login.loading && this.props.login.signInType !== null) {
-			ToastAndroid.show('Login successful', ToastAndroid.SHORT);
+			Toast.show({
+				text: 'Login successful',
+				type: 'success',
+				duration: 2000
+			});
 			Actions.profile();
 		}
 	}

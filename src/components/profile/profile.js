@@ -46,6 +46,8 @@ class Profile extends Component {
 			}).then(success => {
 				this.props.watchCurrLocation();
 			});
+		} else {
+			this.props.watchCurrLocation();
 		}
 		//Gets user submitted incidents
 		this.props.getUserIncidents(this.props.user.email);

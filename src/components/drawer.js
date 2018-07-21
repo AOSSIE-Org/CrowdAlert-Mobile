@@ -5,8 +5,7 @@ import {
 	View,
 	ScrollView,
 	Image,
-	TouchableHighlight,
-	ToastAndroid
+	TouchableHighlight
 } from 'react-native';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -16,6 +15,7 @@ import PropTypes from 'prop-types';
 import { logout } from '../actions/loginAction';
 import FilesystemStorage from 'redux-persist-filesystem-storage';
 import Icon from 'react-native-vector-icons/Feather';
+import { Toast } from 'native-base';
 
 /**
  * Content for the side drawer
@@ -26,7 +26,11 @@ class DrawerContent extends Component {
 	handleLogout() {
 		Promise.resolve(Actions.reset('homeLogin')).then(() => {
 			this.props.logout();
-			ToastAndroid.show('You have been logged out', ToastAndroid.SHORT);
+			Toast.show({
+				text: 'You have been logged out!',
+				type: 'success',
+				duration: 2000
+			});
 			FilesystemStorage.clear();
 		});
 	}
