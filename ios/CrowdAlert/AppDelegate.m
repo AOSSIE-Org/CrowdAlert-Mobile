@@ -13,13 +13,14 @@
 #import <RNGoogleSignin/RNGoogleSignin.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <React/RCTPushNotificationManager.h>
+#import "ReactNativeConfig.h"
 @import GoogleMaps; //add this line if you want to use Google Maps
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  [GMSServices provideAPIKey:@"AIzaSyApvrC8t6Q4xaxQWHFEFvjCDREEgZw-_PQ"];
+  [GMSServices provideAPIKey:[ReactNativeConfig envFor:@"GOOGLE_MAPS_KEY"]];
   [FIRApp configure];
   [[FBSDKApplicationDelegate sharedInstance] application:application
     didFinishLaunchingWithOptions:launchOptions];

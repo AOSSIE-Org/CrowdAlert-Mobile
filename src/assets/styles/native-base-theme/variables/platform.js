@@ -229,7 +229,7 @@ export default {
 	topTabBarTextColor: platform === 'ios' ? '#6b6b6b' : '#b3c7f9',
 	topTabBarActiveTextColor: platform === 'ios' ? '#007aff' : '#fff',
 	topTabBarBorderColor: platform === 'ios' ? '#a7a6ab' : '#fff',
-	topTabBarActiveBorderColor: platform === 'ios' ? '#007aff' : '#fff',
+	topTabBarActiveBorderColor: platform === 'ios' ? '#fff' : '#fff',
 
 	// Tabs
 	tabBgColor: '#F8F8F8',
