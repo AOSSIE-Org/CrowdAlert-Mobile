@@ -22,7 +22,11 @@ const config = {
 			'notificationStack',
 			'user_incidents'
 		]),
-		createWhitelistFilter('login'),
+		createWhitelistFilter('login', [
+			'userFirebase',
+			'userDetails',
+			'signInType'
+		]),
 		createWhitelistFilter('emergencyPlaces', []),
 		createWhitelistFilter('location', ['curr_coordinates']),
 		createWhitelistFilter('settings')
