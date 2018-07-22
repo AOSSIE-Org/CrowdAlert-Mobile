@@ -44,7 +44,6 @@ class Profile extends Component {
 				cancel: 'NO',
 				providerListener: true
 			}).then(success => {
-				console.log(1);
 				this.props.watchCurrLocation();
 			});
 		} else {

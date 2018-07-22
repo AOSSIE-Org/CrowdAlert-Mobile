@@ -112,7 +112,7 @@ export default class Route extends Component {
 						<Scene
 							key="emergencylocation"
 							hideNavBar={true}
-							title="Emergency places nearby"
+							// title="Emergency places nearby"
 							renderLeftButton={() => sideMenu()}
 							component={EmergencyLocation}
 						/>
@@ -127,19 +127,19 @@ export default class Route extends Component {
 						back={true}
 						key="addIncident"
 						hideNavBar={true}
-						title="Add incident"
+						// title="Add incident"
 						component={AddIncident}
 					/>
 					<Scene
 						key="incident"
-						title="Incident Details"
+						// title="Incident Details"
 						component={Incident}
 						hideNavBar={true}
-						right={[
-							<EditButtonIncident key={1} />,
-							<DeleteButtonIncident key={2} />,
-							<ShareButtonIncident key={3} />
-						]}
+						// right={[
+						// 	<EditButtonIncident key={1} />,
+						// 	<DeleteButtonIncident key={2} />,
+						// 	<ShareButtonIncident key={3} />
+						// ]}
 					/>
 					<Scene
 						back={true}
@@ -150,7 +150,7 @@ export default class Route extends Component {
 					<Scene
 						back={true}
 						key="filter"
-						title="Filter"
+						// title="Filter"
 						hideNavBar={true}
 						component={Filter}
 					/>
@@ -158,7 +158,7 @@ export default class Route extends Component {
 						back={true}
 						key="editIncident"
 						hideNavBar={true}
-						title="Edit Incident"
+						// title="Edit Incident"
 						component={EditIncident}
 					/>
 				</Scene>

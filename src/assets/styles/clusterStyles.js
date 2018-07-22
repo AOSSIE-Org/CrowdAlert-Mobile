@@ -31,5 +31,9 @@ export const styles = StyleSheet.create({
 	},
 	colorEmergencyPlacesOuter: {
 		backgroundColor: 'rgba(180,0,0, 0.25)'
+	},
+	markerIcon: {
+		height: 40,
+		width: 40
 	}
 });
