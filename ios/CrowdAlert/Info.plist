@@ -25,17 +25,17 @@
 		<dict>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb371986966622702</string>
+				<string>__RN_CONFIG_FB_CUSTOM_URL_SCHEME</string>
 			</array>
 		</dict>
 		<dict>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>CFBundleURLName</key>
-			<string>com.googleusercontent.apps.443270569292-7dd0bkm9q8fbkve59q0c82k1sqivln3f</string>
+			<string>__RN_CONFIG_REVERSE_CLIENT_ID</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.443270569292-7dd0bkm9q8fbkve59q0c82k1sqivln3f</string>
+				<string>__RN_CONFIG_REVERSE_CLIENT_ID</string>
 			</array>
 		</dict>
 		<dict>
@@ -52,7 +52,7 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>FacebookAppID</key>
-	<string>371986966622702</string>
+	<string>__RN_CONFIG_FB_KEY</string>
 	<key>FacebookDisplayName</key>
 	<string>crowdalert</string>
 	<key>LSRequiresIPhoneOS</key>

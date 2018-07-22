@@ -18,7 +18,7 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { styles } from '../../assets/styles/profile_styles';
 import PropTypes from 'prop-types';
-import { getUserIncidents } from '../../actions/incidentsAction';
+import { getUserIncidents, viewIncident } from '../../actions/incidentsAction';
 import { watchCurrLocation } from '../../actions/locationAction';
 import { getColor } from '../../utils/categoryUtil';
 var PushNotification = require('react-native-push-notification');
@@ -44,6 +44,7 @@ class Profile extends Component {
 				cancel: 'NO',
 				providerListener: true
 			}).then(success => {
+				console.log(1);
 				this.props.watchCurrLocation();
 			});
 		} else {
@@ -175,7 +176,8 @@ function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{
 			getUserIncidents: getUserIncidents,
-			watchCurrLocation: watchCurrLocation
+			watchCurrLocation: watchCurrLocation,
+			viewIncident: viewIncident
 		},
 		dispatch
 	);

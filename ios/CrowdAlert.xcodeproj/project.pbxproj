@@ -51,6 +51,7 @@
 		43FBA61A21025B8E001D50FA /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43FBA61721025B57001D50FA /* libRNFetchBlob.a */; };
 		43FBA62421025ED2001D50FA /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43FBA62121025E9C001D50FA /* libRCTPushNotification.a */; };
 		43FBA665210303E0001D50FA /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43FBA664210303CE001D50FA /* libRNImagePicker.a */; };
+		43FBA74B21046BC5001D50FA /* libReactNativeConfig.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 43FBA74A21046BB5001D50FA /* libReactNativeConfig.a */; };
 		4B10A41565AE4368880A8806 /* libRCTFBSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B15B778947FF4905B827C469 /* libRCTFBSDK.a */; };
 		5E0BC87ECA37420C84312BC3 /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = C112BC0664254E0AB9EDF927 /* EvilIcons.ttf */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
@@ -275,6 +276,13 @@
 			remoteGlobalIDString = 014A3B5C1C6CF33500B6D375;
 			remoteInfo = RNImagePicker;
 		};
+		43FBA74921046BB5001D50FA /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 43FBA74521046BB4001D50FA /* ReactNativeConfig.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = EB2648DF1C7BE17A00B8F155;
+			remoteInfo = ReactNativeConfig;
+		};
 		5E9157321DD0AC6500FF2AA8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */;
@@ -419,6 +427,7 @@
 		43FBA5EE21025B57001D50FA /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFetchBlob.xcodeproj; path = "../node_modules/react-native-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; };
 		43FBA61B21025E9C001D50FA /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
 		43FBA636210303CD001D50FA /* RNImagePicker.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNImagePicker.xcodeproj; path = "../node_modules/react-native-image-picker/ios/RNImagePicker.xcodeproj"; sourceTree = "<group>"; };
+		43FBA74521046BB4001D50FA /* ReactNativeConfig.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeConfig.xcodeproj; path = "../node_modules/react-native-config/ios/ReactNativeConfig.xcodeproj"; sourceTree = "<group>"; };
 		44287345C6854F57B339CC52 /* AddressBook.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		45F79EC85DA54C08BA044387 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/native-base/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		56405F401D544539AA6B83C9 /* SystemConfiguration.framework */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
@@ -460,6 +469,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				43FBA74B21046BC5001D50FA /* libReactNativeConfig.a in Frameworks */,
 				43FBA665210303E0001D50FA /* libRNImagePicker.a in Frameworks */,
 				43FBA62421025ED2001D50FA /* libRCTPushNotification.a in Frameworks */,
 				43FBA61A21025B8E001D50FA /* libRNFetchBlob.a in Frameworks */,
@@ -673,6 +683,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		43FBA74621046BB4001D50FA /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				43FBA74A21046BB5001D50FA /* libReactNativeConfig.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		5E91572E1DD0AC6500FF2AA8 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -703,6 +721,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				43FBA74521046BB4001D50FA /* ReactNativeConfig.xcodeproj */,
 				43FBA636210303CD001D50FA /* RNImagePicker.xcodeproj */,
 				43FBA61B21025E9C001D50FA /* RCTPushNotification.xcodeproj */,
 				43FBA5EE21025B57001D50FA /* RNFetchBlob.xcodeproj */,
@@ -1000,6 +1019,10 @@
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
 				},
 				{
+					ProductGroup = 43FBA74621046BB4001D50FA /* Products */;
+					ProjectRef = 43FBA74521046BB4001D50FA /* ReactNativeConfig.xcodeproj */;
+				},
+				{
 					ProductGroup = 43FBA5EF21025B57001D50FA /* Products */;
 					ProjectRef = 43FBA5EE21025B57001D50FA /* RNFetchBlob.xcodeproj */;
 				},
@@ -1214,6 +1237,13 @@
 			fileType = archive.ar;
 			path = libRNImagePicker.a;
 			remoteRef = 43FBA663210303CE001D50FA /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		43FBA74A21046BB5001D50FA /* libReactNativeConfig.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libReactNativeConfig.a;
+			remoteRef = 43FBA74921046BB5001D50FA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */ = {
@@ -1606,6 +1636,9 @@
 					"\"$(SRCROOT)/../node_modules/react-native-config/ios/**\"",
 				);
 				INFOPLIST_FILE = CrowdAlert/Info.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
+				INFOPLIST_PREFIX_HEADER = "${CONFIGURATION_BUILD_DIR}/../GeneratedInfoPlistDotEnv.h";
+				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
@@ -1648,6 +1681,9 @@
 					"\"$(SRCROOT)/../node_modules/react-native-config/ios/**\"",
 				);
 				INFOPLIST_FILE = CrowdAlert/Info.plist;
+				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-traditional";
+				INFOPLIST_PREFIX_HEADER = "${CONFIGURATION_BUILD_DIR}/../GeneratedInfoPlistDotEnv.h";
+				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"$(inherited)",
