@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { View, Text, Image } from 'react-native';
 import MapView from 'react-native-maps';
 import { bindActionCreators } from 'redux';
 import { getMarkerImage } from '../../../utils/categoryUtil.js';
@@ -8,6 +8,7 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import getDirections from 'react-native-google-maps-directions';
 import PropTypes from 'prop-types';
+import { styles } from '../../../assets/styles/clusterStyles';
 
 /**
  * Class for displaying individual marker on map
@@ -91,10 +92,14 @@ class MapMarker extends Component {
 					onCalloutPress={() => {
 						this.viewClickedIncident(item.properties);
 					}}
-					image={getMarkerImage(
-						item.properties.incident.value.category
-					)}
-				/>
+				>
+					<Image
+						source={getMarkerImage(
+							item.properties.incident.value.category
+						)}
+						style={styles.markerIcon}
+					/>
+				</MapView.Marker>
 			);
 		}
 	}

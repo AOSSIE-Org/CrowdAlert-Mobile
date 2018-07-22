@@ -109,126 +109,114 @@ class Incident extends Component {
 			var incidentDetails = this.props.incident.incident.value;
 			return (
 				<Container style={styles.container}>
-					<Content>
-						<Header androidStatusBarColor="#1c76cb">
-							<Left>
-								<TouchableOpacity
-									style={styles.backButton}
-									onPress={() => Actions.pop()}
-								>
-									<Icon
-										name="close"
-										size={25}
-										color="white"
-									/>
-								</TouchableOpacity>
-							</Left>
-							<Body>
-								<Text style={styles.title}>
-									Incident Details
+					<Header androidStatusBarColor="#1c76cb">
+						<Left>
+							<TouchableOpacity
+								style={styles.backButton}
+								onPress={() => Actions.pop()}
+							>
+								<Icon name="close" size={25} color="white" />
+							</TouchableOpacity>
+						</Left>
+						<Body>
+							<Text style={styles.title}>Incident Details</Text>
+						</Body>
+						<Right>
+							<EditButtonIncident key={1} />
+							<DeleteButtonIncident key={2} />
+							<ShareButtonIncident key={3} />
+						</Right>
+					</Header>
+					<ScrollView
+						keyboardShouldPersistTaps="always"
+						showsVerticalScrollIndicator={false}
+					>
+						{incidentDetails.image.isPresent ? (
+							<View style={styles.avatarContainer}>
+								<Image
+									style={styles.image}
+									resizeMethod={'resize'}
+									source={{
+										uri:
+											'data:image/jpeg;base64, ' +
+											incidentDetails.image.base64
+									}}
+								/>
+							</View>
+						) : null}
+						<Card style={styles.card}>
+							<CardItem>
+								<Text style={styles.titleTextHeader}>
+									Title
 								</Text>
-							</Body>
-							<Right>
-								<EditButtonIncident key={1} />
-								<DeleteButtonIncident key={2} />
-								<ShareButtonIncident key={3} />
-							</Right>
-						</Header>
-						<ScrollView
-							keyboardShouldPersistTaps="always"
-							showsVerticalScrollIndicator={false}
-						>
-							{incidentDetails.image.isPresent ? (
-								<View style={styles.avatarContainer}>
-									<Image
-										style={styles.image}
-										resizeMethod={'resize'}
-										source={{
-											uri:
-												'data:image/jpeg;base64, ' +
-												incidentDetails.image.base64
-										}}
-									/>
+							</CardItem>
+							<CardItem>
+								<Text style={styles.titleTextDescription}>
+									{incidentDetails.title}
+								</Text>
+							</CardItem>
+						</Card>
+						<Card style={styles.card}>
+							{incidentDetails.details !== '' ? (
+								<View>
+									<CardItem>
+										<Text style={styles.titleTextHeader}>
+											Description
+										</Text>
+									</CardItem>
+									<CardItem>
+										<Text
+											style={styles.titleTextDescription}
+										>
+											{incidentDetails.details}
+										</Text>
+									</CardItem>
 								</View>
 							) : null}
-							<Card style={styles.card}>
-								<CardItem>
-									<Text style={styles.titleTextHeader}>
-										Title
-									</Text>
-								</CardItem>
-								<CardItem>
-									<Text style={styles.titleTextDescription}>
-										{incidentDetails.title}
-									</Text>
-								</CardItem>
-								{incidentDetails.details !== '' ? (
-									<View>
-										<CardItem>
-											<Text
-												style={styles.titleTextHeader}
-											>
-												Description
-											</Text>
-										</CardItem>
-										<CardItem>
-											<Text
-												style={
-													styles.titleTextDescription
-												}
-											>
-												{incidentDetails.details}
-											</Text>
-										</CardItem>
-									</View>
-								) : null}
-							</Card>
-							<Card style={styles.card}>
-								<CardItem>
-									<MapView
-										region={{
-											latitude:
-												incidentDetails.location
-													.coordinates.latitude,
-											longitude:
-												incidentDetails.location
-													.coordinates.longitude,
-											latitudeDelta: 0.0052,
-											longitudeDelta: 0.0052
-										}}
-										onLayout={this.onMapLayout}
-										style={styles.map}
-									>
-										{this.state.isMapReady && (
-											<MapView.Marker
-												coordinate={{
-													latitude:
-														incidentDetails.location
-															.coordinates
-															.latitude,
-													longitude:
-														incidentDetails.location
-															.coordinates
-															.longitude
-												}}
-											/>
-										)}
-									</MapView>
-								</CardItem>
-							</Card>
-							<TouchableOpacity
-								activeOpacity={0.5}
-								style={styles.button}
-								onPress={() => this.handleDirections()}
-							>
-								<IconDirection
-									name="directions"
-									size={30}
-									style={styles.fabButtonIcon}
-								/>
-							</TouchableOpacity>
-						</ScrollView>
-					</Content>
+						</Card>
+						<Card style={styles.card}>
+							<CardItem>
+								<MapView
+									region={{
+										latitude:
+											incidentDetails.location.coordinates
+												.latitude,
+										longitude:
+											incidentDetails.location.coordinates
+												.longitude,
+										latitudeDelta: 0.0052,
+										longitudeDelta: 0.0052
+									}}
+									onLayout={this.onMapLayout}
+									style={styles.map}
+								>
+									{this.state.isMapReady && (
+										<MapView.Marker
+											coordinate={{
+												latitude:
+													incidentDetails.location
+														.coordinates.latitude,
+												longitude:
+													incidentDetails.location
+														.coordinates.longitude
+											}}
+										/>
+									)}
+								</MapView>
+							</CardItem>
+						</Card>
+					</ScrollView>
+					<TouchableOpacity
+						activeOpacity={0.5}
+						style={styles.button}
+						onPress={() => this.handleDirections()}
+					>
+						<IconDirection
+							name="directions"
+							size={30}
+							style={styles.fabButtonIcon}
+						/>
+					</TouchableOpacity>
 				</Container>
 			);
 		}
