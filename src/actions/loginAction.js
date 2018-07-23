@@ -246,7 +246,7 @@ const addUserFirebase = userDetails => {
 					.ref('users')
 					.child(userKey)
 					.set(userDetails)
-					.catch(error => console.log(error));
+					.catch(error => dispatch(handleError(error)));
 			}
 			dispatch(loginLoading(false));
 		});

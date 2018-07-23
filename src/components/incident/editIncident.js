@@ -149,60 +149,54 @@ class EditIncident extends Component {
 							<TouchableOpacity
 								onPress={() => this._cameraImage()}
 							>
-								<Text style={styles.imageText}>
-									+ Add Image
-								</Text>
+								<Text style={styles.imageText}>Add Image</Text>
 							</TouchableOpacity>
 						</View>
 					)}
-					<View style={styles.incidentTitleTextContainer}>
-						<Text style={styles.incidentTitleText}>
+					<View style={styles.textInputHeadingContainer}>
+						<Text style={styles.textInputHeading}>
 							Incident Title
 						</Text>
 					</View>
 
 					<TextInput
-						autoCorrect={false}
 						ref={input => (this.titleInput = input)}
 						onChangeText={title => this.setState({ title })}
 						onSubmitEditing={() => this.detailsInput.focus()}
 						returnKeyType="next"
-						style={styles.incidentTitle}
+						style={styles.textInput}
 						placeholder="Title"
 						value={this.state.title}
 					/>
-					<View style={styles.incidentDetailTextContainer}>
-						<Text style={styles.incidentDetailText}>
+					<View style={styles.textInputHeadingContainer}>
+						<Text style={styles.textInputHeading}>
 							Incident Details
 						</Text>
 					</View>
 					<TextInput
-						autoCapitalize="none"
-						autoCorrect={false}
 						multiline={true}
+						numberOfLines={4}
 						ref={input => (this.detailsInput = input)}
 						onChangeText={details => this.setState({ details })}
 						returnKeyType="next"
-						style={styles.incidentDetail}
+						style={styles.textInput}
 						placeholder="Description"
 						value={this.state.details}
 					/>
-					<View style={styles.getHelp}>
-						<Text style={styles.getHelpText}>Get Help!</Text>
+					<View style={styles.switchContainer}>
+						<Text style={styles.switchText}>Get Help!</Text>
 						<Switch
 							thumbTintColor="#1c76cb"
-							style={styles.Switch}
 							onValueChange={getHelp => {
 								this.setState({ getHelp: getHelp });
 							}}
 							value={this.state.getHelp}
 						/>
 					</View>
-					<View style={styles.Share}>
-						<Text style={styles.getHelpText}>Share Publicly!</Text>
+					<View style={styles.switchContainer}>
+						<Text style={styles.switchText}>Share Publicly!</Text>
 						<Switch
 							thumbTintColor="#1c76cb"
-							style={styles.SwitchShare}
 							onValueChange={getHelp => {
 								this.setState({ getHelp: getHelp });
 							}}

@@ -19,8 +19,7 @@ import {
 	Header,
 	Left,
 	Body,
-	Right,
-	Fab
+	Right
 } from 'native-base';
 import { styles } from '../../assets/styles/incident_styles';
 import getDirections from 'react-native-google-maps-directions';
@@ -33,7 +32,6 @@ import {
 	viewIncident,
 	getIndvIncident
 } from '../../actions/incidentsAction.js';
-import firebase from 'react-native-firebase';
 import IconDirection from 'react-native-vector-icons/MaterialCommunityIcons';
 
 /**
@@ -115,7 +113,7 @@ class Incident extends Component {
 								style={styles.backButton}
 								onPress={() => Actions.pop()}
 							>
-								<Icon name="close" size={25} color="white" />
+								<Icon name="close" size={30} color="white" />
 							</TouchableOpacity>
 						</Left>
 						<Body>
@@ -208,7 +206,7 @@ class Incident extends Component {
 					</ScrollView>
 					<TouchableOpacity
 						activeOpacity={0.5}
-						style={styles.button}
+						style={styles.fabButton}
 						onPress={() => this.handleDirections()}
 					>
 						<IconDirection
