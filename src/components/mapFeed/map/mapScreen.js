@@ -11,6 +11,7 @@ import {
 	Modal,
 	Image
 } from 'react-native';
+import { Header, Left, Body } from 'native-base';
 import { Marker } from 'react-native-maps';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -28,6 +29,7 @@ import {
 	updateDomain
 } from '../../../actions/incidentsAction';
 import { styles, searchBarStyle } from '../../../assets/styles/map_styles.js';
+import { styles as filterStyles } from '../../../assets/styles/filter_styles';
 import { GooglePlacesAutocomplete } from '../../googleSearchBar';
 import { sideMenu } from '../../profile/navBarButtons';
 import { getEmergencyPlaces } from '../../../actions/emergencyPlacesAction';
@@ -41,6 +43,9 @@ var haversine = require('haversine-distance');
 class MapScreen extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			visibleModal: false
+		};
 	}
 
 	componentWillMount() {
@@ -126,6 +131,57 @@ class MapScreen extends Component {
 		}
 	}
 
+	//Sets the filter category
+	alertItemName = item => {
+		this.props.updateDomain(item.category);
+		this.closeModal();
+	};
+
+	//Opens the modal
+	openModal() {
+		this.setState({ visibleModal: true });
+	}
+
+	//Closes the modal
+	closeModal() {
+		this.setState({ visibleModal: false });
+	}
+
+	//Modal to be displayed for the filter menu.
+	_renderModalContent = () => (
+		<View style={filterStyles.container}>
+			<Header androidStatusBarColor="#1c76cb">
+				<Left>
+					<TouchableOpacity onPress={() => this.closeModal()}>
+						<Icon name="close" size={25} color="white" />
+					</TouchableOpacity>
+				</Left>
+				<Body>
+					<Text style={filterStyles.title}>
+						Select Incident to filter
+					</Text>
+				</Body>
+			</Header>
+			<View style={filterStyles.listView}>
+				{Object.keys(categories).map((key, index) => (
+					<TouchableOpacity
+						key={categories[key].category}
+						style={filterStyles.field}
+						onPress={() => this.alertItemName(categories[key])}
+					>
+						<Image
+							style={filterStyles.image}
+							source={getMarkerImage(categories[key].category)}
+						/>
+						<Text style={filterStyles.text}>
+							{categories[key].title}
+						</Text>
+					</TouchableOpacity>
+				))}
+			</View>
+		</View>
+	);
+
 	render() {
 		return (
 			<View style={styles.container}>
@@ -133,7 +189,7 @@ class MapScreen extends Component {
 				<TouchableHighlight
 					underlayColor="#005b4f"
 					style={styles.filterButton}
-					onPress={() => Actions.filter()}
+					onPress={() => this.openModal()}
 				>
 					<Icon
 						name="filter"
@@ -148,6 +204,15 @@ class MapScreen extends Component {
 				>
 					<Icon name="plus" size={30} style={styles.fabButtonIcon} />
 				</TouchableOpacity>
+				<Modal
+					visible={this.state.visibleModal}
+					onRequestClose={() => {
+						this.closeModal();
+						alert('Modal has been closed.');
+					}}
+				>
+					{this._renderModalContent()}
+				</Modal>
 				<GooglePlacesAutocomplete
 					minLength={2}
 					listViewDisplayed="auto"

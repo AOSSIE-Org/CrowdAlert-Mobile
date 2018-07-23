@@ -195,51 +195,49 @@ class AddIncident extends Component {
 						<Picker.Item label="Fire" value="fire" />
 						<Picker.Item label="Flood" value="flood" />
 					</Picker>
-					<View style={styles.incidentTitleTextContainer}>
-						<Text style={styles.incidentTitleText}>
+					<View style={styles.textInputHeadingContainer}>
+						<Text style={styles.textInputHeading}>
 							Incident Title
 						</Text>
 					</View>
 
 					<TextInput
-						style={styles.incidentTitle}
+						style={styles.textInput}
 						ref={input => (this.titleInput = input)}
 						onChangeText={title => this.setState({ title })}
 						onSubmitEditing={() => this.detailsInput.focus()}
-						autoCapitalize="none"
-						autoCorrect={false}
 						keyboardType="email-address"
 						returnKeyType="next"
 						placeholder="Title"
 					/>
-					<View style={styles.incidentDetailTextContainer}>
-						<Text style={styles.incidentDetailText}>
+					<View style={styles.textInputHeadingContainer}>
+						<Text style={styles.textInputHeading}>
 							Incident Details
 						</Text>
 					</View>
 					<TextInput
 						ref={input => (this.detailsInput = input)}
-						style={styles.incidentDetail}
+						style={styles.textInput}
 						onChangeText={details => this.setState({ details })}
+						multiline={true}
+						numberOfLines={4}
 						returnKeyType="next"
 						placeholder="Description"
 					/>
-					<View style={styles.getHelp}>
-						<Text style={styles.getHelpText}>Get Help!</Text>
+					<View style={styles.switchContainer}>
+						<Text style={styles.switchText}>Get Help!</Text>
 						<Switch
 							thumbTintColor="#1c76cb"
-							style={styles.Switch}
 							onValueChange={getHelp => {
 								this.setState({ getHelp: getHelp });
 							}}
 							value={this.state.getHelp}
 						/>
 					</View>
-					<View style={styles.Share}>
-						<Text style={styles.getHelpText}>Share Publicly!</Text>
+					<View style={styles.switchContainer}>
+						<Text style={styles.switchText}>Share Publicly!</Text>
 						<Switch
 							thumbTintColor="#1c76cb"
-							style={styles.SwitchShare}
 							onValueChange={getHelp => {
 								this.setState({ getHelp: getHelp });
 							}}

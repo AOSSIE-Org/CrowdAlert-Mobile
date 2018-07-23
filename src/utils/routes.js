@@ -28,10 +28,10 @@ import EditButtonIncident from '../components/incident/navBarButtons/editInciden
 import ShareButtonIncident from '../components/incident/navBarButtons/ShareIncidentButton.js';
 import EditIncident from '../components/incident/editIncident';
 
-import EmergencyLocation from '../components/emergencyPlaces/emergencyPlacesTabular';
+import EmergencyPlaces from '../components/emergencyPlaces/emergencyPlacesTabular';
 
 import SettingsOption from '../components/settings';
-import Filter from '../components/filter';
+
 const ConnectedRouter = connect()(Router);
 const { width, height } = Dimensions.get('window');
 
@@ -114,7 +114,7 @@ export default class Route extends Component {
 							hideNavBar={true}
 							// title="Emergency places nearby"
 							renderLeftButton={() => sideMenu()}
-							component={EmergencyLocation}
+							component={EmergencyPlaces}
 						/>
 					</Scene>
 					<Scene
@@ -146,13 +146,6 @@ export default class Route extends Component {
 						key="editProfile"
 						hideNavBar={true}
 						component={EditProfile}
-					/>
-					<Scene
-						back={true}
-						key="filter"
-						// title="Filter"
-						hideNavBar={true}
-						component={Filter}
 					/>
 					<Scene
 						back={true}

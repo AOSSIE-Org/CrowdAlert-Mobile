@@ -30,27 +30,26 @@ export const styles = StyleSheet.create({
 		alignSelf: 'center',
 		color: '#fff'
 	},
-	button: {
+	fabButton: {
 		width: width / 7.5,
 		height: width / 7.5,
 		backgroundColor: '#4ebaaa',
 		justifyContent: 'center',
 		position: 'absolute',
 		right: width / 20,
-		bottom: height / 25,
+		bottom: height / 35,
 		elevation: 15,
 		borderRadius: 35
 	},
 	avatarContainer: {
 		backgroundColor: '#63a4ff',
 		alignItems: 'center',
-		marginBottom: height / 200
+		marginVertical: height / 100,
+		marginHorizontal: width / 30
 	},
 	image: {
-		height: height / 4,
-		width: width / 1.1,
-		paddingTop: height / 300,
-		paddingBottom: height / 200
+		height: height / 2.7,
+		width: width
 	},
 	map: {
 		flex: 1,

@@ -6,25 +6,9 @@ export const styles = StyleSheet.create({
 	container: {
 		flex: 1
 	},
-	textInput: {
-		flex: 2,
-		textAlign: 'right',
-		color: '#4ebaaa'
-		// borderBottomWidth: 1,
-		// borderColor: 'black'
-	},
 	picker: {
-		marginTop: height / 60,
-		marginBottom: height / 60,
-		marginLeft: width / 30,
-		width: width * 0.9
-	},
-	avatarContainer: {
-		backgroundColor: '#63a4ff',
-		alignItems: 'center',
-		paddingTop: height / 100,
-		paddingBottom: height / 80,
-		marginBottom: height / 200
+		marginVertical: height / 100,
+		marginHorizontal: width / 30
 	},
 	title: {
 		marginLeft: width / 20,
@@ -46,85 +30,48 @@ export const styles = StyleSheet.create({
 		fontSize: 20,
 		color: '#fff'
 	},
-	incidentTitle: {
+	textInput: {
 		width: width * 0.9,
 		marginLeft: width / 20,
 		paddingTop: height / 300
 	},
-	incidentDetail: {
-		paddingTop: height / 300,
-		width: width * 0.9,
-		marginLeft: width / 20
-	},
-	incidentTitleTextContainer: {
+	textInputHeadingContainer: {
 		marginLeft: width / 20,
 		paddingTop: height / 40,
 		paddingBottom: height / 100
 	},
-	incidentDetailTextContainer: {
-		marginLeft: width / 20,
-		paddingTop: height / 60,
-		paddingBottom: height / 100
-	},
-	incidentTitleText: {
+	textInputHeading: {
 		color: '#555',
 		fontWeight: 'bold',
 		fontSize: 17
 	},
-	incidentDetailText: {
-		color: '#555',
-		fontWeight: 'bold',
-		fontSize: 17
+	avatarContainer: {
+		backgroundColor: '#63a4ff',
+		alignItems: 'center',
+		paddingVertical: height / 30
 	},
 	image: {
-		height: width / 2.2,
-		width: width / 1.2,
-		paddingTop: height / 300
+		height: height / 2.7,
+		width: width * 0.95
 	},
-	getHelp: {
+	switchContainer: {
 		flexDirection: 'row',
-		marginLeft: width / 20,
-		paddingTop: height / 40
-	},
-	Share: {
+		marginHorizontal: width / 20,
+		paddingTop: height / 40,
 		flexDirection: 'row',
-		marginLeft: width / 20,
-		paddingTop: height / 30
+		justifyContent: 'space-between'
 	},
-	getHelpText: {
+	switchText: {
 		color: '#555',
 		fontWeight: 'bold',
 		fontSize: 17
-	},
-	Switch: {
-		marginLeft: width / 2
-	},
-	SwitchShare: {
-		marginLeft: width / 2.5
-	},
-	userName: {
-		paddingTop: height / 30,
-		fontSize: 17,
-		color: 'black'
-	},
-	valueItem: {
-		flexDirection: 'row',
-		justifyContent: 'center',
-		marginHorizontal: width / 15
-	},
-	valueTextContainer: {
-		// flex: 3,
-		justifyContent: 'center'
-	},
-	valueText: {
-		color: '#005b4f'
 	},
 	updateButton: {
 		alignItems: 'center',
 		backgroundColor: '#1e1e1e',
 		padding: width / 30,
 		marginHorizontal: width / 3,
-		marginTop: height / 30,
+		marginVertical: height / 30,
 		borderRadius: 17
 	},
 	updateText: {

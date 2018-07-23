@@ -55,8 +55,8 @@ class Profile extends Component {
 			//Called when a remote or local notification is opened or received
 			onNotification: notification => {
 				console.log('NOTIFICATION:', notification);
+				// Process the notification
 				this.viewClickedIncident(notification.tag);
-				// process the notification
 			},
 			requestPermissions: this.props.enable_notifications
 		});
