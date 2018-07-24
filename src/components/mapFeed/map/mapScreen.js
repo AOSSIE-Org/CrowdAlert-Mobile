@@ -30,6 +30,7 @@ import {
 } from '../../../actions/incidentsAction';
 import { styles, searchBarStyle } from '../../../assets/styles/map_styles.js';
 import { styles as filterStyles } from '../../../assets/styles/filter_styles';
+import { styles as loadingStyle } from '../../../assets/styles/mapFeed_styles';
 import { GooglePlacesAutocomplete } from '../../googleSearchBar';
 import { sideMenu } from '../../profile/navBarButtons';
 import { getEmergencyPlaces } from '../../../actions/emergencyPlacesAction';
@@ -183,6 +184,19 @@ class MapScreen extends Component {
 	);
 
 	render() {
+		if (this.props.emergencyPlaces.loading || this.props.incident.loading) {
+			return (
+				<View style={loadingStyle.loaderContainer}>
+					<Image
+						style={loadingStyle.marker_gif}
+						source={require('../../../assets/images/marker_jump.gif')}
+					/>
+					<Text style={loadingStyle.loadingText}>
+						Loading your incidents & emergency places...
+					</Text>
+				</View>
+			);
+		}
 		return (
 			<View style={styles.container}>
 				<MapContainer />
@@ -288,6 +302,7 @@ function matchDispatchToProps(dispatch) {
  */
 const mapStateToProps = state => ({
 	curr_location: state.location.curr_coordinates,
+	emergencyPlaces: state.emergencyPlaces,
 	all_incidents: state.incident.all_incidents,
 	incident: state.incident,
 	settings: state.settings

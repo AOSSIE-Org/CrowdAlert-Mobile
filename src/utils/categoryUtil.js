@@ -1,9 +1,9 @@
 // Import all the Images for each category
-const road_marker = require('../assets/images/road_marker_100.png');
-const health_marker = require('../assets/images/health_marker_100.png');
-const fire_marker = require('../assets/images/fire_marker_100.png');
-const flood_marker = require('../assets/images/floods_marker_100.png');
-const electric_marker = require('../assets/images/electric_marker_100.png');
+const road_marker = require('../assets/images/map/road_marker_100.png');
+const health_marker = require('../assets/images/map/health_marker_100.png');
+const fire_marker = require('../assets/images/map/fire_marker_100.png');
+const flood_marker = require('../assets/images/map/floods_marker_100.png');
+const electric_marker = require('../assets/images/map/electric_marker_100.png');
 const all_marker = require('../assets/images/earthquake-30-512.png');
 
 // Defing properties for the categories of incidents
