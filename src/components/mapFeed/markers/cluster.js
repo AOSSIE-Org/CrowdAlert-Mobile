@@ -19,7 +19,6 @@ export default (Cluster = ({ item, type }) => {
 		<MapView.Marker
 			coordinate={{ latitude: coords[1], longitude: coords[0] }}
 			anchor={{ x: 0.5, y: 0.5 }}
-			title={'Tap here to see all emergency places'}
 			onCalloutPress={() => {
 				console.log(item);
 			}}

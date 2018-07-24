@@ -168,7 +168,12 @@ class MapContainer extends Component {
 	 * @return {Float}        Return zoom level.
 	 */
 	_getZoomLevel(region) {
-		const angle = region.longitudeDelta;
+		var angle = 0;
+		if (region.longitudeDelta < 0) {
+			angle = 360.0 + region.longitudeDelta;
+		} else {
+			angle = region.longitudeDelta;
+		}
 		const level = Math.round(Math.log(360 / angle) / Math.LN2);
 		return level;
 	}
