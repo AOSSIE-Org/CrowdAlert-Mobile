@@ -153,7 +153,10 @@ class MapScreen extends Component {
 		<View style={filterStyles.container}>
 			<Header androidStatusBarColor="#1c76cb">
 				<Left>
-					<TouchableOpacity onPress={() => this.closeModal()}>
+					<TouchableOpacity
+						activeOpacity={0.6}
+						onPress={() => this.closeModal()}
+					>
 						<Icon name="close" size={25} color="white" />
 					</TouchableOpacity>
 				</Left>
