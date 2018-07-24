@@ -357,61 +357,49 @@ class MapContainer extends Component {
 	render() {
 		return (
 			<View style={styles.map}>
-				{this.props.incident.loading &&
-				this.props.emergencyPlaces.loading ? (
-					<MapView
-						initialRegion={this.state.curr_region}
-						style={styles.map}
+				<MapView
+					ref={ref => {
+						this.map = ref;
+					}}
+					initialRegion={this.state.curr_region}
+					onRegionChangeComplete={region => {
+						this.onRegionChangeComplete(region, null);
+					}}
+					style={styles.map}
+				>
+					{/* Maps incidents */}
+					{this.state.clustersIncidents.map(
+						(item, i) =>
+							item.properties.cluster === true ? (
+								<Cluster
+									key={i}
+									item={item}
+									type={'incidents'}
+								/>
+							) : (
+								<MapMarker key={i} item={item} />
+							)
+					)}
+					{/* Maps emergency places */}
+					{this.state.clustersPlaces.map(
+						(item, i) =>
+							item.properties.cluster === true ? (
+								<Cluster key={i} item={item} type={'places'} />
+							) : (
+								<MapMarker key={i} item={item} />
+							)
+					)}
+					{/* Maps current location */}
+					<Marker.Animated
+						ref={marker => {
+							this.marker = marker;
+						}}
+						coordinate={{
+							latitude: this.props.curr_location.latitude,
+							longitude: this.props.curr_location.longitude
+						}}
 					/>
-				) : (
-					<MapView
-						ref={ref => {
-							this.map = ref;
-						}}
-						initialRegion={this.state.curr_region}
-						onRegionChangeComplete={region => {
-							this.onRegionChangeComplete(region, null);
-						}}
-						style={styles.map}
-					>
-						{/* Maps incidents */}
-						{this.state.clustersIncidents.map(
-							(item, i) =>
-								item.properties.cluster === true ? (
-									<Cluster
-										key={i}
-										item={item}
-										type={'incidents'}
-									/>
-								) : (
-									<MapMarker key={i} item={item} />
-								)
-						)}
-						{/* Maps emergency places */}
-						{this.state.clustersPlaces.map(
-							(item, i) =>
-								item.properties.cluster === true ? (
-									<Cluster
-										key={i}
-										item={item}
-										type={'places'}
-									/>
-								) : (
-									<MapMarker key={i} item={item} />
-								)
-						)}
-						{/* Maps current location */}
-						<Marker.Animated
-							ref={marker => {
-								this.marker = marker;
-							}}
-							coordinate={{
-								latitude: this.props.curr_location.latitude,
-								longitude: this.props.curr_location.longitude
-							}}
-						/>
-					</MapView>
-				)}
+				</MapView>
 
 				{/* Relocation Button */}
 				<TouchableOpacity
