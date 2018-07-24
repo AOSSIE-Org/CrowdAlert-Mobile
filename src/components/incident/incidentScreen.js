@@ -154,24 +154,20 @@ class Incident extends Component {
 								</Text>
 							</CardItem>
 						</Card>
-						<Card style={styles.card}>
-							{incidentDetails.details !== '' ? (
-								<View>
-									<CardItem>
-										<Text style={styles.titleTextHeader}>
-											Description
-										</Text>
-									</CardItem>
-									<CardItem>
-										<Text
-											style={styles.titleTextDescription}
-										>
-											{incidentDetails.details}
-										</Text>
-									</CardItem>
-								</View>
-							) : null}
-						</Card>
+						{incidentDetails.details !== '' ? (
+							<Card style={styles.card}>
+								<CardItem>
+									<Text style={styles.titleTextHeader}>
+										Description
+									</Text>
+								</CardItem>
+								<CardItem>
+									<Text style={styles.titleTextDescription}>
+										{incidentDetails.details}
+									</Text>
+								</CardItem>
+							</Card>
+						) : null}
 						<Card style={styles.card}>
 							<CardItem>
 								<MapView
