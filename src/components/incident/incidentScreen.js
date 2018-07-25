@@ -28,10 +28,7 @@ import DeleteButtonIncident from './navBarButtons/deleteIncident.js';
 import EditButtonIncident from './navBarButtons/editIncidentButton.js';
 import ShareButtonIncident from './navBarButtons/ShareIncidentButton.js';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {
-	viewIncident,
-	getIndvIncident
-} from '../../actions/incidentsAction.js';
+import { getIndvIncident } from '../../actions/incidentsAction.js';
 import IconDirection from 'react-native-vector-icons/MaterialCommunityIcons';
 
 /**
@@ -65,10 +62,9 @@ class Incident extends Component {
 	 */
 	componentWillMount() {
 		if (
-			this.props.incident_key &&
-			(this.props.incident.incident !== null
+			this.props.incident.incident !== null
 				? this.props.incident_key !== this.props.incident.incident.key
-				: true)
+				: true
 		) {
 			this.props.getIndvIncident(this.props.incident_key);
 		}
@@ -101,7 +97,11 @@ class Incident extends Component {
 	 * @return the incident screen.
 	 */
 	render() {
-		if (this.props.incident.loading) {
+		if (
+			this.props.incident.incident !== null
+				? this.props.incident_key !== this.props.incident.incident.key
+				: true
+		) {
 			return <ActivityIndicator size={'large'} />;
 		} else {
 			var incidentDetails = this.props.incident.incident.value;
@@ -224,7 +224,6 @@ class Incident extends Component {
 Incident.propTypes = {
 	incident: PropTypes.object,
 	user: PropTypes.object,
-	viewIncident: PropTypes.func.isRequired,
 	getIndvIncident: PropTypes.func.isRequired
 };
 /**
@@ -236,7 +235,6 @@ Incident.propTypes = {
 function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{
-			viewIncident: viewIncident,
 			getIndvIncident: getIndvIncident
 		},
 		dispatch

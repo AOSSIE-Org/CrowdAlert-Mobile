@@ -18,7 +18,7 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { styles } from '../../assets/styles/profile_styles';
 import PropTypes from 'prop-types';
-import { getUserIncidents, viewIncident } from '../../actions/incidentsAction';
+import { getUserIncidents } from '../../actions/incidentsAction';
 import { watchCurrLocation } from '../../actions/locationAction';
 import { getColor } from '../../utils/categoryUtil';
 var PushNotification = require('react-native-push-notification');
@@ -66,12 +66,7 @@ class Profile extends Component {
 	}
 
 	viewClickedIncident(item) {
-		if (item.value.user_id === this.props.user.email) {
-			this.props.viewIncident(item, true);
-		} else {
-			this.props.viewIncident(item, false);
-		}
-		Actions.incident();
+		Actions.incident({ incident_key: item.key });
 	}
 
 	_renderItem({ item, index }) {
@@ -175,8 +170,7 @@ function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{
 			getUserIncidents: getUserIncidents,
-			watchCurrLocation: watchCurrLocation,
-			viewIncident: viewIncident
+			watchCurrLocation: watchCurrLocation
 		},
 		dispatch
 	);

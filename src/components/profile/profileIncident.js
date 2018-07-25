@@ -5,18 +5,12 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import PropTypes from 'prop-types';
 import { styles } from '../../assets/styles/profileIncident_styles';
-import { viewIncident } from '../../actions/incidentsAction';
 
 import { getMarkerImage, categories } from '../../utils/categoryUtil.js';
 
 class ProfileIncident extends Component {
 	viewClickedIncident(item) {
-		if (item.value.user_id === this.props.user.email) {
-			this.props.viewIncident(item, true);
-		} else {
-			this.props.viewIncident(item, false);
-		}
-		Actions.incident();
+		Actions.incident({ incident_key: item.key });
 	}
 
 	render() {
@@ -63,21 +57,6 @@ ProfileIncident.propTypes = {
 };
 
 /**
- * Mapping dispatchable actions to props so that actions can be used
- * through props in children components.
- * @param dispatch Dispatches an action to trigger a state change.
- * @return Turns action creator objects into an objects with the same keys.
- */
-function matchDispatchToProps(dispatch) {
-	return bindActionCreators(
-		{
-			viewIncident: viewIncident
-		},
-		dispatch
-	);
-}
-
-/**
  * Mapping state to props so that state variables can be used
  * through props in children components.
  * @param state Current state in the store.
@@ -87,4 +66,4 @@ const mapStateToProps = state => ({
 	user: state.login.userDetails
 });
 
-export default connect(mapStateToProps, matchDispatchToProps)(ProfileIncident);
+export default connect(mapStateToProps, null)(ProfileIncident);

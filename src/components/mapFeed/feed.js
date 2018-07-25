@@ -10,7 +10,7 @@ import {
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { getAllIncidents, viewIncident } from '../../actions/incidentsAction';
+import { getAllIncidents } from '../../actions/incidentsAction';
 import { styles } from '../../assets/styles/feed_styles';
 import Timeline from 'react-native-timeline-listview';
 import PropTypes from 'prop-types';
@@ -49,7 +49,7 @@ class FeedScreen extends Component {
 				time: this.getTime(incident.value.timestamp),
 				title: incident.value.title,
 				description: incident.value.details,
-				incident: incident,
+				key: incident.key,
 				icon: getMarkerImage(incident.value.category)
 			});
 		});
@@ -103,12 +103,7 @@ class FeedScreen extends Component {
 
 	//Handles an incident click and redirects to its particulat incident screen
 	viewClickedIncident(item) {
-		if (item.value.user_id === this.props.user.email) {
-			this.props.viewIncident(item, true);
-		} else {
-			this.props.viewIncident(item, false);
-		}
-		Actions.incident();
+		Actions.incident({ incident_key: item.key });
 	}
 
 	//Incident details container
@@ -161,8 +156,8 @@ class FeedScreen extends Component {
 							showsVerticalScrollIndicator: false
 						}}
 						onEventPress={event => {
-							console.log(event.incident);
-							this.viewClickedIncident(event.incident);
+							console.log(event);
+							this.viewClickedIncident(event);
 						}}
 						showTime={false}
 					/>
@@ -178,7 +173,6 @@ class FeedScreen extends Component {
  */
 FeedScreen.propTypes = {
 	getAllIncidents: PropTypes.func.isRequired,
-	viewIncident: PropTypes.func.isRequired,
 	user: PropTypes.object,
 	incident: PropTypes.object
 };
@@ -192,8 +186,7 @@ FeedScreen.propTypes = {
 function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{
-			getAllIncidents: getAllIncidents,
-			viewIncident: viewIncident
+			getAllIncidents: getAllIncidents
 		},
 		dispatch
 	);

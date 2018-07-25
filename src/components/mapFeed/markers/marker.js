@@ -3,7 +3,6 @@ import { View, Text, Image } from 'react-native';
 import MapView from 'react-native-maps';
 import { bindActionCreators } from 'redux';
 import { getMarkerImage } from '../../../utils/categoryUtil.js';
-import { viewIncident } from '../../../actions/incidentsAction';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import getDirections from 'react-native-google-maps-directions';
@@ -26,13 +25,8 @@ class MapMarker extends Component {
 	 * @param  {JSON} incident It contains the incident details.
 	 * @return Navigates to incident page
 	 */
-	viewClickedIncident(incident) {
-		if (incident.incident.value.user_id === this.props.user.email) {
-			this.props.viewIncident(incident.incident, true);
-		} else {
-			this.props.viewIncident(incident.incident, false);
-		}
-		Actions.incident(); // Navigates to incident page
+	viewClickedIncident(item) {
+		Actions.incident({ incident_key: item.key }); // Navigates to incident page
 	}
 
 	/**
@@ -90,7 +84,7 @@ class MapMarker extends Component {
 					title={item.properties.incident.value.title}
 					description={item.properties.incident.value.details}
 					onCalloutPress={() => {
-						this.viewClickedIncident(item.properties);
+						this.viewClickedIncident(item.properties.incident);
 					}}
 				>
 					<Image
@@ -110,24 +104,8 @@ class MapMarker extends Component {
  * the props used on this page does not meet the specified type.
  */
 MapMarker.propTypes = {
-	user: PropTypes.object,
-	viewIncident: PropTypes.func.isRequired
+	user: PropTypes.object
 };
-
-/**
- * Mapping dispatchable actions to props so that actions can be used
- * through props in children components.
- * @param dispatch Dispatches an action to trigger a state change.
- * @return Turns action creator objects into an objects with the same keys.
- */
-function matchDispatchToProps(dispatch) {
-	return bindActionCreators(
-		{
-			viewIncident: viewIncident
-		},
-		dispatch
-	);
-}
 
 /**
  * Mapping state to props so that state variables can be used
@@ -139,4 +117,4 @@ const mapStateToProps = state => ({
 	user: state.login.userDetails
 });
 
-export default connect(mapStateToProps, matchDispatchToProps)(MapMarker);
+export default connect(mapStateToProps, null)(MapMarker);
