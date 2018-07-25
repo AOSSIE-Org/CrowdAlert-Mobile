@@ -18,10 +18,7 @@ import { Header, Title, Left, Body, Switch, Right, Card } from 'native-base';
 import getTheme from '../../assets/styles/native-base-theme/components';
 import platform from '../../assets/styles/native-base-theme/variables/platform';
 import PropTypes from 'prop-types';
-import {
-	updateIncidentFirebase,
-	viewIncident
-} from '../../actions/incidentsAction';
+import { updateIncidentFirebase } from '../../actions/incidentsAction';
 
 var ImagePicker = require('react-native-image-picker');
 import { Toast } from 'native-base';
@@ -50,16 +47,6 @@ class EditIncident extends Component {
 	 * @return Updated incident
 	 */
 	handleUpdate() {
-		this.props.viewIncident(
-			{
-				...this.props.incident.incident,
-				value: {
-					...this.props.incident.incident.value,
-					...this.state
-				}
-			},
-			true
-		);
 		this.props
 			.updateIncidentFirebase(
 				this.props.incident.incident.key,
@@ -221,7 +208,6 @@ class EditIncident extends Component {
  */
 EditIncident.propTypes = {
 	updateIncidentFirebase: PropTypes.func.isRequired,
-	viewIncident: PropTypes.func.isRequired,
 	incidentDetails: PropTypes.object,
 	incident: PropTypes.object
 };
@@ -235,8 +221,7 @@ EditIncident.propTypes = {
 function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{
-			updateIncidentFirebase: updateIncidentFirebase,
-			viewIncident: viewIncident
+			updateIncidentFirebase: updateIncidentFirebase
 		},
 		dispatch
 	);

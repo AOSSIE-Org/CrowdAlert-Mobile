@@ -62,9 +62,15 @@ export const getAllIncidents = () => {
 					snap.forEach(child => {
 						if (child.val().visible) {
 							all_incidents.push({
-								title: child.val().title,
 								key: child.key,
-								value: child.val()
+								value: {
+									title: child.val().title,
+									details: child.val().details,
+									category: child.val().category,
+									timestamp: child.val().timestamp,
+									coordinates: child.val().location
+										.coordinates
+								}
 							});
 							//Adds the child to the stack if not present with a timestamp
 							if (notificationStack[child.key] === undefined) {
@@ -111,11 +117,17 @@ export const getUserIncidents = userID => {
 			.on('value', function(snapshot) {
 				dispatch(incidentsLoading(true));
 				var items = [];
-				snapshot.forEach(item => {
-					if (item.val().visible) {
+				snapshot.forEach(child => {
+					if (child.val().visible) {
 						items.push({
-							key: item.key,
-							value: item.val()
+							key: child.key,
+							value: {
+								title: child.val().title,
+								details: child.val().details,
+								category: child.val().category,
+								timestamp: child.val().timestamp,
+								coordinates: child.val().location.coordinates
+							}
 						});
 					}
 				});

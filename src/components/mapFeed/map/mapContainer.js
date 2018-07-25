@@ -90,10 +90,8 @@ class MapContainer extends Component {
 				longitude: null,
 				incident: null
 			};
-			obj.latitude =
-				incidents_marker[i].value.location.coordinates.latitude;
-			obj.longitude =
-				incidents_marker[i].value.location.coordinates.longitude;
+			obj.latitude = incidents_marker[i].value.coordinates.latitude;
+			obj.longitude = incidents_marker[i].value.coordinates.longitude;
 			obj.incident = incidents_marker[i];
 			incidents.push(obj);
 		}

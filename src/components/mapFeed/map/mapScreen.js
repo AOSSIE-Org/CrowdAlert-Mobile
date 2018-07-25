@@ -70,8 +70,8 @@ class MapScreen extends Component {
 				if (nextProps.all_incidents !== null) {
 					nextProps.all_incidents.map(incident => {
 						var incident_location = {
-							lat: incident.value.location.coordinates.latitude,
-							lng: incident.value.location.coordinates.longitude
+							lat: incident.value.coordinates.latitude,
+							lng: incident.value.coordinates.longitude
 						};
 						//Calculates the distance between the current position of the user
 						//to the incidents locations. If its within a specified distance range and
@@ -105,8 +105,7 @@ class MapScreen extends Component {
 									color: 'red', // (optional) default: system default
 									group: 'grp', // (optional) add group to message
 									tag: {
-										key: incident.key,
-										value: incident.value
+										key: incident.key
 									}, // (optional) add tag to message
 
 									/* iOS and Android properties */
