@@ -29,7 +29,7 @@ export const styles = StyleSheet.create({
 	userName: {
 		paddingTop: height / 30,
 		fontSize: 17,
-		color: 'black'
+		color: 'white'
 	},
 	valueItem: {
 		flexDirection: 'row',
