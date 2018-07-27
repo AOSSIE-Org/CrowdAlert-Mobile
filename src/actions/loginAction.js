@@ -50,13 +50,13 @@ export const onPressSignIn = (email, password) => {
 				dispatch(loginLoading(false));
 				dispatch(handleError(error));
 				const { code, message } = error;
-				if (code == 'auth/wrong-password') {
+				if (code === 'auth/wrong-password') {
 					Toast.show({
 						text: 'Wrong password!' + message,
 						type: 'warning',
 						duration: 2000
 					});
-				} else if (code == 'auth/user-not-found') {
+				} else if (code === 'auth/user-not-found') {
 					Toast.show({
 						text: 'Please register first! ' + message,
 						type: 'warning',
@@ -97,7 +97,7 @@ export const onPressSignUp = (email, password, name) => {
 				dispatch(handleError(error));
 				console.log(error);
 				const { code, message } = error;
-				if (code == 'auth/email-already-in-use') {
+				if (code === 'auth/email-already-in-use') {
 					Toast.show({
 						text: 'Email in use ' + message,
 						type: 'danger',
@@ -119,21 +119,40 @@ export const onPressSignUp = (email, password, name) => {
  * @return sends password reset email or trigger an error that user is not registered.
  */
 export const onForget = email => {
+	console.log(email);
 	return dispatch => {
 		dispatch(loginLoading(true));
 		var auth = firebase.auth(); //for firebase authentication
 		auth
 			.sendPasswordResetEmail(email)
 			.then(function() {
-				dispatch(loginLoading(false));
 				Toast.show({
 					text: 'Email sent!',
 					type: 'success',
 					duration: 2000
 				});
+				dispatch(loginLoading(false));
 			})
 			.catch(function(error) {
+				dispatch(handleError(error));
 				dispatch(loginLoading(false));
+				console.log(error);
+				const { code, message } = error;
+				if (code === 'auth/user-not-found') {
+					Toast.show({
+						text: 'User not found, ' + message,
+						type: 'danger',
+						duration: 3000
+					});
+				} else {
+					Toast.show({
+						text:
+							'Could not send the mail! Contact the administrator ' +
+							message,
+						type: 'danger',
+						duration: 3000
+					});
+				}
 			});
 	};
 };
