@@ -3,7 +3,6 @@ import { Provider } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import Route from './src/utils/routes';
-import { ActivityIndicator } from 'react-native';
 import LinkedRouter from './src/utils/LinkedRouter';
 import SplashScreen from './src/components/splashScreen';
 

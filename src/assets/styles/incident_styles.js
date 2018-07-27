@@ -3,6 +3,10 @@ const { width, height } = Dimensions.get('window');
 
 //styling used on individual incident page
 export const styles = StyleSheet.create({
+	loader: {
+		flex: 1,
+		justifyContent: 'center'
+	},
 	titleTextHeader: {
 		fontSize: 20,
 		fontWeight: 'bold',
