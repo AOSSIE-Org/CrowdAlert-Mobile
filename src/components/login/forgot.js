@@ -72,10 +72,13 @@ class Forgot extends Component {
 				<View style={styles.box}>
 					<Text style={styles.heading}>Recover Password</Text>
 					<TextInput
-						placeholder="Email"
 						style={styles.input_field}
+						keyboardType="email-address"
 						autoCapitalize="none"
+						autoCorrect={false}
+						returnKeyType="next"
 						onChangeText={email => this.setState({ email })}
+						placeholder="Email"
 					/>
 					<TouchableOpacity
 						style={styles.button_send}
