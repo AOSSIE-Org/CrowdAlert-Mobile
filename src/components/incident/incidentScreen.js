@@ -102,7 +102,13 @@ class Incident extends Component {
 				? this.props.incident_key !== this.props.incident.incident.key
 				: true
 		) {
-			return <ActivityIndicator size={'large'} />;
+			return (
+				<ActivityIndicator
+					size={'large'}
+					style={styles.loader}
+					color="black"
+				/>
+			);
 		} else {
 			var incidentDetails = this.props.incident.incident.value;
 			return (
