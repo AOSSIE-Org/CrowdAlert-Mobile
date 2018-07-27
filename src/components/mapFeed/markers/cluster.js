@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import MapView from 'react-native-maps';
-import { styles } from '../../../assets/styles/clusterStyles';
+import { styles } from '../../../assets/styles/clusterMarker_styles';
 import PropTypes from 'prop-types';
 
 /**

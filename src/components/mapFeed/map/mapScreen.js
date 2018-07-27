@@ -32,7 +32,7 @@ import { styles, searchBarStyle } from '../../../assets/styles/map_styles.js';
 import { styles as filterStyles } from '../../../assets/styles/filter_styles';
 import { styles as loadingStyle } from '../../../assets/styles/mapFeed_styles';
 import { GooglePlacesAutocomplete } from '../../googleSearchBar';
-import { sideMenu } from '../../profile/navBarButtons';
+import { SideDrawer } from '../../sideMenu';
 import { getEmergencyPlaces } from '../../../actions/emergencyPlacesAction';
 var PushNotification = require('react-native-push-notification');
 var haversine = require('haversine-distance');
@@ -253,7 +253,7 @@ class MapScreen extends Component {
 						);
 					}}
 					styles={searchBarStyle}
-					renderLeftButton={() => sideMenu()}
+					renderLeftButton={() => SideDrawer()}
 				/>
 			</View>
 		);

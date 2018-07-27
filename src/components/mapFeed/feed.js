@@ -15,7 +15,7 @@ import { styles } from '../../assets/styles/feed_styles';
 import Timeline from 'react-native-timeline-listview';
 import PropTypes from 'prop-types';
 import { Header, Title, Left, Body } from 'native-base';
-import { sideMenu } from '../profile/navBarButtons';
+import { SideDrawer } from '../sideMenu';
 import { getMarkerImage } from '../../utils/categoryUtil';
 
 /**
@@ -128,7 +128,7 @@ class FeedScreen extends Component {
 		return (
 			<View style={styles.container}>
 				<Header androidStatusBarColor="#1c76cb" style={styles.header}>
-					<Left>{sideMenu('white')}</Left>
+					<Left>{SideDrawer('white')}</Left>
 					<Body style={styles.body}>
 						<Title style={styles.heading}>Global Feed</Title>
 					</Body>

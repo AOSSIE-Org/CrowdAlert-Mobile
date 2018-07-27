@@ -17,7 +17,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { fbSignIn, googleSignin } from '../../actions/loginAction';
 import { Actions } from 'react-native-router-flux';
-import { styles } from '../../assets/styles/login_styles';
+import { styles } from '../../assets/styles/homeScreen_styles';
 import { GoogleSignin } from 'react-native-google-signin';
 import Config from 'react-native-config';
 import PropTypes from 'prop-types';

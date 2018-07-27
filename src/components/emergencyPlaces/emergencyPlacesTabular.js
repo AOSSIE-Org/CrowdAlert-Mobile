@@ -24,7 +24,7 @@ import { Actions } from 'react-native-router-flux';
 import Hospitals from './hospitals';
 import PoliceStations from './policeStations';
 import { styles } from '../../assets/styles/emergencyPlacesTabular_styles';
-import { sideMenu } from '../profile/navBarButtons';
+import { SideDrawer } from '../sideMenu';
 import Icon from 'react-native-vector-icons/Foundation';
 
 /**
@@ -41,7 +41,7 @@ class EmergencyPlaces extends Component {
 			return (
 				<Container>
 					<Header hasTabs>
-						<Left>{sideMenu('white')}</Left>
+						<Left>{SideDrawer('white')}</Left>
 						<Body>
 							<Text style={styles.title}>Emergency Places</Text>
 						</Body>
@@ -57,7 +57,7 @@ class EmergencyPlaces extends Component {
 		return (
 			<Container>
 				<Header hasTabs>
-					<Left>{sideMenu('white')}</Left>
+					<Left>{SideDrawer('white')}</Left>
 					<Body>
 						<Text style={styles.title}>Emergency Places</Text>
 					</Body>
