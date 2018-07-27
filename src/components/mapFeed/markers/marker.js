@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import getDirections from 'react-native-google-maps-directions';
 import PropTypes from 'prop-types';
-import { styles } from '../../../assets/styles/clusterStyles';
+import { styles } from '../../../assets/styles/clusterMarker_styles';
 
 /**
  * Class for displaying individual marker on map

@@ -175,9 +175,7 @@ class AddIncident extends Component {
 							<TouchableOpacity
 								onPress={() => this._cameraImage()}
 							>
-								<Text style={styles.imageText}>
-									+ Add Image
-								</Text>
+								<Text style={styles.imageText}>Add Image</Text>
 							</TouchableOpacity>
 						</View>
 					)}

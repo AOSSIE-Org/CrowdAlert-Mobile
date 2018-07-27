@@ -37,7 +37,7 @@ class ShareButtonIncident extends Component {
 	render() {
 		return (
 			<TouchableOpacity
-				style={styles.ShareNavButton}
+				style={styles.incidentNavButton}
 				onPress={() => {
 					this.handleShare();
 				}}

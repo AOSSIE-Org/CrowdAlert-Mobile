@@ -7,13 +7,7 @@ export const styles = StyleSheet.create({
 		marginLeft: 20,
 		justifyContent: 'center'
 	},
-	editButton: {
-		marginRight: 10
-	},
 	incidentNavButton: {
 		marginRight: 15
-	},
-	ShareNavButton: {
-		marginRight: 5
 	}
 });

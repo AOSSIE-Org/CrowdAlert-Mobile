@@ -23,7 +23,7 @@ import { watchCurrLocation } from '../../actions/locationAction';
 import { getColor } from '../../utils/categoryUtil';
 var PushNotification = require('react-native-push-notification');
 import { Header, Title, Left, Body } from 'native-base';
-import { sideMenu } from './navBarButtons';
+import { SideDrawer } from '../sideMenu';
 import ProfileIncident from './profileIncident';
 
 /**
@@ -86,7 +86,7 @@ class Profile extends Component {
 						androidStatusBarColor="#1c76cb"
 						style={styles.header}
 					>
-						<Left>{sideMenu('white')}</Left>
+						<Left>{SideDrawer('white')}</Left>
 						<Body style={styles.body}>
 							<Title style={styles.heading}>My Profile</Title>
 						</Body>

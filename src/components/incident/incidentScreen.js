@@ -26,7 +26,7 @@ import getDirections from 'react-native-google-maps-directions';
 import { Actions } from 'react-native-router-flux';
 import DeleteButtonIncident from './navBarButtons/deleteIncident.js';
 import EditButtonIncident from './navBarButtons/editIncidentButton.js';
-import ShareButtonIncident from './navBarButtons/ShareIncidentButton.js';
+import ShareButtonIncident from './navBarButtons/shareIncidentButton.js';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getIndvIncident } from '../../actions/incidentsAction.js';
 import IconDirection from 'react-native-vector-icons/MaterialCommunityIcons';
