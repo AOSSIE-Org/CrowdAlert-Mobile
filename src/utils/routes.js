@@ -55,13 +55,13 @@ export default class Route extends Component {
 				<Scene key="root">
 					<Scene
 						key="homeLogin"
-						hideNavBar={true}
+						hideNavBar
 						component={HomeLogin}
 						initial={this.props.initial}
 					/>
-					<Scene key="signin" hideNavBar={true} component={Signin} />
-					<Scene key="signup" hideNavBar={true} component={Signup} />
-					<Scene key="forgot" hideNavBar={true} component={Forgot} />
+					<Scene key="signin" hideNavBar component={Signin} />
+					<Scene key="signup" hideNavBar component={Signup} />
+					<Scene key="forgot" hideNavBar component={Forgot} />
 					<Scene
 						drawer
 						hideNavBar
@@ -75,7 +75,7 @@ export default class Route extends Component {
 					>
 						<Scene
 							key="profile"
-							hideNavBar={true}
+							hideNavBar
 							// title="Profile"
 							// renderRightButton={editButtonProfile}
 							// renderLeftButton={sideMenu}
@@ -83,7 +83,7 @@ export default class Route extends Component {
 						/>
 						<Scene
 							key="mapFeed"
-							hideNavBar={true}
+							hideNavBar
 							component={MapFeedScreen}
 						/>
 						{/* <Scene
@@ -97,21 +97,21 @@ export default class Route extends Component {
 							<Scene
 								key="map"
 								title="Map"
-								hideNavBar={true}
+								hideNavBar
 								icon={() => <Icon name="map" size={20} />}
 								component={MapScreen}
 							/>
 							<Scene
 								key="feed"
 								title="World Feed"
-								hideNavBar={true}
+								hideNavBar
 								icon={() => <Icon name="feed" size={20} />}
 								component={FeedScreen}
 							/>
 						</Scene> */}
 						<Scene
 							key="emergencylocation"
-							hideNavBar={true}
+							hideNavBar
 							// title="Emergency places nearby"
 							renderLeftButton={() => sideMenu()}
 							component={EmergencyPlaces}
@@ -120,13 +120,13 @@ export default class Route extends Component {
 					<Scene
 						back={true}
 						key="settingsOption"
-						hideNavBar={true}
+						hideNavBar
 						component={SettingsOption}
 					/>
 					<Scene
 						back={true}
 						key="addIncident"
-						hideNavBar={true}
+						hideNavBar
 						// title="Add incident"
 						component={AddIncident}
 					/>
@@ -134,7 +134,7 @@ export default class Route extends Component {
 						key="incident"
 						// title="Incident Details"
 						component={Incident}
-						hideNavBar={true}
+						hideNavBar
 						// right={[
 						// 	<EditButtonIncident key={1} />,
 						// 	<DeleteButtonIncident key={2} />,
@@ -144,13 +144,13 @@ export default class Route extends Component {
 					<Scene
 						back={true}
 						key="editProfile"
-						hideNavBar={true}
+						hideNavBar
 						component={EditProfile}
 					/>
 					<Scene
 						back={true}
 						key="editIncident"
-						hideNavBar={true}
+						hideNavBar
 						// title="Edit Incident"
 						component={EditIncident}
 					/>

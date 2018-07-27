@@ -113,7 +113,11 @@ class Incident extends Component {
 								style={styles.backButton}
 								onPress={() => Actions.pop()}
 							>
-								<Icon name="close" size={30} color="white" />
+								<Icon
+									name="angle-left"
+									size={35}
+									color="white"
+								/>
 							</TouchableOpacity>
 						</Left>
 						<Body>

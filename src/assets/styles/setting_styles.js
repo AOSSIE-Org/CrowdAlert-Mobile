@@ -17,7 +17,7 @@ export const styles = StyleSheet.create({
 		height: height / 10
 	},
 	slider: {
-		width: width,
+		width: width * 0.9,
 		marginBottom: height / 80
 	},
 	list: {

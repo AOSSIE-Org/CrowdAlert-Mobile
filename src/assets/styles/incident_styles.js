@@ -22,6 +22,12 @@ export const styles = StyleSheet.create({
 		backgroundColor: '#63a4ff',
 		flex: 1
 	},
+	backButton: {
+		width: width / 12,
+		height: height / 13,
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
 	card: {
 		marginLeft: width / 40,
 		width: width * 0.95

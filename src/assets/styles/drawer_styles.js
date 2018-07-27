@@ -24,7 +24,8 @@ export const styles = StyleSheet.create({
 		alignSelf: 'center',
 		fontSize: 18,
 		fontWeight: 'bold',
-		color: 'white'
+		color: 'white',
+		marginRight: width * 0.2
 	},
 	option: {
 		color: 'white',

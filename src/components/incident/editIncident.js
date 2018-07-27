@@ -75,6 +75,12 @@ class EditIncident extends Component {
 					text: 'ImagePicker Error: ' + response.error,
 					duration: 2000
 				});
+			} else if (response.didCancel) {
+			} else if (response.customButton) {
+				Toast.show({
+					text: 'User tapped custom button: ' + response.customButton,
+					duration: 2000
+				});
 			} else {
 				this.setState({
 					image: {
