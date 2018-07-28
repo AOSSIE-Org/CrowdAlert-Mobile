@@ -37,11 +37,10 @@ class Profile extends Component {
 		if (Platform.OS === 'android') {
 			LocationServicesDialogBox.checkLocationServicesIsEnabled({
 				message:
-					'<h2>Use Location ?</h2> \
-		            This app wants to change your device settings:<br/><br/> \
-		            Use GPS for location<br/><br/>',
-				ok: 'YES',
-				cancel: 'NO',
+					'<h2>Please enable GPS!</h2> \
+		        CrowdAlert wants to change your Location settings',
+				ok: 'Ok',
+				cancel: 'No',
 				providerListener: true
 			}).then(success => {
 				this.props.watchCurrLocation();
