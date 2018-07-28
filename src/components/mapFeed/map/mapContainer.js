@@ -5,10 +5,11 @@ import {
 	ActivityIndicator,
 	View,
 	TouchableOpacity,
-	Keyboard
+	Keyboard,
+	Platform
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, AnimatedRegion } from 'react-native-maps';
 import MapMarker from '../markers/marker';
 import Cluster from '../markers/cluster';
 import { connect } from 'react-redux';
@@ -32,7 +33,11 @@ class MapContainer extends Component {
 				longitude: this.props.curr_location.longitude,
 				latitudeDelta: this.props.curr_location.latitudeDelta,
 				longitudeDelta: this.props.curr_location.longitudeDelta
-			}
+			},
+			coordinate: new AnimatedRegion({
+				latitude: this.props.curr_location.latitude,
+				longitude: this.props.curr_location.longitude
+			})
 		};
 		this.northeast = {
 			latitude:
@@ -310,10 +315,19 @@ class MapContainer extends Component {
 					.longitudeDelta
 			};
 			mapRef.animateToRegion(region, 1000);
-			markerRef._component.animateMarkerToCoordinate({
-				latitude: coordinates.latitude,
-				longitude: coordinates.longitude
-			});
+			if (Platform.OS === 'android') {
+				markerRef._component.animateMarkerToCoordinate({
+					latitude: coordinates.latitude,
+					longitude: coordinates.longitude
+				});
+			} else {
+				this.state.coordinate
+					.timing({
+						latitude: coordinates.latitude,
+						longitude: coordinates.longitude
+					})
+					.start();
+			}
 			this.setRegion(region);
 			Keyboard.dismiss();
 		} else if (type === 'curr_location') {
@@ -324,10 +338,20 @@ class MapContainer extends Component {
 				longitudeDelta: this.props.curr_location.longitudeDelta
 			};
 			mapRef.animateToRegion(region, 1000);
-			markerRef._component.animateMarkerToCoordinate({
-				latitude: this.props.curr_location.latitude,
-				longitude: this.props.curr_location.longitude
-			});
+
+			if (Platform.OS === 'android') {
+				markerRef._component.animateMarkerToCoordinate({
+					latitude: this.props.curr_location.latitude,
+					longitude: this.props.curr_location.longitude
+				});
+			} else {
+				this.state.coordinate
+					.timing({
+						latitude: this.props.curr_location.latitude,
+						longitude: this.props.curr_location.longitude
+					})
+					.start();
+			}
 			this.setRegion(region);
 		}
 	}
@@ -392,10 +416,16 @@ class MapContainer extends Component {
 						ref={marker => {
 							this.marker = marker;
 						}}
-						coordinate={{
-							latitude: this.props.curr_location.latitude,
-							longitude: this.props.curr_location.longitude
-						}}
+						coordinate={
+							Platform.OS === 'android'
+								? {
+										latitude: this.props.curr_location
+											.latitude,
+										longitude: this.props.curr_location
+											.longitude
+								  }
+								: this.state.coordinate
+						}
 					/>
 				</MapView>
 
