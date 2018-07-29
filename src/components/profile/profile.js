@@ -5,12 +5,10 @@ import {
 	View,
 	ScrollView,
 	TouchableOpacity,
-	TextInput,
+	TouchableHighlight,
 	ActivityIndicator,
 	FlatList,
-	Platform,
-	Dimensions,
-	StyleSheet
+	Platform
 } from 'react-native';
 import LocationServicesDialogBox from 'react-native-android-location-services-dialog-box';
 import { bindActionCreators } from 'redux';
@@ -87,7 +85,7 @@ class Profile extends Component {
 					>
 						<Left>{SideDrawer('white')}</Left>
 						<Body style={styles.body}>
-							<Title style={styles.heading}>My Profile</Title>
+							<Title style={styles.heading}>Dashboard</Title>
 						</Body>
 					</Header>
 					<View style={styles.empty} />
@@ -127,20 +125,26 @@ class Profile extends Component {
 								: null
 						]}
 					>
-						<Image
-							style={styles.avatar}
-							source={
-								this.props.user.photo.url === ''
-									? this.props.user.photo.base64 === ''
-										? require('../../assets/images/boy.png')
-										: {
-												uri:
-													'data:image/jpeg;base64, ' +
-													this.props.user.photo.base64
-										  }
-									: { uri: this.props.user.photo.url }
-							}
-						/>
+						<TouchableHighlight
+							underlayColor="transparent"
+							onPress={Actions.editProfile}
+						>
+							<Image
+								style={styles.avatar}
+								source={
+									this.props.user.photo.url === ''
+										? this.props.user.photo.base64 === ''
+											? require('../../assets/images/boy.png')
+											: {
+													uri:
+														'data:image/jpeg;base64, ' +
+														this.props.user.photo
+															.base64
+											  }
+										: { uri: this.props.user.photo.url }
+								}
+							/>
+						</TouchableHighlight>
 					</View>
 				</ScrollView>
 			);
