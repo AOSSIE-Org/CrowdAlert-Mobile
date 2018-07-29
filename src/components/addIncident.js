@@ -81,7 +81,7 @@ class AddIncident extends Component {
 				.addIncidentToFirebase(this.state) // waits till incident details are updated in redux
 				.then(result => {
 					Toast.show({
-						text: 'Incident updated!',
+						text: 'Incident added!',
 						type: 'success',
 						duration: 2000
 					});
