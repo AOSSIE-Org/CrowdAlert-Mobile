@@ -33,28 +33,8 @@ class FeedScreen extends Component {
 	//fetches all incidents if not fetched earlier and generates data for the timeline
 	componentWillMount() {
 		if (this.props.incident.all_incidents === null) {
-			this.props.getAllIncidents().then(() => {
-				this.generateData();
-			});
-		} else {
-			this.generateData();
+			this.props.getAllIncidents();
 		}
-	}
-
-	//Creates the incidents into 'data' that can be passed to the Timeline component.
-	generateData() {
-		const all_incidents = [];
-		this.props.incident.all_incidents.map(incident => {
-			all_incidents.push({
-				time: this.getTime(incident.value.timestamp),
-				title: incident.value.title,
-				description: incident.value.details,
-				key: incident.key,
-				icon: getMarkerImage(incident.value.category)
-			});
-		});
-		console.log(this.props.incident.all_incidents, all_incidents);
-		this.setState({ data: all_incidents });
 	}
 
 	//Converts a timestamp to a presentable date and time
@@ -125,6 +105,19 @@ class FeedScreen extends Component {
 	}
 
 	render() {
+		//Creates the incidents into 'data' that can be passed to the Timeline component.
+		const all_incidents = [];
+		if (this.props.incident.all_incidents !== null) {
+			this.props.incident.all_incidents.map(incident => {
+				all_incidents.push({
+					time: this.getTime(incident.value.timestamp),
+					title: incident.value.title,
+					description: incident.value.details,
+					key: incident.key,
+					icon: getMarkerImage(incident.value.category)
+				});
+			});
+		}
 		return (
 			<View style={styles.container}>
 				<Header androidStatusBarColor="#1c76cb" style={styles.header}>
@@ -133,7 +126,7 @@ class FeedScreen extends Component {
 						<Title style={styles.heading}>Global Feed</Title>
 					</Body>
 				</Header>
-				{this.props.incident.loading || this.state.data === null ? (
+				{this.props.incident.loading || all_incidents.length === 0 ? (
 					<ActivityIndicator
 						size={'large'}
 						style={styles.loader}
@@ -141,7 +134,7 @@ class FeedScreen extends Component {
 					/>
 				) : (
 					<Timeline
-						data={this.state.data}
+						data={all_incidents}
 						lineWidth={3.5}
 						circleSize={30}
 						innerCircle="icon"
