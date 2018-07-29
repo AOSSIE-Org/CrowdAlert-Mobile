@@ -47,14 +47,27 @@ class EditIncident extends Component {
 	 * @return Updated incident
 	 */
 	handleUpdate() {
-		this.props
-			.updateIncidentFirebase(
-				this.props.incident.incident.key,
-				this.state
-			)
-			.then(() => {
-				Actions.pop();
+		if (this.state.title === '' || this.state.details === '') {
+			Toast.show({
+				text: 'Please dont leave any field blank',
+				type: 'warning',
+				duration: 2000
 			});
+		} else {
+			this.props
+				.updateIncidentFirebase(
+					this.props.incident.incident.key,
+					this.state
+				)
+				.then(() => {
+					Toast.show({
+						text: 'Incident updated!',
+						type: 'success',
+						duration: 2000
+					});
+					Actions.pop();
+				});
+		}
 	}
 
 	/**
