@@ -42,27 +42,30 @@ class DrawerContent extends Component {
 			return (
 				<ScrollView style={styles.container}>
 					<View style={styles.userHeader}>
-						<Image
-							style={styles.userImage}
-							source={
-								this.props.user.photo.url === ''
-									? this.props.user.photo.base64 === ''
-										? require('../assets/images/boy.png')
-										: {
-												uri:
-													'data:image/jpeg;base64, ' +
-													this.props.user.photo.base64
-										  }
-									: { uri: this.props.user.photo.url }
-							}
-						/>
+						<TouchableHighlight onPress={Actions.editProfile}>
+							<Image
+								style={styles.userImage}
+								source={
+									this.props.user.photo.url === ''
+										? this.props.user.photo.base64 === ''
+											? require('../assets/images/boy.png')
+											: {
+													uri:
+														'data:image/jpeg;base64, ' +
+														this.props.user.photo
+															.base64
+											  }
+										: { uri: this.props.user.photo.url }
+								}
+							/>
+						</TouchableHighlight>
 						<Text style={styles.userName}>
 							{this.props.user.name}
 						</Text>
 					</View>
 					<View style={styles.bar} />
 					<TouchableHighlight onPress={Actions.profile}>
-						<Text style={styles.option}>Home</Text>
+						<Text style={styles.option}>Dashboard</Text>
 					</TouchableHighlight>
 					<TouchableHighlight onPress={Actions.mapFeed}>
 						<Text style={styles.option}>Map / Feed</Text>
