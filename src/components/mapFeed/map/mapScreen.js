@@ -224,7 +224,6 @@ class MapScreen extends Component {
 					visible={this.state.visibleModal}
 					onRequestClose={() => {
 						this.closeModal();
-						alert('Modal has been closed.');
 					}}
 				>
 					{this._renderModalContent()}

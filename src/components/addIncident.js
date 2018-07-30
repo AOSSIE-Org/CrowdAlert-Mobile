@@ -242,10 +242,10 @@ class AddIncident extends Component {
 						<Text style={styles.switchText}>Share Publicly!</Text>
 						<Switch
 							thumbTintColor="#1c76cb"
-							onValueChange={getHelp => {
-								this.setState({ getHelp: getHelp });
+							onValueChange={visible => {
+								this.setState({ visible: visible });
 							}}
-							value={this.state.getHelp}
+							value={this.state.visible}
 						/>
 					</View>
 					<TouchableOpacity

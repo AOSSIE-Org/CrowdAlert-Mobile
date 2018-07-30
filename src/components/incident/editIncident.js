@@ -38,7 +38,8 @@ class EditIncident extends Component {
 				base64: this.props.incidentDetails.image.base64,
 				uri: this.props.incidentDetails.image.uri
 			},
-			getHelp: this.props.incidentDetails.getHelp
+			getHelp: this.props.incidentDetails.getHelp,
+			visible: this.props.incidentDetails.visible
 		};
 	}
 
@@ -203,10 +204,10 @@ class EditIncident extends Component {
 						<Text style={styles.switchText}>Share Publicly!</Text>
 						<Switch
 							thumbTintColor="#1c76cb"
-							onValueChange={getHelp => {
-								this.setState({ getHelp: getHelp });
+							onValueChange={visible => {
+								this.setState({ visible: visible });
 							}}
-							value={this.state.getHelp}
+							value={this.state.visible}
 						/>
 					</View>
 					<TouchableOpacity
