@@ -11,3 +11,9 @@
 5.  The code you write should be well documented and must follow the rule of 100 characters per line. You can set this limit from your editors settings.
 
 6.  Use [Prettier](https://prettier.io/) in your editor for auto code formatting and beautification.
+
+7.  Enable `Single Quotes` settings in **Prettier** plugin of your editor. You can change the number of characters per line from the `Print Width` settings option.
+
+### Screenshot of my **Prettier** settings in Atom.
+
+![alt text](Prettier-atom.png)

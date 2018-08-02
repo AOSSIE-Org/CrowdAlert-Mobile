@@ -15,30 +15,11 @@
 			},
 			"oauth_client": [
 				{
-					"client_id": "${GOOGLE_SERVICES_OAUTH_CLIENT_TYPE11}",
+					"client_id": "${DOCKER_SHA1_KEY_CLIENT_ID}",
 					"client_type": 1,
 					"android_info": {
 						"package_name": "com.crowdalert",
-						"certificate_hash":
-							"${GOOGLE_SERVICES_OAUTH_CLIENT_TYPE11_CERTIFICATE_HASH}"
-					}
-				},
-				{
-					"client_id": "${GOOGLE_SERVICES_OAUTH_CLIENT_TYPE12}",
-					"client_type": 1,
-					"android_info": {
-						"package_name": "com.crowdalert",
-						"certificate_hash":
-							"${GOOGLE_SERVICES_OAUTH_CLIENT_TYPE12_CERTIFICATE_HASH}"
-					}
-				},
-				{
-					"client_id": "${GOOGLE_SERVICES_OAUTH_CLIENT_TYPE13}",
-					"client_type": 1,
-					"android_info": {
-						"package_name": "com.crowdalert",
-						"certificate_hash":
-							"${GOOGLE_SERVICES_OAUTH_CLIENT_TYPE13_CERTIFICATE_HASH}"
+						"certificate_hash": "${DOCKER_SHA1_KEY}"
 					}
 				},
 				{
@@ -63,12 +44,10 @@
 							"client_type": 3
 						},
 						{
-							"client_id":
-								"${GOOGLE_SERVICES_SERVICES_CLIENT_TYPE2}",
+							"client_id": "${GOOGLE_SERVICES_SERVICES_CLIENT_TYPE2}",
 							"client_type": 2,
 							"ios_info": {
-								"bundle_id":
-									"org.reactjs.native.example.CrowdAlert"
+								"bundle_id": "org.reactjs.native.example.CrowdAlert"
 							}
 						}
 					]
