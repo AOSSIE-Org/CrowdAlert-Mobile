@@ -42,11 +42,7 @@ const reducers = (state, action) => {
 	}
 	return combinedReducer(state, action);
 };
-const enhancers = applyMiddleware(
-	thunk,
-	promise,
-	__DEV__ ? createLogger() : null
-);
+const enhancers = applyMiddleware(thunk, promise, createLogger());
 
 //Creating the store and the persistor
 const store = createStore(reducers, enhancers);
