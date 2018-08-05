@@ -1,14 +1,11 @@
 import React, { Component } from 'react';
 import {
-	StyleSheet,
 	Image,
 	Text,
 	View,
-	ScrollView,
 	TouchableOpacity,
 	Alert,
 	TextInput,
-	Button,
 	ActivityIndicator
 } from 'react-native';
 import firebase from 'react-native-firebase';
@@ -22,20 +19,13 @@ import { GoogleSignin } from 'react-native-google-signin';
 import Config from 'react-native-config';
 import PropTypes from 'prop-types';
 import { Toast } from 'native-base';
+import Slides from '../introSlides';
 
 /**
  * Screen showing all login options.
  * @extends Component
  */
 class HomeLogin extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			email: '',
-			password: ''
-		};
-	}
-
 	componentDidMount() {
 		GoogleSignin.configure({
 			webClientId: Config.GOOGLE_WEB_CLIENT_ID,
@@ -59,7 +49,6 @@ class HomeLogin extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				{/* <ActivityIndicator animating={this.props.login.loading} size={'large'}/> */}
 				<View style={styles.heading}>
 					<Image
 						source={require('../../assets/images/earthquake.png')}
@@ -91,6 +80,7 @@ class HomeLogin extends Component {
 						<Text style={styles.button_login_text}> Email </Text>
 					</TouchableOpacity>
 				</View>
+				<Slides />
 			</View>
 		);
 	}

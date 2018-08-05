@@ -29,7 +29,8 @@ const config = {
 		]),
 		createWhitelistFilter('emergencyPlaces', []),
 		createWhitelistFilter('location', ['curr_coordinates']),
-		createWhitelistFilter('settings')
+		createWhitelistFilter('settings'),
+		createWhitelistFilter('slides')
 	]
 };
 
