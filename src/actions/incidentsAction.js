@@ -9,6 +9,7 @@ import {
 } from './types';
 import { handleError } from './errorAction';
 import firebase from 'react-native-firebase';
+import { Toast } from 'native-base';
 
 import configureStore from '../utils/store';
 let { store, persistor } = configureStore();
@@ -30,12 +31,22 @@ export const addIncidentToFirebase = incident => {
 				.then(result => {
 					dispatch(incidentsLoading(false));
 					dispatch(add_incident());
+					Toast.show({
+						text: 'Incident added!',
+						type: 'success',
+						duration: 2000
+					});
 					resolve();
 				})
 				.catch(error => {
 					dispatch(incidentsLoading(false));
 					dispatch(handleError(error));
 					console.log(error);
+					Toast.show({
+						text: 'Could not add incident, pls try again!',
+						type: 'error',
+						duration: 2000
+					});
 					reject();
 				});
 		});

@@ -16,16 +16,29 @@ export const styles = StyleSheet.create({
 		fontSize: 25,
 		color: '#fff'
 	},
+	avatarContainer: {
+		backgroundColor: '#63a4ff',
+		alignItems: 'center',
+		paddingVertical: height / 30
+	},
+	image: {
+		height: height / 2.7,
+		width: width * 0.95
+	},
+	cameraContainer: {
+		flexDirection: 'row',
+		alignItems: 'center'
+	},
 	imageText: {
 		marginLeft: width / 80,
-		paddingBottom: height / 50,
+		paddingVertical: height / 50,
 		fontWeight: 'bold',
 		fontSize: 20,
 		color: '#fff'
 	},
 	imageChangeText: {
 		marginLeft: width / 80,
-		paddingTop: height / 40,
+		paddingVertical: height / 70,
 		fontWeight: 'bold',
 		fontSize: 20,
 		color: '#fff'
@@ -44,15 +57,6 @@ export const styles = StyleSheet.create({
 		color: '#555',
 		fontWeight: 'bold',
 		fontSize: 17
-	},
-	avatarContainer: {
-		backgroundColor: '#63a4ff',
-		alignItems: 'center',
-		paddingVertical: height / 30
-	},
-	image: {
-		height: height / 2.7,
-		width: width * 0.95
 	},
 	switchContainer: {
 		flexDirection: 'row',

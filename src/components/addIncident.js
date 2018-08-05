@@ -32,22 +32,25 @@ class AddIncident extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			title: null,
-			details: null,
-			visible: true,
-			timestamp: new Date().toString(),
-			location: {
-				coordinates: this.props.location.curr_coordinates
+			incident: {
+				title: null,
+				details: null,
+				visible: true,
+				timestamp: new Date().toString(),
+				location: {
+					coordinates: this.props.location.curr_coordinates
+				},
+				category: null,
+				user_id: this.props.login.userDetails.email,
+				upvotes: 0,
+				image: {
+					isPresent: false,
+					base64: '',
+					uri: ''
+				},
+				getHelp: true
 			},
-			category: null,
-			user_id: this.props.login.userDetails.email,
-			upvotes: 0,
-			image: {
-				isPresent: false,
-				base64: '',
-				uri: ''
-			},
-			getHelp: true
+			disable: false
 		};
 	}
 
@@ -57,19 +60,24 @@ class AddIncident extends Component {
 	 * @return category of the incident gets updated.
 	 */
 	updateCategory = category => {
-		this.setState({ category: category });
+		this.setState({
+			incident: {
+				...this.state.incident,
+				category: category
+			}
+		});
 	};
 
 	/**
 	 * The function is used to update incident details with the details entered by the user.
 	 */
 	handleAddIncident() {
-		console.log(this.state);
+		console.log(this.state.incident);
 		Keyboard.dismiss();
 		if (
-			this.state.title === null ||
-			this.state.details === null ||
-			this.state.category === null
+			this.state.incident.title === null ||
+			this.state.incident.details === null ||
+			this.state.incident.category === null
 		) {
 			Toast.show({
 				text: 'Please dont leave any field blank',
@@ -77,14 +85,10 @@ class AddIncident extends Component {
 				duration: 2000
 			});
 		} else {
+			this.setState({ disable: true });
 			this.props
-				.addIncidentToFirebase(this.state) // waits till incident details are updated in redux
+				.addIncidentToFirebase(this.state.incident) // waits till incident details are updated in redux
 				.then(result => {
-					Toast.show({
-						text: 'Incident added!',
-						type: 'success',
-						duration: 2000
-					});
 					Actions.pop(); // set markers on map page to result from firebase.
 				});
 		}
@@ -116,10 +120,13 @@ class AddIncident extends Component {
 				});
 			} else {
 				this.setState({
-					image: {
-						isPresent: true,
-						base64: response.data,
-						uri: response.uri
+					incident: {
+						...this.state.incident,
+						image: {
+							isPresent: true,
+							base64: response.data,
+							uri: response.uri
+						}
 					}
 				});
 				Toast.show({
@@ -151,38 +158,37 @@ class AddIncident extends Component {
 					keyboardShouldPersistTaps="always"
 					showsVerticalScrollIndicator={false}
 				>
-					{this.state.image.isPresent ? (
-						<View style={styles.avatarContainer}>
+					<View style={styles.avatarContainer}>
+						{this.state.incident.image.isPresent ? (
 							<Image
 								style={styles.image}
 								resizeMethod={'resize'}
 								source={{
 									uri:
 										'data:image/jpeg;base64, ' +
-										this.state.image.base64
+										this.state.incident.image.base64
 								}}
 							/>
-							<TouchableOpacity
-								onPress={() => this._cameraImage()}
-							>
-								<Text style={styles.imageChangeText}>
-									Change Image
-								</Text>
-							</TouchableOpacity>
-						</View>
-					) : (
-						<View style={styles.avatarContainer}>
-							<TouchableOpacity
-								onPress={() => this._cameraImage()}
-							>
-								<Text style={styles.imageText}>Add Image</Text>
-							</TouchableOpacity>
-						</View>
-					)}
+						) : null}
+						<TouchableOpacity onPress={() => this._cameraImage()}>
+							<View style={styles.cameraContainer}>
+								<Icon name="camera" size={40} color="white" />
+								{this.state.incident.image.isPresent ? (
+									<Text style={styles.imageChangeText}>
+										Change Image
+									</Text>
+								) : (
+									<Text style={styles.imageText}>
+										Add Image
+									</Text>
+								)}
+							</View>
+						</TouchableOpacity>
+					</View>
 					<Picker
-						selectedValue={this.state.category}
+						selectedValue={this.state.incident.category}
 						onValueChange={category => {
-							this.setState({ category: category });
+							this.updateCategory(category);
 						}}
 						style={styles.picker}
 					>
@@ -208,7 +214,14 @@ class AddIncident extends Component {
 					<TextInput
 						style={styles.textInput}
 						ref={input => (this.titleInput = input)}
-						onChangeText={title => this.setState({ title })}
+						onChangeText={title =>
+							this.setState({
+								incident: {
+									...this.state.incident,
+									title: title
+								}
+							})
+						}
 						onSubmitEditing={() => this.detailsInput.focus()}
 						keyboardType="email-address"
 						returnKeyType="next"
@@ -222,7 +235,14 @@ class AddIncident extends Component {
 					<TextInput
 						ref={input => (this.detailsInput = input)}
 						style={styles.textInput}
-						onChangeText={details => this.setState({ details })}
+						onChangeText={details =>
+							this.setState({
+								incident: {
+									...this.state.incident,
+									details: details
+								}
+							})
+						}
 						multiline={true}
 						numberOfLines={4}
 						returnKeyType="next"
@@ -233,9 +253,14 @@ class AddIncident extends Component {
 						<Switch
 							thumbTintColor="#1c76cb"
 							onValueChange={getHelp => {
-								this.setState({ getHelp: getHelp });
+								this.setState({
+									incident: {
+										...this.state.incident,
+										getHelp: getHelp
+									}
+								});
 							}}
-							value={this.state.getHelp}
+							value={this.state.incident.getHelp}
 						/>
 					</View>
 					<View style={styles.switchContainer}>
@@ -243,12 +268,18 @@ class AddIncident extends Component {
 						<Switch
 							thumbTintColor="#1c76cb"
 							onValueChange={visible => {
-								this.setState({ visible: visible });
+								this.setState({
+									incident: {
+										...this.state.incident,
+										visible: visible
+									}
+								});
 							}}
-							value={this.state.visible}
+							value={this.state.incident.visible}
 						/>
 					</View>
 					<TouchableOpacity
+						disabled={this.state.disable}
 						style={styles.updateButton}
 						onPress={() => this.handleAddIncident()}
 					>
