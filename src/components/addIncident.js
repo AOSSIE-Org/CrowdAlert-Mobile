@@ -60,7 +60,6 @@ class AddIncident extends Component {
 
 	/**
 	 * The function is used to update incident details with the details entered by the user.
-	 * @return {Promise} [description]
 	 */
 	handleAddIncident() {
 		console.log(this.state);
@@ -165,23 +164,23 @@ class AddIncident extends Component {
 						returnKeyType="next"
 						placeholder="Details [Optional]"
 					/>
-					<View style={styles.CheckBox}>
+					<View style={styles.checkBox}>
 						<CheckBox
 							value={this.state.visible}
 							onValueChange={() =>
 								this.setState({ visible: !this.state.visible })
 							}
 						/>
-						<Text style={styles.CheckBoxText}>Share Publicly</Text>
+						<Text style={styles.checkBoxText}>Share Publicly</Text>
 					</View>
-					<View style={styles.CheckBox}>
+					<View style={styles.checkBox}>
 						<CheckBox
 							value={this.state.getHelp}
 							onValueChange={() =>
 								this.setState({ getHelp: !this.state.getHelp })
 							}
 						/>
-						<Text style={styles.CheckBoxText}>Get Help!</Text>
+						<Text style={styles.checkBoxText}>Get Help!</Text>
 					</View>
 				</View>
 				{this.state.image.isPresent ? (
@@ -221,6 +220,16 @@ class AddIncident extends Component {
 	}
 }
 
+/**
+ * Checks that the functions specified as isRequired are present and warns if the
+ * props used on this page does not meet the specified type.
+ */
+AddIncident.propTypes = {
+	addIncidentToFirebase: PropTypes.func.isRequired,
+	login: PropTypes.object,
+	location: PropTypes.object,
+	incident: PropTypes.object
+};
 /**
  * Mapping dispatchable actions to props so that actions can be used
  * through props in children components.

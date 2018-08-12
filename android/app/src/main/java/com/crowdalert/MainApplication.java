@@ -3,6 +3,9 @@ import com.airbnb.android.react.maps.MapsPackage;
 import android.app.Application;
 import com.imagepicker.ImagePickerPackage;
 import com.facebook.react.ReactApplication;
+import com.oblador.vectoricons.VectorIconsPackage;
+import com.RNFetchBlob.RNFetchBlobPackage;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
 import com.lugg.ReactNativeConfig.ReactNativeConfigPackage;
 import com.showlocationservicesdialogbox.LocationServicesDialogBoxPackage;
 import co.apptailor.googlesignin.RNGoogleSigninPackage;
@@ -50,10 +53,13 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
 		new MainReactPackage(),
+        new VectorIconsPackage(),
+        new RNFetchBlobPackage(),
+        new ReactNativePushNotificationPackage(),
         new ReactNativeConfigPackage(),
         new LocationServicesDialogBoxPackage(),
 		new MapsPackage(),
-	new ImagePickerPackage(),
+		new ImagePickerPackage(),
         new RNGoogleSigninPackage(),
         new FBSDKPackage(mCallbackManager),
         new RNFirebasePackage(),

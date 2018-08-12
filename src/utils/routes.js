@@ -4,6 +4,7 @@ import { Text, Dimensions } from 'react-native';
 import { connect } from 'react-redux';
 import { Router } from 'react-native-router-flux';
 import { Actions, Scene, Drawer } from 'react-native-router-flux';
+import crossroads from 'crossroads';
 
 import Signin from '../components/login/signin';
 import Signup from '../components/login/signup';
@@ -21,7 +22,12 @@ import { editButtonProfile } from '../components/profile/navBarButtons';
 import { sideMenu } from '../components/profile/navBarButtons';
 
 import Incident from '../components/incident/incidentScreen';
-import { moreOptions } from '../components/incident/navBarButtons';
+import DeleteButtonIncident from '../components/incident/navBarButtons/deleteIncident.js';
+import EditButtonIncident from '../components/incident/navBarButtons/editIncidentButton.js';
+import ShareButtonIncident from '../components/incident/navBarButtons/ShareIncidentButton.js';
+import EditIncident from '../components/incident/editIncident';
+import EmergencyLocation from '../components/emergencyPlaces';
+import SettingsOption from '../components/settings';
 
 const ConnectedRouter = connect()(Router);
 const { width, height } = Dimensions.get('window');
@@ -31,8 +37,9 @@ const { width, height } = Dimensions.get('window');
  * @extends Component
  */
 export default class Route extends Component {
+	//Describes the functionality of the hardware back button
 	onBackPress() {
-		if (Actions.currentScene === 'profile') {
+		if (Actions.currentScene === '_profile') {
 			return false;
 		}
 		Actions.pop();
@@ -72,7 +79,6 @@ export default class Route extends Component {
 							title="Profile"
 							renderRightButton={editButtonProfile}
 							renderLeftButton={sideMenu}
-							// right={[<Text>hi</Text>, <Text>hi</Text>]}
 							component={Profile}
 						/>
 						<Scene
@@ -92,15 +98,42 @@ export default class Route extends Component {
 							title="Add incident"
 							component={AddIncident}
 						/>
+						<Scene
+							key="emergencylocation"
+							title="Emergency places nearby"
+							renderLeftButton={sideMenu}
+							component={EmergencyLocation}
+						/>
+						<Scene
+							back={true}
+							key="settingsOption"
+							title="Settings"
+							component={SettingsOption}
+						/>
 					</Scene>
 					<Scene
 						key="incident"
 						title="Incident Details"
 						component={Incident}
-						renderRightButton={moreOptions}
+						right={[
+							<EditButtonIncident key={1} />,
+							<DeleteButtonIncident key={2} />,
+							<ShareButtonIncident key={3} />
+						]}
+						// renderRightButton={moreOptions}
+					/>
+					<Scene
+						back={true}
+						key="editIncident"
+						title="Edit Incident"
+						component={EditIncident}
 					/>
 				</Scene>
 			</ConnectedRouter>
 		);
 	}
 }
+
+crossroads.addRoute('crowdalert.herokuapp.com/view/{key}', key => {
+	Actions.incident({ incident_key: key });
+});

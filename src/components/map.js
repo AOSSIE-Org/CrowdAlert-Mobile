@@ -10,16 +10,19 @@ import {
 	Modal,
 	Image
 } from 'react-native';
-import LocationServicesDialogBox from 'react-native-android-location-services-dialog-box';
 import MapView, { Marker } from 'react-native-maps';
 import { bindActionCreators } from 'redux';
 import { getMarkerImage, categories } from '../utils/categoryUtil.js';
 import { connect } from 'react-redux';
 import {
-	setLocationOnCustomSearch,
-	getCurrLocation
+	setLocationOnCustomSearch
+	// watchCurrLocation
 } from '../actions/locationAction';
-import { getAllIncidents } from '../actions/incidentsAction';
+import {
+	getAllIncidents,
+	viewIncident,
+	updateIndvNotification
+} from '../actions/incidentsAction';
 import { Actions } from 'react-native-router-flux';
 import PropTypes from 'prop-types';
 import { styles, searchBarStyle } from '../assets/styles/map_styles.js';
@@ -27,6 +30,10 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import Config from 'react-native-config';
 import { GooglePlacesAutocomplete } from './googleSearchBar';
 import { sideMenu } from './profile/navBarButtons';
+import { getEmergencyPlaces } from '../actions/emergencyPlacesAction';
+import getDirections from 'react-native-google-maps-directions';
+var PushNotification = require('react-native-push-notification');
+var haversine = require('haversine-distance');
 
 /**
  * Map screen showing google maps with search location and add incident feature
@@ -54,38 +61,95 @@ class MapScreen extends Component {
 
 	componentWillMount() {
 		this.props.getAllIncidents();
-		//Used to check if location services are enabled and
-		//if not than asks to enables them by redirecting to location settings.
-		if (Platform.OS === 'android') {
-			LocationServicesDialogBox.checkLocationServicesIsEnabled({
-				message:
-					'<h2>Use Location ?</h2> \
-                    This app wants to change your device settings:<br/><br/> \
-                    Use GPS for location<br/><br/>',
-				ok: 'YES',
-				cancel: 'NO',
-				providerListener: true
-			}).then(success => {
-				this.props.getCurrLocation().then(() => {
-					this.setState({
-						curr_region: {
-							...this.state.curr_region,
-							latitude: this.props.curr_location.latitude,
-							longitude: this.props.curr_location.longitude
-						},
-						curr_location_marker: {
-							latitude: this.props.curr_location.latitude,
-							longitude: this.props.curr_location.longitude
-						}
-					});
-				});
-			});
-		}
+		this.props.getEmergencyPlaces(this.props.settings.emergency_radius);
+		this.setState({
+			curr_region: {
+				...this.state.curr_region,
+				latitude: this.props.curr_location.latitude,
+				longitude: this.props.curr_location.longitude
+			},
+			curr_location_marker: {
+				latitude: this.props.curr_location.latitude,
+				longitude: this.props.curr_location.longitude
+			}
+		});
 	}
 
-	componentWillUnmount() {
-		if (Platform.OS === 'android') {
-			LocationServicesDialogBox.stopListener();
+	componentWillUpdate(nextProps) {
+		//Check if notifications are enabled or not
+		if (this.props.settings.enable_notifications) {
+			//If there has been any location change or modifications in the incidents
+			if (
+				nextProps.curr_location !== this.props.curr_location ||
+				nextProps.all_incidents !== this.props.all_incidents
+			) {
+				var curr_position = {
+					lat: nextProps.curr_location.latitude,
+					lng: nextProps.curr_location.longitude
+				};
+				var self = this;
+				if (nextProps.all_incidents !== null) {
+					nextProps.all_incidents.map(incident => {
+						var incident_location = {
+							lat: incident.value.location.coordinates.latitude,
+							lng: incident.value.location.coordinates.longitude
+						};
+						//Calculates the distance between the current position of the user
+						//to the incidents locations. If its within a specified distance range and
+						//within a certain trigger timeout range then notification is triggered
+						if (
+							haversine(curr_position, incident_location) <
+							parseInt(
+								this.props.settings.notification_min_radius.toFixed(
+									2
+								)
+							)
+						) {
+							if (
+								new Date() -
+									new Date(
+										self.props.incident.notificationStack[
+											incident.key
+										].date
+									) >
+									this.props.settings.notification_timeout *
+										60 *
+										1000 ||
+								self.props.incident.notificationStack[
+									incident.key
+								].isFirstTime
+							) {
+								PushNotification.localNotification({
+									/* Android Only Properties */
+									bigText: incident.value.details, // (optional) default: "message" prop
+									largeIcon: incident.value.category, // (optional) default: "ic_launcher"
+									color: 'red', // (optional) default: system default
+									group: 'grp', // (optional) add group to message
+									tag: {
+										key: incident.key,
+										value: incident.value
+									}, // (optional) add tag to message
+
+									/* iOS and Android properties */
+									title: 'Danger ahead!', // (optional)
+									message:
+										'You have a ' +
+										incident.value.category +
+										' incident near you', // (required)
+									playSound: true, // (optional) default: true
+									soundName: 'default' // (optional) Sound to play when the
+									//notification is shown. Value of 'default' plays the default sound.
+									//It can be set to a custom sound such as
+									//'android.resource://com.xyz/raw/my_sound'. It will look for the
+									//my_sound' audio file in 'res/raw' directory and play it.
+									//default: 'default' (default sound is played)
+								});
+								self.props.updateIndvNotification(incident.key);
+							}
+						}
+					});
+				}
+			}
 		}
 	}
 
@@ -150,6 +214,15 @@ class MapScreen extends Component {
 		}
 	}
 
+	viewClickedIncident(marker) {
+		if (marker.value.user_id === this.props.user.email) {
+			this.props.viewIncident(marker, true);
+		} else {
+			this.props.viewIncident(marker, false);
+		}
+		Actions.incident();
+	}
+
 	//Sets the filter category
 	alertItemName = item => {
 		this.setState({ domain: item.category });
@@ -164,6 +237,30 @@ class MapScreen extends Component {
 	//Closes the modal
 	closeModal() {
 		this.setState({ visibleModal: false });
+	}
+
+	/**
+	 * to open google maps app and navigate the user to the specified destination.
+	 * @param  {object} coordinates contains the latitude and longitude of nearby place.
+	 * @return Opens the google maps app.
+	 */
+	handleNavigation(coordinates) {
+		getDirections({
+			source: {
+				latitude: '',
+				longitude: ''
+			},
+			destination: {
+				latitude: coordinates.lat,
+				longitude: coordinates.lng
+			},
+			params: [
+				{
+					key: 'dirflg',
+					value: 'd'
+				}
+			]
+		});
 	}
 
 	//Modal to be displayed for the filter menu.
@@ -198,16 +295,16 @@ class MapScreen extends Component {
 	render() {
 		//Logic for filtering the incidents
 		var state = this.state;
-		if (this.props.incident.all_incidents !== null) {
-			var incidents_marker = this.props.incident.all_incidents.filter(
-				function(item) {
-					if (state.domain === 'all') {
-						return true;
-					} else {
-						return item.value.category === state.domain;
-					}
+		if (this.props.all_incidents !== null) {
+			var incidents_marker = this.props.all_incidents.filter(function(
+				item
+			) {
+				if (state.domain === 'all') {
+					return true;
+				} else {
+					return item.value.category === state.domain;
 				}
-			);
+			});
 		}
 		return (
 			<View style={styles.container}>
@@ -225,7 +322,7 @@ class MapScreen extends Component {
 						}}
 						coordinate={this.state.curr_location_marker}
 					/>
-					{this.props.incident.all_incidents !== null
+					{this.props.all_incidents !== null
 						? incidents_marker.map(marker => {
 								var coordinates =
 									marker.value.location.coordinates;
@@ -239,9 +336,7 @@ class MapScreen extends Component {
 										title={marker.value.title}
 										description={marker.value.details}
 										onCalloutPress={() => {
-											Actions.incident({
-												details: marker.value
-											});
+											this.viewClickedIncident(marker);
 										}}
 										image={getMarkerImage(
 											marker.value.category
@@ -249,6 +344,52 @@ class MapScreen extends Component {
 									/>
 								);
 						  })
+						: null}
+					{this.props.emergencyPlaces.hospitals !== null
+						? this.props.emergencyPlaces.hospitals.map(marker => {
+								var coordinates = marker.geometry.location;
+								//For displaying hospitals on map
+								return (
+									<MapView.Marker
+										key={marker.id}
+										coordinate={{
+											latitude: coordinates.lat,
+											longitude: coordinates.lng
+										}}
+										title={marker.name}
+										description={marker.vicinity}
+										image={marker.icon}
+										onCalloutPress={() => {
+											this.handleNavigation(coordinates);
+										}}
+									/>
+								);
+						  })
+						: null}
+					{this.props.emergencyPlaces.policeStations !== null
+						? this.props.emergencyPlaces.policeStations.map(
+								marker => {
+									var coordinates = marker.geometry.location;
+									//For displaying police stations on map
+									return (
+										<MapView.Marker
+											key={marker.id}
+											coordinate={{
+												latitude: coordinates.lat,
+												longitude: coordinates.lng
+											}}
+											title={marker.name}
+											description={marker.vicinity}
+											image={marker.icon}
+											onCalloutPress={() => {
+												this.handleNavigation(
+													coordinates
+												);
+											}}
+										/>
+									);
+								}
+						  )
 						: null}
 				</MapView>
 
@@ -320,13 +461,25 @@ class MapScreen extends Component {
 	}
 }
 
-//Prop types for prop checking.
+/**
+ * Checks that the functions specified as isRequired are present and warns if the
+ * props used on this page does not meet the specified type.
+ */
 MapScreen.propTypes = {
-	setLocationOnCustomSearch: PropTypes.func.isRequired,
-	getCurrLocation: PropTypes.func.isRequired,
 	location: PropTypes.object,
 	curr_location: PropTypes.object,
-	getAllIncidents: PropTypes.func.isRequired
+	all_incidents: PropTypes.array,
+	incident: PropTypes.object,
+	user: PropTypes.object,
+	emergencyPlaces: PropTypes.object,
+	settings: PropTypes.object,
+	setLocationOnCustomSearch: PropTypes.func.isRequired,
+	// watchCurrLocation: PropTypes.func.isRequired,
+	getAllIncidents: PropTypes.func.isRequired,
+	getAllIncidents: PropTypes.func.isRequired,
+	viewIncident: PropTypes.func.isRequired,
+	getEmergencyPlaces: PropTypes.func.isRequired,
+	updateIndvNotification: PropTypes.func.isRequired
 };
 
 /**
@@ -339,8 +492,11 @@ function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{
 			setLocationOnCustomSearch: setLocationOnCustomSearch,
-			getCurrLocation: getCurrLocation,
-			getAllIncidents: getAllIncidents
+			// watchCurrLocation: watchCurrLocation,
+			getAllIncidents: getAllIncidents,
+			viewIncident: viewIncident,
+			getEmergencyPlaces: getEmergencyPlaces,
+			updateIndvNotification: updateIndvNotification
 		},
 		dispatch
 	);
@@ -355,7 +511,11 @@ function matchDispatchToProps(dispatch) {
 const mapStateToProps = state => ({
 	location: state.location.coordinates,
 	curr_location: state.location.curr_coordinates,
-	incident: state.incident
+	all_incidents: state.incident.all_incidents,
+	incident: state.incident,
+	user: state.login.userDetails,
+	emergencyPlaces: state.emergencyPlaces,
+	settings: state.settings
 });
 
 export default connect(mapStateToProps, matchDispatchToProps)(MapScreen);

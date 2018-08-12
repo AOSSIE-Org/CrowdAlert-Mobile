@@ -3,17 +3,26 @@ import thunk from 'redux-thunk';
 import promise from 'redux-promise';
 import { createLogger } from 'redux-logger';
 import allReducers from '../reducers/index';
+import createFilter, {
+	createWhitelistFilter
+} from 'redux-persist-transform-filter';
 import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/es/storage';
+import FilesystemStorage from 'redux-persist-filesystem-storage';
 import { persistCombineReducers } from 'redux-persist';
 import { AsyncStorage } from 'react-native';
 
 //Creating the config for the redux-persist for persisting the data upon data load.
 const config = {
 	key: 'root',
-	storage: AsyncStorage,
+	storage: FilesystemStorage, //Since AsyncStorage is not responding properly
 	debug: true,
-	whitelist: ['login']
+	// whitelist: ['login', 'incident'],
+	transforms: [
+		createWhitelistFilter('incident', ['notificationStack']),
+		createWhitelistFilter('login'),
+		createWhitelistFilter('emergencyPlaces', []),
+		createWhitelistFilter('settings')
+	]
 };
 
 //Linking all the reducers with the redux-persist and applying all the middlewares to it.

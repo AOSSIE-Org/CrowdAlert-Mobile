@@ -99,7 +99,10 @@ class HomeLogin extends Component {
 	}
 }
 
-//Prop types for prop checking.
+/**
+ * Checks that the functions specified as isRequired are present and warns if the
+ * props used on this page does not meet the specified type.
+ */
 HomeLogin.propTypes = {
 	fbSignIn: PropTypes.func.isRequired,
 	googleSignin: PropTypes.func.isRequired,

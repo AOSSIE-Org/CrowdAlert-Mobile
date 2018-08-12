@@ -1,10 +1,29 @@
 import React, { Component } from 'react';
-import { Text, View, Image } from 'react-native';
+import {
+	Text,
+	View,
+	Image,
+	TouchableOpacity,
+	ActivityIndicator
+} from 'react-native';
 import PropTypes from 'prop-types';
 import MapView, { Marker } from 'react-native-maps';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import { Container, Content, Card, CardItem } from 'native-base';
 import { styles } from '../../assets/styles/incident_styles';
+import getDirections from 'react-native-google-maps-directions';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {
+	viewIncident,
+	getIndvIncident
+} from '../../actions/incidentsAction.js';
+import firebase from 'react-native-firebase';
 
+/**
+ * Screen for showing individual incidents.
+ * @extends Component
+ */
 class Incident extends Component {
 	constructor(props) {
 		super(props);
@@ -13,93 +32,198 @@ class Incident extends Component {
 		};
 	}
 
+	/**
+	 * Function to check if map has been loaded then only display marker on the map.
+	 * @return  sets isMapReady ready to true.
+	 */
 	onMapLayout = () => {
 		this.setState({ isMapReady: true });
 	};
 
+	/**
+	 * This screen gets opened either through a shared link or normally
+	 * through app navigation. When the screen gets opened through a shared
+	 * url than it contains an incident_key prop passed while navigating to this
+	 * screen , if the prop is found than it fetches the particular incident from
+	 * the firebase else it fetches the incident details from redux and incident
+	 *  state is updated accordingly.
+	 * @return sets the incident to be viewed.
+	 */
+	componentWillMount() {
+		if (
+			this.props.incident_key &&
+			(this.props.incident.incident !== null
+				? this.props.incident_key !== this.props.incident.incident.key
+				: true)
+		) {
+			this.props.getIndvIncident(this.props.incident_key);
+		}
+	}
+
+	//Handles the navigation by opening the Google Maps
+	handleDirections() {
+		var coordinates = this.props.incidentDetails.location.coordinates;
+		getDirections({
+			source: {
+				latitude: '',
+				longitude: ''
+			},
+			destination: {
+				latitude: coordinates.latitude,
+				longitude: coordinates.longitude
+			},
+			params: [
+				{
+					key: 'dirflg',
+					value: 'd'
+				}
+			]
+		});
+	}
+
+	/**
+	 * The UI of incident screen.
+	 * @return the incident screen.
+	 */
 	render() {
-		return (
-			<Container>
-				<Content>
-					{this.props.details.image.isPresent ? (
-						<Card>
-							<CardItem>
-								<Image
-									style={styles.image}
-									resizeMethod={'resize'}
-									source={{
-										uri:
-											'data:image/jpeg;base64, ' +
-											this.props.details.image.base64
-									}}
-								/>
-							</CardItem>
-						</Card>
-					) : null}
-					<Card>
-						<CardItem>
-							<Text style={styles.titleTextHeader}>Title</Text>
-						</CardItem>
-						<CardItem>
-							<Text style={styles.titleTextDescription}>
-								{this.props.details.title}
-							</Text>
-						</CardItem>
-						{this.props.details.details === '' ? (
-							<View>
+		if (this.props.incident.loading) {
+			return <ActivityIndicator size={'large'} />;
+		} else {
+			var incidentDetails = this.props.incident.incident.value;
+			return (
+				<Container>
+					<Content>
+						{incidentDetails.image.isPresent ? (
+							<Card>
 								<CardItem>
-									<Text style={styles.titleTextHeader}>
-										Description
-									</Text>
-								</CardItem>
-								<CardItem>
-									<Text style={styles.titleTextDescription}>
-										{this.props.details.details}
-									</Text>
-								</CardItem>
-							</View>
-						) : null}
-					</Card>
-					<Card>
-						<CardItem>
-							<MapView
-								region={{
-									latitude: this.props.details.location
-										.coordinates.latitude,
-									longitude: this.props.details.location
-										.coordinates.longitude,
-									latitudeDelta: 0.0052,
-									longitudeDelta: 0.0052
-								}}
-								onLayout={this.onMapLayout}
-								style={styles.map}
-							>
-								{this.state.isMapReady && (
-									<MapView.Marker
-										coordinate={{
-											latitude: this.props.details
-												.location.coordinates.latitude,
-											longitude: this.props.details
-												.location.coordinates.longitude
+									<Image
+										style={styles.image}
+										resizeMethod={'resize'}
+										source={{
+											uri:
+												'data:image/jpeg;base64, ' +
+												incidentDetails.image.base64
 										}}
 									/>
-								)}
-							</MapView>
-						</CardItem>
-					</Card>
-					<Card>
-						<CardItem>
-							<Text>Navigate</Text>
-						</CardItem>
-					</Card>
-				</Content>
-			</Container>
-		);
+								</CardItem>
+							</Card>
+						) : null}
+						<Card>
+							<CardItem>
+								<Text style={styles.titleTextHeader}>
+									Title
+								</Text>
+							</CardItem>
+							<CardItem>
+								<Text style={styles.titleTextDescription}>
+									{incidentDetails.title}
+								</Text>
+							</CardItem>
+							{incidentDetails.details !== '' ? (
+								<View>
+									<CardItem>
+										<Text style={styles.titleTextHeader}>
+											Description
+										</Text>
+									</CardItem>
+									<CardItem>
+										<Text
+											style={styles.titleTextDescription}
+										>
+											{incidentDetails.details}
+										</Text>
+									</CardItem>
+								</View>
+							) : null}
+						</Card>
+						<Card>
+							<CardItem>
+								<MapView
+									region={{
+										latitude:
+											incidentDetails.location.coordinates
+												.latitude,
+										longitude:
+											incidentDetails.location.coordinates
+												.longitude,
+										latitudeDelta: 0.0052,
+										longitudeDelta: 0.0052
+									}}
+									onLayout={this.onMapLayout}
+									style={styles.map}
+								>
+									{this.state.isMapReady && (
+										<MapView.Marker
+											coordinate={{
+												latitude:
+													incidentDetails.location
+														.coordinates.latitude,
+												longitude:
+													incidentDetails.location
+														.coordinates.longitude
+											}}
+										/>
+									)}
+								</MapView>
+							</CardItem>
+						</Card>
+						<Card>
+							<CardItem>
+								<TouchableOpacity
+									style={styles.navigationContainer}
+									onPress={() => this.handleDirections()}
+								>
+									<Text>Navigate</Text>
+									<Icon
+										name="map-pin"
+										size={23}
+										style={styles.navigationIcon}
+									/>
+								</TouchableOpacity>
+							</CardItem>
+						</Card>
+					</Content>
+				</Container>
+			);
+		}
 	}
 }
 
+/**
+ * Checks that the functions specified as isRequired are present and warns if the
+ * props used on this page does not meet the specified type.
+ */
 Incident.propTypes = {
-	details: PropTypes.object
+	incident: PropTypes.object,
+	user: PropTypes.object,
+	viewIncident: PropTypes.func.isRequired,
+	getIndvIncident: PropTypes.func.isRequired
 };
+/**
+ * Mapping dispatchable actions to props so that actions can be used
+ * through props in children components.
+ * @param dispatch Dispatches an action to trigger a state change.
+ * @return Turns action creator objects into an objects with the same keys.
+ */
+function matchDispatchToProps(dispatch) {
+	return bindActionCreators(
+		{
+			viewIncident: viewIncident,
+			getIndvIncident: getIndvIncident
+		},
+		dispatch
+	);
+}
 
-export default Incident;
+/**
+ * Mapping state to props so that state variables can be used
+ * through props in children components.
+ * @param state Current state in the store.
+ * @return Returns states as props.
+ */
+const mapStateToProps = state => ({
+	incident: state.incident,
+	user: state.login.userDetails
+});
+
+export default connect(mapStateToProps, matchDispatchToProps)(Incident);

@@ -3,18 +3,17 @@ import { handleError } from './errorAction';
 
 /**
  * This function is called to update the location co-ordinates to user's current location
- * by communicating changes to redux via set_currLocation.
+ * by watching those and then dispatching them to the store.
  * @return dispatches location updates to set_currLocation.
  */
-export const getCurrLocation = () => {
+export const watchCurrLocation = () => {
 	return dispatch => {
 		return new Promise((resolve, reject) => {
-			navigator.geolocation.getCurrentPosition(
+			navigator.geolocation.watchPosition(
 				position => {
 					let data = {};
 					data.latitude = parseFloat(position.coords.latitude);
 					data.longitude = parseFloat(position.coords.longitude);
-					console.log(data);
 					resolve(dispatch(set_currLocation(data)));
 				},
 				error => {

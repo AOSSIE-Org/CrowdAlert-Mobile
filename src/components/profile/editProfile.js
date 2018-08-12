@@ -11,7 +11,7 @@ import {
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { styles } from '../../assets/styles/editProfile_styles';
+import { styles } from '../../assets/styles/editScreen_styles';
 import PropTypes from 'prop-types';
 import { updateUserFirebase } from '../../actions/loginAction';
 var ImagePicker = require('react-native-image-picker');
@@ -188,8 +188,15 @@ class EditProfile extends Component {
 	}
 }
 
-//Prop types for prop checking.
-// EditProfile.propTypes = {};
+/**
+ * Checks that the functions specified as isRequired are present and warns if the
+ * props used on this page does not meet the specified type.
+ */
+EditProfile.propTypes = {
+	updateUserFirebase: PropTypes.func.isRequired,
+	user: PropTypes.object,
+	updateLoading: PropTypes.object
+};
 
 /**
  * Mapping dispatchable actions to props so that actions can be used

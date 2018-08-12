@@ -6,16 +6,21 @@ import {
 	ScrollView,
 	TouchableOpacity,
 	TextInput,
+	ToastAndroid,
 	ActivityIndicator,
-	FlatList
+	FlatList,
+	Platform
 } from 'react-native';
+import LocationServicesDialogBox from 'react-native-android-location-services-dialog-box';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { styles } from '../../assets/styles/profile_styles';
 import PropTypes from 'prop-types';
-import { getUserIncidents } from '../../actions/incidentsAction';
+import { getUserIncidents, viewIncident } from '../../actions/incidentsAction';
+import { watchCurrLocation } from '../../actions/locationAction';
 import { getColor } from '../../utils/categoryUtil';
+var PushNotification = require('react-native-push-notification');
 
 /**
  * Screen showing the profile along with his/her incidents.
@@ -27,19 +32,49 @@ class Profile extends Component {
 	}
 
 	componentWillMount() {
+		//Used to check if location services are enabled and
+		//if not than asks to enables them by redirecting to location settings.
+		if (Platform.OS === 'android') {
+			LocationServicesDialogBox.checkLocationServicesIsEnabled({
+				message:
+					'<h2>Use Location ?</h2> \
+		            This app wants to change your device settings:<br/><br/> \
+		            Use GPS for location<br/><br/>',
+				ok: 'YES',
+				cancel: 'NO',
+				providerListener: true
+			}).then(success => {
+				this.props.watchCurrLocation();
+			});
+		}
+		//Gets user submitted incidents
 		this.props.getUserIncidents(this.props.user.email);
+		//Configures the push notification
+		PushNotification.configure({
+			//Called when a remote or local notification is opened or received
+			onNotification: notification => {
+				console.log('NOTIFICATION:', notification);
+				this.viewClickedIncident(notification.tag);
+				// Actions.incident({ incident_key: notification.tag });
+				// process the notification
+			},
+			requestPermissions: this.props.enable_notifications
+		});
+	}
+
+	viewClickedIncident(item) {
+		if (item.value.user_id === this.props.user.email) {
+			this.props.viewIncident(item, true);
+		} else {
+			this.props.viewIncident(item, false);
+		}
+		Actions.incident();
 	}
 
 	//Individual list item for the incidents
 	renderItem({ item }) {
 		return (
-			<TouchableOpacity
-				onPress={() =>
-					Actions.incident({
-						details: item.value
-					})
-				}
-			>
+			<TouchableOpacity onPress={() => this.viewClickedIncident(item)}>
 				<View
 					style={[
 						styles.incidentContainer,
@@ -119,7 +154,7 @@ class Profile extends Component {
 				<FlatList
 					contentContainerStyle={styles.flatListContainer}
 					data={this.props.incident.user_incidents}
-					renderItem={this.renderItem}
+					renderItem={this.renderItem.bind(this)}
 					keyExtractor={item => item.key}
 				/>
 			</ScrollView>
@@ -127,8 +162,16 @@ class Profile extends Component {
 	}
 }
 
-//Prop types for prop checking.
-// Profile.propTypes = {};
+/**
+ * Checks that the functions specified as isRequired are present and warns if the
+ * props used on this page does not meet the specified type.
+ */
+Profile.propTypes = {
+	getUserIncidents: PropTypes.func.isRequired,
+	// watchCurrLocation: PropTypes.func.isRequired,
+	user: PropTypes.object,
+	incident: PropTypes.object
+};
 
 /**
  * Mapping dispatchable actions to props so that actions can be used
@@ -139,7 +182,9 @@ class Profile extends Component {
 function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{
-			getUserIncidents: getUserIncidents
+			getUserIncidents: getUserIncidents,
+			watchCurrLocation: watchCurrLocation,
+			viewIncident: viewIncident
 		},
 		dispatch
 	);
@@ -153,7 +198,8 @@ function matchDispatchToProps(dispatch) {
  */
 const mapStateToProps = state => ({
 	user: state.login.userDetails,
-	incident: state.incident
+	incident: state.incident,
+	enable_notifications: state.settings.enable_notifications
 });
 
 export default connect(mapStateToProps, matchDispatchToProps)(Profile);

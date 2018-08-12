@@ -98,6 +98,11 @@ class Signin extends Component {
 		);
 	}
 }
+
+/**
+ * Checks that the functions specified as isRequired are present and warns if the
+ * props used on this page does not meet the specified type.
+ */
 Signin.propTypes = {
 	onPressSignIn: PropTypes.func.isRequired,
 	login: PropTypes.object

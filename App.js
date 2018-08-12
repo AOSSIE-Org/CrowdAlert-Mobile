@@ -4,6 +4,7 @@ import { Actions } from 'react-native-router-flux';
 import { PersistGate } from 'redux-persist/lib/integration/react';
 import Route from './src/utils/routes';
 import { ActivityIndicator } from 'react-native';
+import LinkedRouter from './src/utils/LinkedRouter';
 
 import configureStore from './src/utils/store';
 let { store, persistor } = configureStore();
@@ -21,13 +22,7 @@ export default class App extends Component {
 						if (!isLoaded) {
 							return <ActivityIndicator size={'large'} />;
 						} else {
-							if (
-								store.getState().login.userFirebase.length == 0
-							) {
-								return <Route initial={true} />;
-							} else {
-								return <Route initial={false} />;
-							}
+							return <LinkedRouter scheme="https" />;
 						}
 					}}
 				</PersistGate>
