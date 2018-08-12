@@ -122,6 +122,7 @@ class MapScreen extends Component {
 								PushNotification.localNotification({
 									/* Android Only Properties */
 									bigText: incident.value.details, // (optional) default: "message" prop
+									largeIcon: incident.value.category, // (optional) default: "ic_launcher"
 									color: 'red', // (optional) default: system default
 									group: 'grp', // (optional) add group to message
 									tag: {
