@@ -48,6 +48,11 @@ const data = [
 		text:
 			'Update your profile or change any app settings from the Settings section!',
 		screen: require('../assets/images/slides/settings.jpg')
+	},
+	{
+		text:
+			'View all the incidents in the form of a global feed.',
+		screen: require('../assets/images/slides/feed.jpg')
 	}
 ];
 
@@ -75,7 +80,7 @@ class Slides extends Component {
 							}}
 						>
 							<View style={styles.exitButtonContainer}>
-								<Text style={styles.exitButtonText}>Exit</Text>
+								<Text style={styles.exitButtonText}>Lets Get Started!</Text>
 							</View>
 						</TouchableHighlight>
 					) : null}

@@ -34,8 +34,7 @@ class Profile extends Component {
 		//if not than asks to enables them by redirecting to location settings.
 		if (Platform.OS === 'android') {
 			LocationServicesDialogBox.checkLocationServicesIsEnabled({
-				message:
-					'<h2>Please enable GPS!</h2> \
+				message:'<h2>Please enable GPS!</h2>\
 		        CrowdAlert wants to change your Location settings',
 				ok: 'Ok',
 				cancel: 'No',
