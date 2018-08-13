@@ -168,13 +168,10 @@ export const viewIncident = (incident, isLoggedIn) => {
  */
 export const updateIncidentFirebase = (key, value) => {
 	return dispatch => {
-		return new Promise((resolve, reject) => {
-			firebase
-				.database()
-				.ref('incidents/' + key)
-				.update(value);
-			resolve();
-		});
+		firebase
+			.database()
+			.ref('incidents/' + key)
+			.update(value);
 	};
 };
 
@@ -200,7 +197,6 @@ export const getIndvIncident = key => {
 			.database()
 			.ref('incidents/' + key)
 			.on('value', snap => {
-				console.log(snap);
 				var item = {
 					key: snap.key,
 					value: snap._value

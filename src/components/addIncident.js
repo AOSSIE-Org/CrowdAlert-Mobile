@@ -130,7 +130,7 @@ class AddIncident extends Component {
 					}
 				});
 				Toast.show({
-					text: 'Image Added!' + response.error,
+					text: 'Image Added!',
 					type: 'success',
 					duration: 2000
 				});

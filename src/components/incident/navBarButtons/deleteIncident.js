@@ -18,7 +18,7 @@ class DeleteButtonIncident extends Component {
 	handleDelete() {
 		Alert.alert(
 			'',
-			'Are you sure you want to delete this incident',
+			'Are you sure you want to delete this incident?',
 			[
 				{
 					text: 'No',

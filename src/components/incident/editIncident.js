@@ -55,19 +55,19 @@ class EditIncident extends Component {
 				duration: 2000
 			});
 		} else {
-			this.props
-				.updateIncidentFirebase(
+			Promise.resolve(
+				this.props.updateIncidentFirebase(
 					this.props.incident.incident.key,
 					this.state
 				)
-				.then(() => {
-					Toast.show({
-						text: 'Incident updated!',
-						type: 'success',
-						duration: 2000
-					});
-					Actions.pop();
+			).then(() => {
+				Toast.show({
+					text: 'Incident updated!',
+					type: 'success',
+					duration: 2000
 				});
+				Actions.pop();
+			});
 		}
 	}
 
@@ -104,7 +104,7 @@ class EditIncident extends Component {
 					}
 				});
 				Toast.show({
-					text: 'Image Added!' + response.error,
+					text: 'Image Added!',
 					type: 'success',
 					duration: 2000
 				});

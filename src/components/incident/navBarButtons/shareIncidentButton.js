@@ -19,14 +19,20 @@ class ShareButtonIncident extends Component {
 		Share.share(
 			{
 				message:
-					'https://crowdalert.herokuapp.com/view/' + this.props.incident.incident.key,
+					'Hey, check out this ' +
+					this.props.incident.incident.value.category +
+					' incident on CrowdAlert: ' +
+					'https://crowdalert.herokuapp.com/view/' +
+					this.props.incident.incident.key,
 				title: 'Wow, did you see that ? Check it out !!!'
 			},
 			{
 				// Android only:
 				dialogTitle: 'Share Incident',
 				// iOS only:
-				excludedActivityTypes: ['com.apple.UIKit.activity.PostToTwitter']
+				excludedActivityTypes: [
+					'com.apple.UIKit.activity.PostToTwitter'
+				]
 			}
 		);
 	}

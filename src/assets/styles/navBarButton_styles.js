@@ -4,7 +4,7 @@ const { width, height } = Dimensions.get('window');
 //styling used for all the nav bar buttons.
 export const styles = StyleSheet.create({
 	sideMenu: {
-		marginLeft: 20,
+		paddingLeft: width / 20,
 		justifyContent: 'center'
 	},
 	incidentNavButton: {
