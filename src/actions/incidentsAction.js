@@ -190,6 +190,11 @@ export const updateIndvNotification = key => {
 	};
 };
 
+/**
+ * Gets the individual incident from Firebase using incident key.
+ * @param  {String} key Unique key to every incident to indentify them.
+ * @return Returns all the details regarding an incident.
+ */
 export const getIndvIncident = key => {
 	return dispatch => {
 		dispatch(incidentsLoading(true));
@@ -214,12 +219,21 @@ export const getIndvIncident = key => {
 	};
 };
 
+/**
+ * Updates the incident category domain for filtering them on the map
+ * @param  {String} domain Incident category for filtering.
+ * @return Sends the category value to the store.
+ */
 export const updateDomain = domain => {
 	return dispatch => {
 		dispatch(updateDomainHelper(domain));
 	};
 };
 
+/**
+ * Helper function for updating the incident category.
+ * @param  {String} domain Incident category for filtering.
+ */
 export function updateDomainHelper(domain) {
 	return {
 		type: TOGGLE_DOMAINS,

@@ -34,7 +34,8 @@ class Profile extends Component {
 		//if not than asks to enables them by redirecting to location settings.
 		if (Platform.OS === 'android') {
 			LocationServicesDialogBox.checkLocationServicesIsEnabled({
-				message:'<h2>Please enable GPS!</h2>\
+				message:
+					'<h2>Please enable GPS!</h2>\
 		        CrowdAlert wants to change your Location settings',
 				ok: 'Ok',
 				cancel: 'No',
@@ -61,10 +62,20 @@ class Profile extends Component {
 		this.props.getUserIncidents(this.props.user.email);
 	}
 
+	/**
+	 * Redirecting the app from profile to the individual incident which is clicked on.
+	 * @param  {JSON} item Incident object being passed whose details have to be viewed.
+	 */
 	viewClickedIncident(item) {
 		Actions.incident({ incident_key: item.key });
 	}
 
+	/**
+	 * Renders the User submitted incident section below the user name and avatar.
+	 * @param  {JSON} item  Individual incident item from all user submitted incident object.
+	 * @param  {integer} index Index of that particular item.
+	 * @return {Class} Returns the profileIncident class containing all the user submitted incidents.
+	 */
 	_renderItem({ item, index }) {
 		return <ProfileIncident data={item} even={(index + 1) % 2 === 0} />;
 	}
