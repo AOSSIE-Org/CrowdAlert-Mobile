@@ -14,4 +14,4 @@ Follow the [Keys installation guide](doc/keys.md) for setting up the keys for Cr
 
 ### Like this project and want to contribute to it??
 
-We welcome all kind of support from you guys. Just have a quick look at the [Contribution guide](doc/contribution.md) for some rules and regulations to be followed before you send a MR.
+We welcome all kind of support from you guys. Just have a quick look at the [Contribution guide](doc/contributions.md) for some rules and regulations to be followed before you send a MR.
