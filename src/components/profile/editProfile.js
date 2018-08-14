@@ -5,15 +5,16 @@ import {
 	View,
 	ScrollView,
 	TouchableOpacity,
-	TextInput,
-	ToastAndroid
+	TextInput
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { styles } from '../../assets/styles/editScreen_styles';
+import { styles } from '../../assets/styles/editProfile_styles';
 import PropTypes from 'prop-types';
 import { updateUserFirebase } from '../../actions/loginAction';
+import Icon from 'react-native-vector-icons/EvilIcons';
+import { Header, Title, Left, Body, Toast } from 'native-base';
 var ImagePicker = require('react-native-image-picker');
 
 /**
@@ -35,10 +36,34 @@ class EditProfile extends Component {
 	}
 
 	handleUpdate() {
-		this.props.updateUserFirebase(this.state).then(() => {
-			ToastAndroid.show('Profile Updated', ToastAndroid.SHORT);
-			Actions.profile();
-		});
+		if (this.state.email === '') {
+			Toast.show({
+				text: 'You cannot leave your email field blank',
+				type: 'warning',
+				duration: 2000
+			});
+		} else if (this.state.name === '') {
+			Toast.show({
+				text: 'You cannot leave your name field blank',
+				type: 'warning',
+				duration: 2000
+			});
+		} else if (this.state.phone_no.length !== 10) {
+			Toast.show({
+				text: 'Please enter a 10 digit contact number',
+				type: 'warning',
+				duration: 2000
+			});
+		} else {
+			this.props.updateUserFirebase(this.state).then(() => {
+				Toast.show({
+					text: 'Profile Updated',
+					type: 'success',
+					duration: 2000
+				});
+				Actions.pop();
+			});
+		}
 	}
 
 	/**
@@ -54,21 +79,17 @@ class EditProfile extends Component {
 			}
 		};
 		ImagePicker.showImagePicker(options, response => {
-			if (response.didCancel) {
-				ToastAndroid.show(
-					'User cancelled image picker',
-					ToastAndroid.SHORT
-				);
-			} else if (response.error) {
-				ToastAndroid.show(
-					'ImagePicker Error: ' + response.error,
-					ToastAndroid.SHORT
-				);
+			if (response.error) {
+				Toast.show({
+					text: 'ImagePicker Error: ' + response.error,
+					duration: 2000
+				});
+			} else if (response.didCancel) {
 			} else if (response.customButton) {
-				ToastAndroid.show(
-					'User tapped custom button: ' + response.customButton,
-					ToastAndroid.SHORT
-				);
+				Toast.show({
+					text: 'User tapped custom button: ' + response.customButton,
+					duration: 2000
+				});
 			} else {
 				this.setState({
 					photo: {
@@ -76,114 +97,178 @@ class EditProfile extends Component {
 						base64: response.data
 					}
 				});
-				ToastAndroid.show('Image Added', ToastAndroid.SHORT);
+				Toast.show({
+					text: 'Image Added!',
+					type: 'success',
+					duration: 2000
+				});
 			}
 		});
 	};
 
 	render() {
 		return (
-			<ScrollView
-				style={styles.container}
-				keyboardShouldPersistTaps="always"
-				showsVerticalScrollIndicator={false}
-			>
-				<TextInput
-					autoCorrect={false}
-					ref={input => (this.nameInput = input)}
-					onChangeText={name => this.setState({ name })}
-					onSubmitEditing={() => this.emailInput.focus()}
-					returnKeyType="next"
-					style={styles.field_Pass}
-					placeholder="Name"
-					value={this.state.name}
-				/>
-				<TextInput
-					autoCapitalize="none"
-					autoCorrect={false}
-					ref={input => (this.emailInput = input)}
-					onChangeText={email => this.setState({ email })}
-					onSubmitEditing={() => this.phoneNoInput.focus()}
-					keyboardType="email-address"
-					returnKeyType="next"
-					style={styles.field_Pass}
-					placeholder="Email"
-					value={this.state.email}
-				/>
-				<TextInput
-					autoCorrect={false}
-					ref={input => (this.phoneNoInput = input)}
-					onChangeText={phone_no => this.setState({ phone_no })}
-					onSubmitEditing={() =>
-						this.emergencyContactNameInput.focus()
-					}
-					keyboardType="phone-pad"
-					returnKeyType="next"
-					style={styles.field_Pass}
-					placeholder="Phone No."
-					value={this.state.phone_no}
-				/>
-				<TextInput
-					autoCorrect={false}
-					ref={input => (this.emergencyContactNameInput = input)}
-					onChangeText={emergency_contact_name =>
-						this.setState({ emergency_contact_name })
-					}
-					onSubmitEditing={() =>
-						this.emergencyContactPhoneInput.focus()
-					}
-					returnKeyType="next"
-					style={styles.field_Pass}
-					placeholder="Emergency Contact Name"
-					value={this.state.emergency_contact_name}
-				/>
-				<TextInput
-					autoCapitalize="none"
-					autoCorrect={false}
-					ref={input => (this.emergencyContactPhoneInput = input)}
-					onChangeText={emergency_contact_phone_no =>
-						this.setState({ emergency_contact_phone_no })
-					}
-					keyboardType="phone-pad"
-					returnKeyType="next"
-					style={styles.field_Pass}
-					placeholder="Emergency Contact Phone No."
-					value={this.state.emergency_contact_phone_no}
-				/>
-				<Image
-					style={styles.image}
-					resizeMethod={'resize'}
-					source={
-						this.state.photo.url === ''
-							? this.state.photo.base64 === ''
-								? {
-										uri:
-											'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZA_wIwT-DV4G3E3jdNZScRLQnH4faqTH2a7PrNwlhqP4W1Zjh'
-								  }
-								: {
-										uri:
-											'data:image/jpeg;base64, ' +
-											this.state.photo.base64
-								  }
-							: { uri: this.state.photo.url }
-					}
-				/>
-				<TouchableOpacity
-					style={styles.button_camera}
-					onPress={() => this._cameraImage()}
+			<View style={styles.container}>
+				<Header androidStatusBarColor="#1c76cb">
+					<Left>
+						<TouchableOpacity
+							style={styles.backButton}
+							onPress={() => Actions.pop()}
+						>
+							<Icon name="close" size={40} color="white" />
+						</TouchableOpacity>
+					</Left>
+					<Body>
+						<Title>Profile Settings</Title>
+					</Body>
+				</Header>
+
+				<ScrollView
+					keyboardShouldPersistTaps="always"
+					showsVerticalScrollIndicator={false}
 				>
-					<Text style={styles.cameraText}>Change Image</Text>
-				</TouchableOpacity>
-				{this.props.updateLoading ? (
-					<ActivityIndicator size={'large'} />
-				) : null}
-				<TouchableOpacity
-					style={styles.updateButton}
-					onPress={() => this.handleUpdate()}
-				>
-					<Text style={styles.updateText}> Update </Text>
-				</TouchableOpacity>
-			</ScrollView>
+					<View style={styles.avatarContainer}>
+						<Image
+							style={styles.avatar}
+							resizeMethod={'resize'}
+							source={
+								this.state.photo.url === ''
+									? this.state.photo.base64 === ''
+										? require('../../assets/images/boy.png')
+										: {
+												uri:
+													'data:image/jpeg;base64, ' +
+													this.state.photo.base64
+										  }
+									: { uri: this.state.photo.url }
+							}
+						/>
+						<TouchableOpacity
+							activeOpacity={0.4}
+							onPress={() => this._cameraImage()}
+						>
+							<Text style={styles.userName}>
+								Change Profile Photo
+							</Text>
+						</TouchableOpacity>
+					</View>
+					<View style={styles.valueItem}>
+						<View style={styles.valueTextContainer}>
+							<Text style={styles.valueText}>Name</Text>
+						</View>
+						<TextInput
+							autoCorrect={false}
+							ref={input => (this.nameInput = input)}
+							onChangeText={name => this.setState({ name })}
+							onSubmitEditing={() => this.emailInput.focus()}
+							returnKeyType="next"
+							style={styles.textInput}
+							underlineColorAndroid="transparent"
+							placeholder="Name"
+							value={this.state.name}
+						/>
+					</View>
+
+					<View style={styles.valueItem}>
+						<View style={styles.valueTextContainer}>
+							<Text style={styles.valueText}>Email</Text>
+						</View>
+						<TextInput
+							autoCapitalize="none"
+							autoCorrect={false}
+							ref={input => (this.emailInput = input)}
+							onChangeText={email => this.setState({ email })}
+							onSubmitEditing={() => this.phoneNoInput.focus()}
+							keyboardType="email-address"
+							returnKeyType="next"
+							style={styles.textInput}
+							underlineColorAndroid="transparent"
+							placeholder="Email"
+							value={this.state.email}
+						/>
+					</View>
+					<View style={styles.valueItem}>
+						<View style={styles.valueTextContainer}>
+							<Text style={styles.valueText}>Contact Number</Text>
+						</View>
+						<TextInput
+							autoCorrect={false}
+							ref={input => (this.phoneNoInput = input)}
+							onChangeText={phone_no =>
+								this.setState({ phone_no })
+							}
+							onSubmitEditing={() =>
+								this.emergencyContactNameInput.focus()
+							}
+							keyboardType="phone-pad"
+							returnKeyType="next"
+							style={styles.textInput}
+							underlineColorAndroid="transparent"
+							placeholder="Phone No."
+							value={this.state.phone_no}
+						/>
+					</View>
+					<View style={styles.valueItem}>
+						<View style={styles.valueTextContainer}>
+							<Text style={styles.valueText}>
+								Emergency Contact Name
+							</Text>
+						</View>
+						<TextInput
+							autoCorrect={false}
+							ref={input =>
+								(this.emergencyContactNameInput = input)
+							}
+							onChangeText={emergency_contact_name =>
+								this.setState({ emergency_contact_name })
+							}
+							onSubmitEditing={() =>
+								this.emergencyContactPhoneInput.focus()
+							}
+							returnKeyType="next"
+							style={styles.textInput}
+							underlineColorAndroid="transparent"
+							placeholder="Contact Name"
+							value={this.state.emergency_contact_name}
+						/>
+					</View>
+					<View style={styles.valueItem}>
+						<View style={styles.valueTextContainer}>
+							<Text style={styles.valueText}>
+								Emergency Contact Number
+							</Text>
+						</View>
+						<TextInput
+							autoCapitalize="none"
+							autoCorrect={false}
+							ref={input =>
+								(this.emergencyContactPhoneInput = input)
+							}
+							onChangeText={emergency_contact_phone_no =>
+								this.setState({
+									emergency_contact_phone_no
+								})
+							}
+							keyboardType="phone-pad"
+							returnKeyType="next"
+							style={styles.textInput}
+							underlineColorAndroid="transparent"
+							placeholder="Contact Number"
+							value={this.state.emergency_contact_phone_no}
+						/>
+					</View>
+					{this.props.updateLoading ? (
+						<ActivityIndicator size={'large'} />
+					) : null}
+					<TouchableOpacity
+						activeOpacity={0.7}
+						style={styles.updateButton}
+						onPress={() => this.handleUpdate()}
+					>
+						<Text style={styles.updateText}> Update </Text>
+					</TouchableOpacity>
+				</ScrollView>
+			</View>
 		);
 	}
 }
@@ -195,7 +280,7 @@ class EditProfile extends Component {
 EditProfile.propTypes = {
 	updateUserFirebase: PropTypes.func.isRequired,
 	user: PropTypes.object,
-	updateLoading: PropTypes.object
+	updateLoading: PropTypes.bool
 };
 
 /**

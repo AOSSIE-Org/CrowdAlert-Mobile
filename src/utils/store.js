@@ -18,19 +18,28 @@ const config = {
 	debug: true,
 	// whitelist: ['login', 'incident'],
 	transforms: [
-		createWhitelistFilter('incident', ['notificationStack']),
-		createWhitelistFilter('login'),
+		createWhitelistFilter('incident', [
+			'notificationStack',
+			'user_incidents'
+		]),
+		createWhitelistFilter('login', [
+			'userFirebase',
+			'userDetails',
+			'signInType'
+		]),
 		createWhitelistFilter('emergencyPlaces', []),
-		createWhitelistFilter('settings')
+		createWhitelistFilter('location', ['curr_coordinates']),
+		createWhitelistFilter('settings'),
+		createWhitelistFilter('slides')
 	]
 };
 
 //Linking all the reducers with the redux-persist and applying all the middlewares to it.
 const combinedReducer = persistCombineReducers(config, allReducers);
 const reducers = (state, action) => {
-	// if (action.type === 'FORM_SIGN_OUT') {
-	//     state = undefined;
-	// }
+	if (action.type === 'SIGN_OUT') {
+		state = undefined;
+	}
 	return combinedReducer(state, action);
 };
 const enhancers = applyMiddleware(thunk, promise, createLogger());

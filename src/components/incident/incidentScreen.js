@@ -4,21 +4,32 @@ import {
 	View,
 	Image,
 	TouchableOpacity,
-	ActivityIndicator
+	ActivityIndicator,
+	ScrollView
 } from 'react-native';
 import PropTypes from 'prop-types';
 import MapView, { Marker } from 'react-native-maps';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Container, Content, Card, CardItem } from 'native-base';
+import {
+	Container,
+	Content,
+	Card,
+	CardItem,
+	Header,
+	Left,
+	Body,
+	Right
+} from 'native-base';
 import { styles } from '../../assets/styles/incident_styles';
 import getDirections from 'react-native-google-maps-directions';
+import { Actions } from 'react-native-router-flux';
+import DeleteButtonIncident from './navBarButtons/deleteIncident.js';
+import EditButtonIncident from './navBarButtons/editIncidentButton.js';
+import ShareButtonIncident from './navBarButtons/shareIncidentButton.js';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {
-	viewIncident,
-	getIndvIncident
-} from '../../actions/incidentsAction.js';
-import firebase from 'react-native-firebase';
+import { getIndvIncident } from '../../actions/incidentsAction.js';
+import IconDirection from 'react-native-vector-icons/MaterialCommunityIcons';
 
 /**
  * Screen for showing individual incidents.
@@ -51,10 +62,9 @@ class Incident extends Component {
 	 */
 	componentWillMount() {
 		if (
-			this.props.incident_key &&
-			(this.props.incident.incident !== null
+			this.props.incident.incident !== null
 				? this.props.incident_key !== this.props.incident.incident.key
-				: true)
+				: true
 		) {
 			this.props.getIndvIncident(this.props.incident_key);
 		}
@@ -62,7 +72,8 @@ class Incident extends Component {
 
 	//Handles the navigation by opening the Google Maps
 	handleDirections() {
-		var coordinates = this.props.incidentDetails.location.coordinates;
+		var coordinates = this.props.incident.incident.value.location
+			.coordinates;
 		getDirections({
 			source: {
 				latitude: '',
@@ -86,29 +97,62 @@ class Incident extends Component {
 	 * @return the incident screen.
 	 */
 	render() {
-		if (this.props.incident.loading) {
-			return <ActivityIndicator size={'large'} />;
+		if (
+			this.props.incident.incident !== null
+				? this.props.incident_key !== this.props.incident.incident.key
+				: true
+		) {
+			return (
+				<ActivityIndicator
+					size={'large'}
+					style={styles.loader}
+					color="black"
+				/>
+			);
 		} else {
 			var incidentDetails = this.props.incident.incident.value;
 			return (
-				<Container>
-					<Content>
+				<Container style={styles.container}>
+					<Header androidStatusBarColor="#1c76cb">
+						<Left>
+							<TouchableOpacity
+								style={styles.backButton}
+								onPress={() => Actions.pop()}
+							>
+								<Icon
+									name="angle-left"
+									size={35}
+									color="white"
+								/>
+							</TouchableOpacity>
+						</Left>
+						<Body>
+							<Text style={styles.title}>Incident Details</Text>
+						</Body>
+						<Right>
+							<EditButtonIncident key={1} />
+							<DeleteButtonIncident key={2} />
+							<ShareButtonIncident key={3} />
+						</Right>
+					</Header>
+					<ScrollView
+						keyboardShouldPersistTaps="always"
+						showsVerticalScrollIndicator={false}
+					>
 						{incidentDetails.image.isPresent ? (
-							<Card>
-								<CardItem>
-									<Image
-										style={styles.image}
-										resizeMethod={'resize'}
-										source={{
-											uri:
-												'data:image/jpeg;base64, ' +
-												incidentDetails.image.base64
-										}}
-									/>
-								</CardItem>
-							</Card>
+							<View style={styles.avatarContainer}>
+								<Image
+									style={styles.image}
+									resizeMethod={'resize'}
+									source={{
+										uri:
+											'data:image/jpeg;base64, ' +
+											incidentDetails.image.base64
+									}}
+								/>
+							</View>
 						) : null}
-						<Card>
+						<Card style={styles.card}>
 							<CardItem>
 								<Text style={styles.titleTextHeader}>
 									Title
@@ -119,24 +163,22 @@ class Incident extends Component {
 									{incidentDetails.title}
 								</Text>
 							</CardItem>
-							{incidentDetails.details !== '' ? (
-								<View>
-									<CardItem>
-										<Text style={styles.titleTextHeader}>
-											Description
-										</Text>
-									</CardItem>
-									<CardItem>
-										<Text
-											style={styles.titleTextDescription}
-										>
-											{incidentDetails.details}
-										</Text>
-									</CardItem>
-								</View>
-							) : null}
 						</Card>
-						<Card>
+						{incidentDetails.details !== '' ? (
+							<Card style={styles.card}>
+								<CardItem>
+									<Text style={styles.titleTextHeader}>
+										Description
+									</Text>
+								</CardItem>
+								<CardItem>
+									<Text style={styles.titleTextDescription}>
+										{incidentDetails.details}
+									</Text>
+								</CardItem>
+							</Card>
+						) : null}
+						<Card style={styles.card}>
 							<CardItem>
 								<MapView
 									region={{
@@ -167,22 +209,18 @@ class Incident extends Component {
 								</MapView>
 							</CardItem>
 						</Card>
-						<Card>
-							<CardItem>
-								<TouchableOpacity
-									style={styles.navigationContainer}
-									onPress={() => this.handleDirections()}
-								>
-									<Text>Navigate</Text>
-									<Icon
-										name="map-pin"
-										size={23}
-										style={styles.navigationIcon}
-									/>
-								</TouchableOpacity>
-							</CardItem>
-						</Card>
-					</Content>
+					</ScrollView>
+					<TouchableOpacity
+						activeOpacity={0.5}
+						style={styles.fabButton}
+						onPress={() => this.handleDirections()}
+					>
+						<IconDirection
+							name="directions"
+							size={30}
+							style={styles.fabButtonIcon}
+						/>
+					</TouchableOpacity>
 				</Container>
 			);
 		}
@@ -196,7 +234,6 @@ class Incident extends Component {
 Incident.propTypes = {
 	incident: PropTypes.object,
 	user: PropTypes.object,
-	viewIncident: PropTypes.func.isRequired,
 	getIndvIncident: PropTypes.func.isRequired
 };
 /**
@@ -208,7 +245,6 @@ Incident.propTypes = {
 function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{
-			viewIncident: viewIncident,
 			getIndvIncident: getIndvIncident
 		},
 		dispatch

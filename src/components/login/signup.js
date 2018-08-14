@@ -1,16 +1,10 @@
 import React, { Component } from 'react';
 import {
-	StyleSheet,
-	Image,
 	Text,
 	View,
-	ScrollView,
 	TouchableOpacity,
-	Alert,
 	TextInput,
-	Button,
 	Keyboard,
-	ToastAndroid,
 	ActivityIndicator
 } from 'react-native';
 import { bindActionCreators } from 'redux';
@@ -18,6 +12,9 @@ import { connect } from 'react-redux';
 import { onPressSignUp } from '../../actions/loginAction';
 import { styles } from '../../assets/styles/signin_styles';
 import PropTypes from 'prop-types';
+import { Actions } from 'react-native-router-flux';
+import Icon from 'react-native-vector-icons/Feather';
+import { Header, Title, Left, Body, Toast } from 'native-base';
 
 /**
  * Screen for signup.
@@ -36,7 +33,11 @@ class Signup extends Component {
 	componentDidUpdate() {
 		// Typical usage (don't forget to compare props):
 		if (!this.props.login.loading && this.props.login.signInType !== null) {
-			ToastAndroid.show('Registration successful', ToastAndroid.SHORT);
+			Toast.show({
+				text: 'Registration successful',
+				type: 'success',
+				duration: 2000
+			});
 			Actions.profile();
 		}
 	}
@@ -46,22 +47,98 @@ class Signup extends Component {
 	 */
 	handleSignUp() {
 		Keyboard.dismiss();
-		this.props.onPressSignUp(this.state.email, this.state.password);
+		if (
+			this.validateEmail(this.state.email) &&
+			this.validatePassword(this.state.password) &&
+			this.validateName(this.state.name)
+		) {
+			this.props.onPressSignUp(
+				this.state.email,
+				this.state.password,
+				this.state.name
+			);
+		}
+	}
+
+	validateName(inputName) {
+		if (inputName === '') {
+			Toast.show({
+				text: "You can't leave the name field blank!",
+				type: 'warning',
+				duration: 2000
+			});
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	validateEmail(inputEmail) {
+		if (inputEmail === '') {
+			Toast.show({
+				text: "You can't leave the email field blank!",
+				type: 'warning',
+				duration: 2000
+			});
+			return false;
+		} else {
+			var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+			if (!inputEmail.match(mailformat)) {
+				Toast.show({
+					text: 'Please check your email format',
+					type: 'warning',
+					duration: 2000
+				});
+				return false;
+			} else {
+				return true;
+			}
+		}
+	}
+
+	validatePassword(inputPassword) {
+		if (inputPassword === '') {
+			Toast.show({
+				text: "You can't leave the password field blank!",
+				type: 'warning',
+				duration: 2000
+			});
+			return false;
+		} else if (inputPassword.length < 8) {
+			Toast.show({
+				text: 'Your password should be of minimum 8 characters!',
+				type: 'warning',
+				duration: 2000
+			});
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	render() {
 		return (
 			<View style={styles.container}>
-				<View style={styles.field}>
+				<Header transparent androidStatusBarColor="#1c76cb">
+					<Left>
+						<TouchableOpacity onPress={() => Actions.pop()}>
+							<Icon name="chevron-left" size={40} />
+						</TouchableOpacity>
+					</Left>
+					<Body>
+						<Title />
+					</Body>
+				</Header>
+				<View style={styles.box}>
+					<Text style={styles.heading}>Register</Text>
 					<TextInput
-						autoCapitalize="none"
 						autoCorrect={false}
 						ref={input => (this.nameInput = input)}
 						onChangeText={name => this.setState({ name })}
 						onSubmitEditing={() => this.emailInput.focus()}
 						returnKeyType="next"
-						style={styles.field_Pass}
-						placeholder={'Name'}
+						style={styles.input_field}
+						placeholder="Full name"
 					/>
 					<TextInput
 						autoCapitalize="none"
@@ -71,27 +148,27 @@ class Signup extends Component {
 						onSubmitEditing={() => this.passwordInput.focus()}
 						keyboardType="email-address"
 						returnKeyType="next"
-						style={styles.field_Pass}
+						style={styles.input_field}
 						placeholder="Email"
 					/>
 					<TextInput
 						ref={input => (this.passwordInput = input)}
-						style={styles.field_Pass}
+						style={styles.input_field}
 						onChangeText={password => this.setState({ password })}
 						// onSubmitEditing={() => this.passwordConfirmInput.focus()}
 						returnKeyType="next"
 						secureTextEntry={true}
 						placeholder="Password"
 					/>
+					<TouchableOpacity
+						style={styles.button_send}
+						onPress={() => this.handleSignUp()}
+					>
+						<Text style={styles.button_text}> Register </Text>
+					</TouchableOpacity>
 				</View>
-				<TouchableOpacity
-					style={styles.button_send}
-					onPress={() => this.handleSignUp()}
-				>
-					<Text style={styles.button_text}> Register </Text>
-				</TouchableOpacity>
 				{this.props.login.loading ? (
-					<ActivityIndicator size={'large'} />
+					<ActivityIndicator size={'large'} color="white" />
 				) : null}
 			</View>
 		);

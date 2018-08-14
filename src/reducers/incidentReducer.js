@@ -4,7 +4,8 @@ import {
 	INCIDENTS_LOADING,
 	USERS_INCIDENTS,
 	VIEW_INCIDENT,
-	NOTIFICATION_INCIDENTS
+	NOTIFICATION_INCIDENTS,
+	TOGGLE_DOMAINS
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -13,7 +14,8 @@ const INITIAL_STATE = {
 	user_incidents: null,
 	incident: null,
 	isLoggedIn: false,
-	notificationStack: {}
+	notificationStack: {},
+	domain: 'all'
 };
 
 /**
@@ -56,6 +58,11 @@ export default function(state = INITIAL_STATE, action) {
 			return {
 				...result,
 				notificationStack: action.notificationStack
+			};
+		case TOGGLE_DOMAINS:
+			return {
+				...result,
+				domain: action.domain
 			};
 		default:
 			return state;

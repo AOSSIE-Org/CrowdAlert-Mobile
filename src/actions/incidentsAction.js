@@ -4,10 +4,12 @@ import {
 	INCIDENTS_LOADING,
 	USERS_INCIDENTS,
 	VIEW_INCIDENT,
-	NOTIFICATION_INCIDENTS
+	NOTIFICATION_INCIDENTS,
+	TOGGLE_DOMAINS
 } from './types';
 import { handleError } from './errorAction';
 import firebase from 'react-native-firebase';
+import { Toast } from 'native-base';
 
 import configureStore from '../utils/store';
 let { store, persistor } = configureStore();
@@ -29,12 +31,22 @@ export const addIncidentToFirebase = incident => {
 				.then(result => {
 					dispatch(incidentsLoading(false));
 					dispatch(add_incident());
+					Toast.show({
+						text: 'Incident added!',
+						type: 'success',
+						duration: 2000
+					});
 					resolve();
 				})
 				.catch(error => {
 					dispatch(incidentsLoading(false));
 					dispatch(handleError(error));
 					console.log(error);
+					Toast.show({
+						text: 'Could not add incident, pls try again!',
+						type: 'error',
+						duration: 2000
+					});
 					reject();
 				});
 		});
@@ -48,12 +60,12 @@ export const addIncidentToFirebase = incident => {
  */
 export const getAllIncidents = () => {
 	return dispatch => {
-		dispatch(incidentsLoading(true));
 		return new Promise((resolve, reject) => {
 			firebase
 				.database()
 				.ref('incidents')
 				.on('value', snap => {
+					dispatch(incidentsLoading(true));
 					var all_incidents = [];
 					var notificationStack = store.getState().incident
 						.notificationStack;
@@ -61,9 +73,15 @@ export const getAllIncidents = () => {
 					snap.forEach(child => {
 						if (child.val().visible) {
 							all_incidents.push({
-								title: child.val().title,
 								key: child.key,
-								value: child.val()
+								value: {
+									title: child.val().title,
+									details: child.val().details,
+									category: child.val().category,
+									timestamp: child.val().timestamp,
+									coordinates: child.val().location
+										.coordinates
+								}
 							});
 							//Adds the child to the stack if not present with a timestamp
 							if (notificationStack[child.key] === undefined) {
@@ -80,6 +98,13 @@ export const getAllIncidents = () => {
 						}
 					});
 					console.log(all_incidents, notificationStack);
+					//Sorting the incidents according to their correct timestamp order.
+					all_incidents.sort(function(a, b) {
+						return (
+							new Date(b.value.timestamp) -
+							new Date(a.value.timestamp)
+						);
+					});
 					dispatch(retrieveAllIncidents(all_incidents));
 					dispatch(updateNotificationsStack(notificationStack));
 					dispatch(incidentsLoading(false));
@@ -101,12 +126,19 @@ export const getUserIncidents = userID => {
 			.orderByChild('user_id')
 			.equalTo(userID)
 			.on('value', function(snapshot) {
+				dispatch(incidentsLoading(true));
 				var items = [];
-				snapshot.forEach(item => {
-					if (item.val().visible) {
+				snapshot.forEach(child => {
+					if (child.val().visible) {
 						items.push({
-							key: item.key,
-							value: item.val()
+							key: child.key,
+							value: {
+								title: child.val().title,
+								details: child.val().details,
+								category: child.val().category,
+								timestamp: child.val().timestamp,
+								coordinates: child.val().location.coordinates
+							}
 						});
 					}
 				});
@@ -136,13 +168,10 @@ export const viewIncident = (incident, isLoggedIn) => {
  */
 export const updateIncidentFirebase = (key, value) => {
 	return dispatch => {
-		return new Promise((resolve, reject) => {
-			firebase
-				.database()
-				.ref('incidents/' + key)
-				.update(value);
-			resolve();
-		});
+		firebase
+			.database()
+			.ref('incidents/' + key)
+			.update(value);
 	};
 };
 
@@ -168,7 +197,6 @@ export const getIndvIncident = key => {
 			.database()
 			.ref('incidents/' + key)
 			.on('value', snap => {
-				console.log(snap);
 				var item = {
 					key: snap.key,
 					value: snap._value
@@ -185,6 +213,19 @@ export const getIndvIncident = key => {
 			});
 	};
 };
+
+export const updateDomain = domain => {
+	return dispatch => {
+		dispatch(updateDomainHelper(domain));
+	};
+};
+
+export function updateDomainHelper(domain) {
+	return {
+		type: TOGGLE_DOMAINS,
+		domain: domain
+	};
+}
 
 /**
  * Called when an incident is clicked to be viewed for its details

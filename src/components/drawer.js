@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 import {
-	StyleSheet,
+	ActivityIndicator,
 	Text,
 	View,
 	ScrollView,
 	Image,
-	TouchableHighlight,
-	TouchableOpacity
+	TouchableHighlight
 } from 'react-native';
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Actions } from 'react-native-router-flux';
 import { styles } from '../assets/styles/drawer_styles';
 import PropTypes from 'prop-types';
+import { logout } from '../actions/loginAction';
+import FilesystemStorage from 'redux-persist-filesystem-storage';
+import Icon from 'react-native-vector-icons/Feather';
+import { Toast } from 'native-base';
 
 /**
  * Content for the side drawer
@@ -19,44 +23,77 @@ import PropTypes from 'prop-types';
  */
 
 class DrawerContent extends Component {
+	handleLogout() {
+		Promise.resolve(Actions.reset('homeLogin')).then(() => {
+			this.props.logout();
+			Toast.show({
+				text: 'You have been logged out!',
+				type: 'success',
+				duration: 2000
+			});
+			FilesystemStorage.clear();
+		});
+	}
+
 	render() {
-		return (
-			<ScrollView style={styles.container}>
-				<View style={styles.userHeader}>
-					<Image
-						style={styles.userImage}
-						source={
-							this.props.user.photo.url === ''
-								? this.props.user.photo.base64 === ''
-									? {
-											uri:
-												'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZA_wIwT-DV4G3E3jdNZScRLQnH4faqTH2a7PrNwlhqP4W1Zjh'
-									  }
-									: {
-											uri:
-												'data:image/jpeg;base64, ' +
-												this.props.user.photo.base64
-									  }
-								: { uri: this.props.user.photo.url }
-						}
-					/>
-					<Text style={styles.userName}>{this.props.user.name}</Text>
-				</View>
-				<View style={styles.bar} />
-				<TouchableHighlight onPress={Actions.profile}>
-					<Text style={styles.option}>Home</Text>
-				</TouchableHighlight>
-				<TouchableHighlight onPress={Actions.map}>
-					<Text style={styles.option}>Map</Text>
-				</TouchableHighlight>
-				<TouchableHighlight onPress={Actions.emergencylocation}>
-					<Text style={styles.option}>Emergency locations</Text>
-				</TouchableHighlight>
-				<TouchableHighlight onPress={Actions.settingsOption}>
-					<Text style={styles.option}>Settings</Text>
-				</TouchableHighlight>
-			</ScrollView>
-		);
+		if (this.props.user === null) {
+			return <ActivityIndicator size={'large'} />;
+		} else {
+			return (
+				<ScrollView style={styles.container}>
+					<View style={styles.userHeader}>
+						<TouchableHighlight onPress={Actions.editProfile}>
+							<Image
+								style={styles.userImage}
+								source={
+									this.props.user.photo.url === ''
+										? this.props.user.photo.base64 === ''
+											? require('../assets/images/boy.png')
+											: {
+													uri:
+														'data:image/jpeg;base64, ' +
+														this.props.user.photo
+															.base64
+											  }
+										: { uri: this.props.user.photo.url }
+								}
+							/>
+						</TouchableHighlight>
+						<Text style={styles.userName}>
+							{this.props.user.name}
+						</Text>
+					</View>
+					<View style={styles.bar} />
+					<TouchableHighlight onPress={Actions.profile}>
+						<Text style={styles.option}>Dashboard</Text>
+					</TouchableHighlight>
+					<TouchableHighlight onPress={Actions.mapFeed}>
+						<Text style={styles.option}>Map / Feed</Text>
+					</TouchableHighlight>
+					<TouchableHighlight onPress={Actions.emergencylocation}>
+						<Text style={styles.option}>Emergency locations</Text>
+					</TouchableHighlight>
+					<TouchableHighlight onPress={Actions.settingsOption}>
+						<Text style={styles.option}>Settings</Text>
+					</TouchableHighlight>
+					<TouchableHighlight
+						onPress={() => {
+							this.handleLogout();
+						}}
+					>
+						<View style={styles.logout}>
+							<Icon
+								name="log-out"
+								size={22}
+								style={styles.logoutIcon}
+								color="white"
+							/>
+							<Text style={styles.logoutOption}>Logout</Text>
+						</View>
+					</TouchableHighlight>
+				</ScrollView>
+			);
+		}
 	}
 }
 
@@ -69,6 +106,21 @@ DrawerContent.propTypes = {
 };
 
 /**
+ * Mapping dispatchable actions to props so that actions can be used
+ * through props in children components.
+ * @param dispatch Dispatches an action to trigger a state change.
+ * @return Turns action creator objects into an objects with the same keys.
+ */
+function matchDispatchToProps(dispatch) {
+	return bindActionCreators(
+		{
+			logout: logout
+		},
+		dispatch
+	);
+}
+
+/**
  * Mapping state to props so that state variables can be used
  * through props in children components.
  * @param state Current state in the store.
@@ -78,4 +130,4 @@ const mapStateToProps = state => ({
 	user: state.login.userDetails
 });
 
-export default connect(mapStateToProps, null)(DrawerContent);
+export default connect(mapStateToProps, matchDispatchToProps)(DrawerContent);

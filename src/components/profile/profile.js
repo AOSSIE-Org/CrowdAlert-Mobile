@@ -5,8 +5,7 @@ import {
 	View,
 	ScrollView,
 	TouchableOpacity,
-	TextInput,
-	ToastAndroid,
+	TouchableHighlight,
 	ActivityIndicator,
 	FlatList,
 	Platform
@@ -17,148 +16,138 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { styles } from '../../assets/styles/profile_styles';
 import PropTypes from 'prop-types';
-import { getUserIncidents, viewIncident } from '../../actions/incidentsAction';
+import { getUserIncidents } from '../../actions/incidentsAction';
 import { watchCurrLocation } from '../../actions/locationAction';
 import { getColor } from '../../utils/categoryUtil';
 var PushNotification = require('react-native-push-notification');
+import { Header, Title, Left, Body } from 'native-base';
+import { SideDrawer } from '../sideMenu';
+import ProfileIncident from './profileIncident';
 
 /**
  * Screen showing the profile along with his/her incidents.
  * @extends Component
  */
 class Profile extends Component {
-	constructor(props) {
-		super(props);
-	}
-
 	componentWillMount() {
 		//Used to check if location services are enabled and
 		//if not than asks to enables them by redirecting to location settings.
 		if (Platform.OS === 'android') {
 			LocationServicesDialogBox.checkLocationServicesIsEnabled({
-				message:
-					'<h2>Use Location ?</h2> \
-		            This app wants to change your device settings:<br/><br/> \
-		            Use GPS for location<br/><br/>',
-				ok: 'YES',
-				cancel: 'NO',
+				message:'<h2>Please enable GPS!</h2>\
+		        CrowdAlert wants to change your Location settings',
+				ok: 'Ok',
+				cancel: 'No',
 				providerListener: true
 			}).then(success => {
 				this.props.watchCurrLocation();
 			});
+		} else {
+			this.props.watchCurrLocation();
 		}
-		//Gets user submitted incidents
-		this.props.getUserIncidents(this.props.user.email);
+
 		//Configures the push notification
 		PushNotification.configure({
 			//Called when a remote or local notification is opened or received
 			onNotification: notification => {
 				console.log('NOTIFICATION:', notification);
+				// Process the notification
 				this.viewClickedIncident(notification.tag);
-				// Actions.incident({ incident_key: notification.tag });
-				// process the notification
 			},
 			requestPermissions: this.props.enable_notifications
 		});
+
+		//Gets user submitted incidents
+		this.props.getUserIncidents(this.props.user.email);
 	}
 
 	viewClickedIncident(item) {
-		if (item.value.user_id === this.props.user.email) {
-			this.props.viewIncident(item, true);
-		} else {
-			this.props.viewIncident(item, false);
-		}
-		Actions.incident();
+		Actions.incident({ incident_key: item.key });
 	}
 
-	//Individual list item for the incidents
-	renderItem({ item }) {
-		return (
-			<TouchableOpacity onPress={() => this.viewClickedIncident(item)}>
-				<View
-					style={[
-						styles.incidentContainer,
-						{ backgroundColor: getColor(item.value.category) }
-					]}
-				>
-					<Image
-						style={styles.incidentsImage}
-						source={getMarkerImage(item.value.category)}
-					/>
-					<View style={styles.incidentTextContainer}>
-						<Text style={styles.incident}>{item.value.title}</Text>
-						<Text style={styles.incident}>
-							{item.value.details}
-						</Text>
-					</View>
-				</View>
-			</TouchableOpacity>
-		);
+	_renderItem({ item, index }) {
+		return <ProfileIncident data={item} even={(index + 1) % 2 === 0} />;
 	}
 
 	render() {
-		return (
-			<ScrollView
-				style={styles.container}
-				showsVerticalScrollIndicator={false}
-			>
-				<View style={styles.avatarContainer}>
-					<Image
-						style={styles.avatar}
-						source={
-							this.props.user.photo.url === ''
-								? this.props.user.photo.base64 === ''
-									? {
-											uri:
-												'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZA_wIwT-DV4G3E3jdNZScRLQnH4faqTH2a7PrNwlhqP4W1Zjh'
-									  }
-									: {
-											uri:
-												'data:image/jpeg;base64, ' +
-												this.props.user.photo.base64
-									  }
-								: { uri: this.props.user.photo.url }
-						}
-					/>
-					<Text style={styles.userName}>{this.props.user.name}</Text>
-				</View>
-				<View style={styles.otherInfoContainer}>
-					<Text style={styles.otherInfoValue}>
-						<Text style={styles.otherInfoHead}>Email ID: </Text>
-						{this.props.user.email}
-					</Text>
-					<Text style={styles.otherInfoValue}>
-						<Text style={styles.otherInfoHead}>Phone No: </Text>
-						{this.props.user.phone_no}
-					</Text>
-					<Text style={styles.otherInfoValue}>
-						<Text style={styles.otherInfoHead}>
-							Emergency contact name:{' '}
-						</Text>
-						{this.props.user.emergency_contact_name === ''
-							? 'NA'
-							: this.props.user.emergency_contact_name}
-					</Text>
-					<Text style={styles.otherInfoValue}>
-						<Text style={styles.otherInfoHead}>
-							Emergency contact phone no:{' '}
-						</Text>
-						{this.props.user.emergency_contact_phone_no === ''
-							? 'NA'
-							: this.props.user.emergency_contact_phone_no}
-					</Text>
-				</View>
-				{this.props.incident.loading ? (
-					<ActivityIndicator size={'large'} />
-				) : null}
-				<FlatList
-					contentContainerStyle={styles.flatListContainer}
-					data={this.props.incident.user_incidents}
-					renderItem={this.renderItem.bind(this)}
-					keyExtractor={item => item.key}
-				/>
-			</ScrollView>
-		);
+		if (this.props.user === null) {
+			return <ActivityIndicator size={'large'} />;
+		} else {
+			return (
+				<ScrollView
+					showsVerticalScrollIndicator={false}
+					style={styles.container}
+				>
+					<Header
+						androidStatusBarColor="#1c76cb"
+						style={styles.header}
+					>
+						<Left>{SideDrawer('white')}</Left>
+						<Body style={styles.body}>
+							<Title style={styles.heading}>Dashboard</Title>
+						</Body>
+					</Header>
+					<View style={styles.empty} />
+					<View style={styles.box}>
+						<View style={styles.avatarContainer}>
+							<View style={styles.empty} />
+							<Text style={styles.userName}>
+								{this.props.user.name}
+							</Text>
+						</View>
+						{this.props.incident.user_incidents === null ||
+						this.props.incident.loading ? (
+							<ActivityIndicator
+								size={'large'}
+								color="black"
+								style={styles.loader}
+							/>
+						) : (
+							<View>
+								<FlatList
+									contentContainerStyle={
+										styles.flatListContainer
+									}
+									data={this.props.incident.user_incidents}
+									renderItem={this._renderItem.bind(this)}
+									keyExtractor={item => item.key}
+								/>
+							</View>
+						)}
+					</View>
+					<View
+						style={[
+							styles.avatarOutline,
+							this.props.user.photo.url === '' &&
+							this.props.user.photo.base64 === ''
+								? styles.noAvatarOutline
+								: null
+						]}
+					>
+						<TouchableHighlight
+							underlayColor="transparent"
+							onPress={Actions.editProfile}
+						>
+							<Image
+								style={styles.avatar}
+								source={
+									this.props.user.photo.url === ''
+										? this.props.user.photo.base64 === ''
+											? require('../../assets/images/boy.png')
+											: {
+													uri:
+														'data:image/jpeg;base64, ' +
+														this.props.user.photo
+															.base64
+											  }
+										: { uri: this.props.user.photo.url }
+								}
+							/>
+						</TouchableHighlight>
+					</View>
+				</ScrollView>
+			);
+		}
 	}
 }
 
@@ -168,7 +157,7 @@ class Profile extends Component {
  */
 Profile.propTypes = {
 	getUserIncidents: PropTypes.func.isRequired,
-	// watchCurrLocation: PropTypes.func.isRequired,
+	watchCurrLocation: PropTypes.func.isRequired,
 	user: PropTypes.object,
 	incident: PropTypes.object
 };
@@ -183,8 +172,7 @@ function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{
 			getUserIncidents: getUserIncidents,
-			watchCurrLocation: watchCurrLocation,
-			viewIncident: viewIncident
+			watchCurrLocation: watchCurrLocation
 		},
 		dispatch
 	);

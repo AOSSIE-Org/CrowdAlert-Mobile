@@ -5,20 +5,43 @@ const { width, height } = Dimensions.get('window');
 export const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#F5FCFF',
-		paddingHorizontal: width / 20
-		// paddingTop: height / 30
+		backgroundColor: 'white'
+	},
+	backButton: {
+		width: width / 8,
+		height: height / 13,
+		justifyContent: 'center',
+		alignItems: 'center'
+	},
+	header: {
+		height: height / 10
 	},
 	slider: {
-		height: 50,
-		marginTop: height / 40
+		width: width * 0.9,
+		marginBottom: height / 80
 	},
-	toggleContainer: {
+	list: {
+		marginRight: width / 15,
+		marginLeft: width / 40,
+		marginTop: height / 20
+	},
+	listItem: {
+		marginBottom: height / 40,
+		borderBottomWidth: 1.4,
+		borderColor: 'black'
+	},
+	option: {
+		flexDirection: 'row'
+	},
+	rightSection: {
 		flexDirection: 'row',
-		justifyContent: 'space-between',
-		paddingTop: height / 40
+		alignItems: 'center',
+		marginRight: width / 30
 	},
-	toggleText: {
-		alignSelf: 'center'
+	sliderValue: {
+		marginRight: width / 50
+	},
+	footer: {
+		backgroundColor: '#63a4ff'
 	}
 });

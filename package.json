@@ -4,6 +4,7 @@
 	"private": true,
 	"devDependencies": {
 		"babel-jest": "22.0.6",
+		"babel-plugin-transform-remove-console": "^6.9.4",
 		"babel-preset-react-native": "^4.0.0",
 		"babel-preset-react-native-stage-0": "^1.0.1",
 		"fs-extra": "^4.0.2",
@@ -26,6 +27,7 @@
 	},
 	"dependencies": {
 		"crossroads": "^0.12.2",
+		"geojson": "^0.5.0",
 		"haversine-distance": "^1.1.4",
 		"lodash.debounce": "^4.0.8",
 		"native-base": "^2.5.2",
@@ -44,6 +46,7 @@
 		"react-native-push-notification": "^3.0.2",
 		"react-native-router-flux": "^4.0.0-beta.31",
 		"react-native-slider": "^0.11.0",
+		"react-native-timeline-listview": "^0.2.3",
 		"react-native-vector-icons": "^4.6.0",
 		"react-redux": "^5.0.7",
 		"redux": "^4.0.0",
@@ -52,6 +55,7 @@
 		"redux-persist-filesystem-storage": "^1.2.0",
 		"redux-persist-transform-filter": "0.0.18",
 		"redux-promise": "^0.5.3",
-		"redux-thunk": "^2.2.0"
+		"redux-thunk": "^2.2.0",
+		"supercluster": "^4.0.1"
 	}
 }

@@ -7,20 +7,21 @@ import {
 	TouchableOpacity,
 	TextInput,
 	ActivityIndicator,
-	ToastAndroid,
 	CheckBox
 } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { styles } from '../../assets/styles/editScreen_styles';
-import { styles as addincident_styles } from '../../assets/styles/addincident_styles';
+import { styles } from '../../assets/styles/editIncident_styles';
+import Icon from 'react-native-vector-icons/EvilIcons';
+import { Header, Title, Left, Body, Switch, Right, Card } from 'native-base';
+import getTheme from '../../assets/styles/native-base-theme/components';
+import platform from '../../assets/styles/native-base-theme/variables/platform';
 import PropTypes from 'prop-types';
-import {
-	updateIncidentFirebase,
-	viewIncident
-} from '../../actions/incidentsAction';
+import { updateIncidentFirebase } from '../../actions/incidentsAction';
+
 var ImagePicker = require('react-native-image-picker');
+import { Toast } from 'native-base';
 
 /**
  * Screen showing the edit options for the profile and personal information.
@@ -37,29 +38,37 @@ class EditIncident extends Component {
 				base64: this.props.incidentDetails.image.base64,
 				uri: this.props.incidentDetails.image.uri
 			},
-			getHelp: this.props.incidentDetails.getHelp
+			getHelp: this.props.incidentDetails.getHelp,
+			visible: this.props.incidentDetails.visible
 		};
 	}
 
+	/**
+	 * Updates the incident in firebase.
+	 * @return Updated incident
+	 */
 	handleUpdate() {
-		this.props.viewIncident(
-			{
-				...this.props.incident.incident,
-				value: {
-					...this.props.incident.incident.value,
-					...this.state
-				}
-			},
-			true
-		);
-		this.props
-			.updateIncidentFirebase(
-				this.props.incident.incident.key,
-				this.state
-			)
-			.then(() => {
+		if (this.state.title === '' || this.state.details === '') {
+			Toast.show({
+				text: 'Please dont leave any field blank',
+				type: 'warning',
+				duration: 2000
+			});
+		} else {
+			Promise.resolve(
+				this.props.updateIncidentFirebase(
+					this.props.incident.incident.key,
+					this.state
+				)
+			).then(() => {
+				Toast.show({
+					text: 'Incident updated!',
+					type: 'success',
+					duration: 2000
+				});
 				Actions.pop();
 			});
+		}
 	}
 
 	/**
@@ -75,21 +84,17 @@ class EditIncident extends Component {
 			}
 		};
 		ImagePicker.showImagePicker(options, response => {
-			if (response.didCancel) {
-				ToastAndroid.show(
-					'User cancelled image picker',
-					ToastAndroid.SHORT
-				);
-			} else if (response.error) {
-				ToastAndroid.show(
-					'ImagePicker Error: ' + response.error,
-					ToastAndroid.SHORT
-				);
+			if (response.error) {
+				Toast.show({
+					text: 'ImagePicker Error: ' + response.error,
+					duration: 2000
+				});
+			} else if (response.didCancel) {
 			} else if (response.customButton) {
-				ToastAndroid.show(
-					'User tapped custom button: ' + response.customButton,
-					ToastAndroid.SHORT
-				);
+				Toast.show({
+					text: 'User tapped custom button: ' + response.customButton,
+					duration: 2000
+				});
 			} else {
 				this.setState({
 					image: {
@@ -98,78 +103,121 @@ class EditIncident extends Component {
 						uri: response.uri
 					}
 				});
-				ToastAndroid.show('Image Added', ToastAndroid.SHORT);
+				Toast.show({
+					text: 'Image Added!',
+					type: 'success',
+					duration: 2000
+				});
 			}
 		});
 	};
 
 	render() {
 		return (
-			<ScrollView
-				style={styles.container}
-				keyboardShouldPersistTaps="always"
-				showsVerticalScrollIndicator={false}
-			>
-				<TextInput
-					autoCorrect={false}
-					ref={input => (this.titleInput = input)}
-					onChangeText={title => this.setState({ title })}
-					onSubmitEditing={() => this.detailsInput.focus()}
-					returnKeyType="next"
-					style={styles.field_Pass}
-					placeholder="Title"
-					value={this.state.title}
-				/>
-				<TextInput
-					autoCapitalize="none"
-					autoCorrect={false}
-					multiline={true}
-					ref={input => (this.detailsInput = input)}
-					onChangeText={details => this.setState({ details })}
-					returnKeyType="next"
-					style={[styles.field_Pass, { height: 80 }]}
-					placeholder="Description"
-					value={this.state.details}
-				/>
-				<View style={addincident_styles.checkBox}>
-					<CheckBox
-						value={this.state.getHelp}
-						onValueChange={() =>
-							this.setState({ getHelp: !this.state.getHelp })
-						}
-					/>
-					<Text style={addincident_styles.checkBoxText}>
-						Get Help!
-					</Text>
-				</View>
-				{this.state.image.isPresent ? (
-					<Image
-						style={styles.image}
-						resizeMethod={'resize'}
-						source={{
-							uri:
-								'data:image/jpeg;base64, ' +
-								this.state.image.base64
-						}}
-					/>
-				) : null}
-				<TouchableOpacity
-					style={styles.button_camera}
-					onPress={() => this._cameraImage()}
+			<View style={styles.container}>
+				<Header androidStatusBarColor="#1c76cb">
+					<Left>
+						<TouchableOpacity
+							style={styles.backButton}
+							onPress={() => Actions.pop()}
+						>
+							<Icon name="close" size={40} color="white" />
+						</TouchableOpacity>
+					</Left>
+					<Body>
+						<Text style={styles.title}>Edit Incident</Text>
+					</Body>
+				</Header>
+				<ScrollView
+					keyboardShouldPersistTaps="always"
+					showsVerticalScrollIndicator={false}
 				>
-					<Text style={styles.cameraText}>
-						{this.state.image.isPresent
-							? 'Change Image'
-							: 'Add Image'}{' '}
-					</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					style={styles.updateButton}
-					onPress={() => this.handleUpdate()}
-				>
-					<Text style={styles.updateText}> Update </Text>
-				</TouchableOpacity>
-			</ScrollView>
+					{this.state.image.isPresent ? (
+						<View style={styles.avatarContainer}>
+							<Image
+								style={styles.image}
+								resizeMethod={'resize'}
+								source={{
+									uri:
+										'data:image/jpeg;base64, ' +
+										this.state.image.base64
+								}}
+							/>
+							<TouchableOpacity
+								onPress={() => this._cameraImage()}
+							>
+								<Text style={styles.imageChangeText}>
+									Change Image
+								</Text>
+							</TouchableOpacity>
+						</View>
+					) : (
+						<View style={styles.avatarContainer}>
+							<TouchableOpacity
+								onPress={() => this._cameraImage()}
+							>
+								<Text style={styles.imageText}>Add Image</Text>
+							</TouchableOpacity>
+						</View>
+					)}
+					<View style={styles.textInputHeadingContainer}>
+						<Text style={styles.textInputHeading}>
+							Incident Title
+						</Text>
+					</View>
+
+					<TextInput
+						ref={input => (this.titleInput = input)}
+						onChangeText={title => this.setState({ title })}
+						onSubmitEditing={() => this.detailsInput.focus()}
+						returnKeyType="next"
+						style={styles.textInput}
+						placeholder="Title"
+						value={this.state.title}
+					/>
+					<View style={styles.textInputHeadingContainer}>
+						<Text style={styles.textInputHeading}>
+							Incident Details
+						</Text>
+					</View>
+					<TextInput
+						multiline={true}
+						numberOfLines={4}
+						ref={input => (this.detailsInput = input)}
+						onChangeText={details => this.setState({ details })}
+						returnKeyType="next"
+						style={styles.textInput}
+						placeholder="Description"
+						value={this.state.details}
+					/>
+					<View style={styles.switchContainer}>
+						<Text style={styles.switchText}>Get Help!</Text>
+						<Switch
+							thumbTintColor="#1c76cb"
+							onValueChange={getHelp => {
+								this.setState({ getHelp: getHelp });
+							}}
+							value={this.state.getHelp}
+						/>
+					</View>
+					<View style={styles.switchContainer}>
+						<Text style={styles.switchText}>Share Publicly!</Text>
+						<Switch
+							thumbTintColor="#1c76cb"
+							onValueChange={visible => {
+								this.setState({ visible: visible });
+							}}
+							value={this.state.visible}
+						/>
+					</View>
+					<TouchableOpacity
+						style={styles.updateButton}
+						onPress={() => this.handleUpdate()}
+					>
+						<Text style={styles.updateText}> Update </Text>
+					</TouchableOpacity>
+				</ScrollView>
+			</View>
 		);
 	}
 }
@@ -179,8 +227,7 @@ class EditIncident extends Component {
  * props used on this page does not meet the specified type.
  */
 EditIncident.propTypes = {
-	updateUserFirebase: PropTypes.func.isRequired,
-	viewIncident: PropTypes.func.isRequired,
+	updateIncidentFirebase: PropTypes.func.isRequired,
 	incidentDetails: PropTypes.object,
 	incident: PropTypes.object
 };
@@ -194,8 +241,7 @@ EditIncident.propTypes = {
 function matchDispatchToProps(dispatch) {
 	return bindActionCreators(
 		{
-			updateIncidentFirebase: updateIncidentFirebase,
-			viewIncident: viewIncident
+			updateIncidentFirebase: updateIncidentFirebase
 		},
 		dispatch
 	);

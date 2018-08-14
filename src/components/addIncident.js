@@ -10,10 +10,11 @@ import {
 	Keyboard,
 	ActivityIndicator,
 	Picker,
-	ToastAndroid,
 	CheckBox
 } from 'react-native';
 import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
+import { Header, Title, Left, Body, Switch, Right, Card } from 'native-base';
+import Icon from 'react-native-vector-icons/EvilIcons';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { addIncidentToFirebase } from '../actions/incidentsAction';
@@ -21,6 +22,7 @@ import { Actions } from 'react-native-router-flux';
 import { styles } from '../assets/styles/addincident_styles';
 import PropTypes from 'prop-types';
 var ImagePicker = require('react-native-image-picker');
+import { Toast } from 'native-base';
 
 /**
  * Screen for adding an incident.
@@ -30,22 +32,25 @@ class AddIncident extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			title: null,
-			details: '',
-			visible: true,
-			timestamp: new Date().toLocaleString(),
-			location: {
-				coordinates: this.props.location.curr_coordinates
+			incident: {
+				title: null,
+				details: null,
+				visible: true,
+				timestamp: new Date().toString(),
+				location: {
+					coordinates: this.props.location.curr_coordinates
+				},
+				category: null,
+				user_id: this.props.login.userDetails.email,
+				upvotes: 0,
+				image: {
+					isPresent: false,
+					base64: '',
+					uri: ''
+				},
+				getHelp: true
 			},
-			category: null,
-			user_id: this.props.login.userDetails.email,
-			upvotes: 0,
-			image: {
-				isPresent: false,
-				base64: '',
-				uri: ''
-			},
-			getHelp: true
+			disable: false
 		};
 	}
 
@@ -55,25 +60,35 @@ class AddIncident extends Component {
 	 * @return category of the incident gets updated.
 	 */
 	updateCategory = category => {
-		this.setState({ category: category });
+		this.setState({
+			incident: {
+				...this.state.incident,
+				category: category
+			}
+		});
 	};
 
 	/**
 	 * The function is used to update incident details with the details entered by the user.
 	 */
 	handleAddIncident() {
-		console.log(this.state);
+		console.log(this.state.incident);
 		Keyboard.dismiss();
-		if (this.state.title === null || this.state.category === null) {
-			ToastAndroid.show(
-				'Please dont leave any field blank',
-				ToastAndroid.SHORT
-			);
+		if (
+			this.state.incident.title === null ||
+			this.state.incident.details === null ||
+			this.state.incident.category === null
+		) {
+			Toast.show({
+				text: 'Please dont leave any field blank',
+				type: 'warning',
+				duration: 2000
+			});
 		} else {
+			this.setState({ disable: true });
 			this.props
-				.addIncidentToFirebase(this.state) // waits till incident details are updated in redux
+				.addIncidentToFirebase(this.state.incident) // waits till incident details are updated in redux
 				.then(result => {
-					ToastAndroid.show('Incident Updated', ToastAndroid.SHORT);
 					Actions.pop(); // set markers on map page to result from firebase.
 				});
 		}
@@ -92,30 +107,33 @@ class AddIncident extends Component {
 			}
 		};
 		ImagePicker.showImagePicker(options, response => {
-			if (response.didCancel) {
-				ToastAndroid.show(
-					'User cancelled image picker',
-					ToastAndroid.SHORT
-				);
-			} else if (response.error) {
-				ToastAndroid.show(
-					'ImagePicker Error: ' + response.error,
-					ToastAndroid.SHORT
-				);
+			if (response.error) {
+				Toast.show({
+					text: 'ImagePicker Error: ' + response.error,
+					duration: 2000
+				});
+			} else if (response.didCancel) {
 			} else if (response.customButton) {
-				ToastAndroid.show(
-					'User tapped custom button: ' + response.customButton,
-					ToastAndroid.SHORT
-				);
+				Toast.show({
+					text: 'User tapped custom button: ' + response.customButton,
+					duration: 2000
+				});
 			} else {
 				this.setState({
-					image: {
-						isPresent: true,
-						base64: response.data,
-						uri: response.uri
+					incident: {
+						...this.state.incident,
+						image: {
+							isPresent: true,
+							base64: response.data,
+							uri: response.uri
+						}
 					}
 				});
-				ToastAndroid.show('Image Added', ToastAndroid.SHORT);
+				Toast.show({
+					text: 'Image Added!',
+					type: 'success',
+					duration: 2000
+				});
 			}
 		});
 	};
@@ -123,11 +141,54 @@ class AddIncident extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<View style={styles.field}>
+				<Header androidStatusBarColor="#1c76cb">
+					<Left>
+						<TouchableOpacity
+							style={styles.backButton}
+							onPress={() => Actions.pop()}
+						>
+							<Icon name="close" size={40} color="white" />
+						</TouchableOpacity>
+					</Left>
+					<Body>
+						<Text style={styles.title}>Add Incident</Text>
+					</Body>
+				</Header>
+				<ScrollView
+					keyboardShouldPersistTaps="always"
+					showsVerticalScrollIndicator={false}
+				>
+					<View style={styles.avatarContainer}>
+						{this.state.incident.image.isPresent ? (
+							<Image
+								style={styles.image}
+								resizeMethod={'resize'}
+								source={{
+									uri:
+										'data:image/jpeg;base64, ' +
+										this.state.incident.image.base64
+								}}
+							/>
+						) : null}
+						<TouchableOpacity onPress={() => this._cameraImage()}>
+							<View style={styles.cameraContainer}>
+								<Icon name="camera" size={40} color="white" />
+								{this.state.incident.image.isPresent ? (
+									<Text style={styles.imageChangeText}>
+										Change Image
+									</Text>
+								) : (
+									<Text style={styles.imageText}>
+										Add Image
+									</Text>
+								)}
+							</View>
+						</TouchableOpacity>
+					</View>
 					<Picker
-						selectedValue={this.state.category}
+						selectedValue={this.state.incident.category}
 						onValueChange={category => {
-							this.setState({ category: category });
+							this.updateCategory(category);
 						}}
 						style={styles.picker}
 					>
@@ -144,77 +205,90 @@ class AddIncident extends Component {
 						<Picker.Item label="Fire" value="fire" />
 						<Picker.Item label="Flood" value="flood" />
 					</Picker>
-					<View style={styles.row_container}>
-						<TextInput
-							style={styles.field_title}
-							ref={input => (this.titleInput = input)}
-							onChangeText={title => this.setState({ title })}
-							onSubmitEditing={() => this.detailsInput.focus()}
-							autoCapitalize="none"
-							autoCorrect={false}
-							keyboardType="email-address"
-							returnKeyType="next"
-							placeholder="Title"
-						/>
+					<View style={styles.textInputHeadingContainer}>
+						<Text style={styles.textInputHeading}>
+							Incident Title
+						</Text>
+					</View>
+
+					<TextInput
+						style={styles.textInput}
+						ref={input => (this.titleInput = input)}
+						onChangeText={title =>
+							this.setState({
+								incident: {
+									...this.state.incident,
+									title: title
+								}
+							})
+						}
+						onSubmitEditing={() => this.detailsInput.focus()}
+						keyboardType="email-address"
+						returnKeyType="next"
+						placeholder="Title"
+					/>
+					<View style={styles.textInputHeadingContainer}>
+						<Text style={styles.textInputHeading}>
+							Incident Details
+						</Text>
 					</View>
 					<TextInput
 						ref={input => (this.detailsInput = input)}
-						style={styles.field_details}
-						onChangeText={details => this.setState({ details })}
+						style={styles.textInput}
+						onChangeText={details =>
+							this.setState({
+								incident: {
+									...this.state.incident,
+									details: details
+								}
+							})
+						}
+						multiline={true}
+						numberOfLines={4}
 						returnKeyType="next"
-						placeholder="Details [Optional]"
+						placeholder="Description"
 					/>
-					<View style={styles.checkBox}>
-						<CheckBox
-							value={this.state.visible}
-							onValueChange={() =>
-								this.setState({ visible: !this.state.visible })
-							}
+					<View style={styles.switchContainer}>
+						<Text style={styles.switchText}>Get Help!</Text>
+						<Switch
+							thumbTintColor="#1c76cb"
+							onValueChange={getHelp => {
+								this.setState({
+									incident: {
+										...this.state.incident,
+										getHelp: getHelp
+									}
+								});
+							}}
+							value={this.state.incident.getHelp}
 						/>
-						<Text style={styles.checkBoxText}>Share Publicly</Text>
 					</View>
-					<View style={styles.checkBox}>
-						<CheckBox
-							value={this.state.getHelp}
-							onValueChange={() =>
-								this.setState({ getHelp: !this.state.getHelp })
-							}
+					<View style={styles.switchContainer}>
+						<Text style={styles.switchText}>Share Publicly!</Text>
+						<Switch
+							thumbTintColor="#1c76cb"
+							onValueChange={visible => {
+								this.setState({
+									incident: {
+										...this.state.incident,
+										visible: visible
+									}
+								});
+							}}
+							value={this.state.incident.visible}
 						/>
-						<Text style={styles.checkBoxText}>Get Help!</Text>
 					</View>
-				</View>
-				{this.state.image.isPresent ? (
-					<Image
-						style={styles.image}
-						resizeMethod={'resize'}
-						source={{
-							uri:
-								'data:image/jpeg;base64, ' +
-								this.state.image.base64
-						}}
-					/>
-				) : null}
-				<View style={styles.cameraContainer}>
 					<TouchableOpacity
-						style={styles.button_camera}
-						onPress={() => this._cameraImage()}
+						disabled={this.state.disable}
+						style={styles.updateButton}
+						onPress={() => this.handleAddIncident()}
 					>
-						{this.state.image.isPresent ? (
-							<Text style={styles.cameraText}>Change Image</Text>
-						) : (
-							<Text style={styles.cameraText}> Add Image </Text>
-						)}
+						<Text style={styles.updateText}> Update </Text>
 					</TouchableOpacity>
-				</View>
-				<TouchableOpacity
-					style={styles.button_send}
-					onPress={() => this.handleAddIncident()}
-				>
-					<Text style={styles.button_text}> Update </Text>
-				</TouchableOpacity>
-				{this.props.incident.loading ? (
-					<ActivityIndicator size={'large'} />
-				) : null}
+					{this.props.incident.loading ? (
+						<ActivityIndicator size={'large'} />
+					) : null}
+				</ScrollView>
 			</View>
 		);
 	}

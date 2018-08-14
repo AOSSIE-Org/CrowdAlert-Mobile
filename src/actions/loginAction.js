@@ -1,12 +1,13 @@
 import {
 	LOGIN_LOADING,
 	GET_USER_AUTH_FIREBASE,
-	ADD_USER_FIREBASE
+	ADD_USER_FIREBASE,
+	SIGN_OUT
 } from './types';
 import firebase from 'react-native-firebase';
 import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
 import { GoogleSignin } from 'react-native-google-signin';
-import { ToastAndroid } from 'react-native';
+import { Toast } from 'native-base';
 import { handleError } from './errorAction';
 
 /**
@@ -49,21 +50,24 @@ export const onPressSignIn = (email, password) => {
 				dispatch(loginLoading(false));
 				dispatch(handleError(error));
 				const { code, message } = error;
-				if (code == 'auth/wrong-password') {
-					ToastAndroid.show(
-						'Wrong Password ' + message,
-						ToastAndroid.SHORT
-					);
-				} else if (code == 'auth/user-not-found') {
-					ToastAndroid.show(
-						'Please register first ' + message,
-						ToastAndroid.SHORT
-					);
+				if (code === 'auth/wrong-password') {
+					Toast.show({
+						text: 'Wrong password!' + message,
+						type: 'warning',
+						duration: 2000
+					});
+				} else if (code === 'auth/user-not-found') {
+					Toast.show({
+						text: 'Please register first! ' + message,
+						type: 'warning',
+						duration: 2000
+					});
 				} else {
-					ToastAndroid.show(
-						'Could not complete signin ' + message,
-						ToastAndroid.SHORT
-					);
+					Toast.show({
+						text: 'Could not complete signin ' + message,
+						type: 'danger',
+						duration: 2000
+					});
 				}
 				console.log(error);
 			});
@@ -76,7 +80,7 @@ export const onPressSignIn = (email, password) => {
  * @param  {string} password carries password entered by the user on signin screen.
  * @return signs up in the user successfully or triggers an error.
  */
-export const onPressSignUp = (email, password) => {
+export const onPressSignUp = (email, password, name) => {
 	return dispatch => {
 		dispatch(loginLoading(true));
 		firebase
@@ -85,6 +89,7 @@ export const onPressSignUp = (email, password) => {
 			.then(data => {
 				//on success
 				dispatch(getUserAuthFirebase(data.user, 'email'));
+				data.user.providerData[0]['displayName'] = name;
 				dispatch(addUserFirebase(userFirebaseStructure(data.user)));
 			})
 			.catch(error => {
@@ -92,16 +97,17 @@ export const onPressSignUp = (email, password) => {
 				dispatch(handleError(error));
 				console.log(error);
 				const { code, message } = error;
-				if (code == 'auth/email-already-in-use') {
-					ToastAndroid.show(
-						'Email in use ' + message,
-						ToastAndroid.SHORT
-					);
+				if (code === 'auth/email-already-in-use') {
+					Toast.show({
+						text: 'Email in use ' + message,
+						type: 'danger',
+						duration: 2000
+					});
 				} else {
-					ToastAndroid.show(
-						'Could not sign you up! ' + message,
-						ToastAndroid.SHORT
-					);
+					Toast.show({
+						text: 'Could not sign you up! ' + message,
+						duration: 2000
+					});
 				}
 			});
 	};
@@ -113,17 +119,40 @@ export const onPressSignUp = (email, password) => {
  * @return sends password reset email or trigger an error that user is not registered.
  */
 export const onForget = email => {
+	console.log(email);
 	return dispatch => {
 		dispatch(loginLoading(true));
 		var auth = firebase.auth(); //for firebase authentication
 		auth
 			.sendPasswordResetEmail(email)
 			.then(function() {
+				Toast.show({
+					text: 'Email sent!',
+					type: 'success',
+					duration: 2000
+				});
 				dispatch(loginLoading(false));
-				ToastAndroid.show('Email sent', ToastAndroid.SHORT);
 			})
 			.catch(function(error) {
+				dispatch(handleError(error));
 				dispatch(loginLoading(false));
+				console.log(error);
+				const { code, message } = error;
+				if (code === 'auth/user-not-found') {
+					Toast.show({
+						text: 'User not found, ' + message,
+						type: 'danger',
+						duration: 3000
+					});
+				} else {
+					Toast.show({
+						text:
+							'Could not send the mail! Contact the administrator ' +
+							message,
+						type: 'danger',
+						duration: 3000
+					});
+				}
 			});
 	};
 };
@@ -164,10 +193,11 @@ export const fbSignIn = () => {
 				dispatch(loginLoading(false));
 				dispatch(handleError(error));
 				console.log(error);
-				ToastAndroid.show(
-					'Could not complete signin',
-					ToastAndroid.SHORT
-				);
+				Toast.show({
+					text: 'Could not complete signin',
+					type: 'warning',
+					duration: 2000
+				});
 			});
 	};
 };
@@ -200,10 +230,11 @@ export const googleSignin = () => {
 				dispatch(loginLoading(false));
 				dispatch(handleError(error));
 				console.log(error);
-				ToastAndroid.show(
-					'Could not complete login',
-					ToastAndroid.SHORT
-				);
+				Toast.show({
+					text: 'Could not complete signin',
+					type: 'warning',
+					duration: 2000
+				});
 			});
 	};
 };
@@ -234,7 +265,7 @@ const addUserFirebase = userDetails => {
 					.ref('users')
 					.child(userKey)
 					.set(userDetails)
-					.catch(error => console.log(error));
+					.catch(error => dispatch(handleError(error)));
 			}
 			dispatch(loginLoading(false));
 		});
@@ -261,6 +292,28 @@ export const updateUserFirebase = userDetails => {
 		});
 	};
 };
+
+/**
+ *  Called when the user updates his details
+ *  Also updates the firebase and the redux store
+ * @param  {JSON} userDetails Details of the user
+ */
+export const logout = () => {
+	return dispatch => {
+		dispatch(logoutHelper());
+	};
+};
+
+/**
+ * Adds the personal user details to the redux store
+ * @param {JSON} details Details of the user
+ * @return returns type and user details.
+ */
+function logoutHelper() {
+	return {
+		type: SIGN_OUT
+	};
+}
 
 /**
  * Adds the personal user details to the redux store

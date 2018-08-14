@@ -1,26 +1,20 @@
 import React, { Component } from 'react';
 import {
-	StyleSheet,
-	Image,
 	Text,
 	View,
-	ScrollView,
 	TouchableOpacity,
-	Alert,
 	TextInput,
-	Button,
-	ToastAndroid,
 	Keyboard,
 	ActivityIndicator
 } from 'react-native';
-import firebase from 'react-native-firebase';
-import { AccessToken, LoginManager, LoginButton } from 'react-native-fbsdk';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { onPressSignIn } from '../../actions/loginAction';
 import { Actions } from 'react-native-router-flux';
 import { styles } from '../../assets/styles/signin_styles';
 import PropTypes from 'prop-types';
+import Icon from 'react-native-vector-icons/Feather';
+import { Header, Title, Left, Body, Toast } from 'native-base';
 
 /**
  * Screen for login using login id and password.
@@ -38,7 +32,11 @@ class Signin extends Component {
 	componentDidUpdate() {
 		// Typical usage (don't forget to compare props):
 		if (!this.props.login.loading && this.props.login.signInType !== null) {
-			ToastAndroid.show('You are logged in', ToastAndroid.SHORT);
+			Toast.show({
+				text: 'You are logged in',
+				type: 'success',
+				duration: 2000
+			});
 			Actions.profile();
 		}
 	}
@@ -48,15 +46,75 @@ class Signin extends Component {
 	 */
 	handleSignIn() {
 		Keyboard.dismiss();
-		this.props.onPressSignIn(this.state.email, this.state.password);
+
+		if (
+			this.validateEmail(this.state.email) &&
+			this.validatePassword(this.state.password)
+		) {
+			this.props.onPressSignIn(this.state.email, this.state.password);
+		}
+	}
+
+	validateEmail(inputEmail) {
+		if (inputEmail === '') {
+			Toast.show({
+				text: "You can't leave the email field blank!",
+				type: 'warning',
+				duration: 2000
+			});
+			return false;
+		} else {
+			var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+			if (!inputEmail.match(mailformat)) {
+				Toast.show({
+					text: 'Please check your email format',
+					type: 'warning',
+					duration: 2000
+				});
+				return false;
+			} else {
+				return true;
+			}
+		}
+	}
+
+	validatePassword(inputPassword) {
+		if (inputPassword === '') {
+			Toast.show({
+				text: 'You can leave the password field blank!',
+				type: 'warning',
+				duration: 2000
+			});
+			return false;
+		} else if (inputPassword.length < 8) {
+			Toast.show({
+				text: 'Your password should be of minimum 8 characters!',
+				type: 'warning',
+				duration: 2000
+			});
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	render() {
 		return (
 			<View style={styles.container}>
-				<View style={styles.field}>
+				<Header transparent androidStatusBarColor="#1c76cb">
+					<Left>
+						<TouchableOpacity onPress={() => Actions.pop()}>
+							<Icon name="chevron-left" size={40} />
+						</TouchableOpacity>
+					</Left>
+					<Body>
+						<Title />
+					</Body>
+				</Header>
+				<View style={styles.box}>
+					<Text style={styles.heading}>Sign in</Text>
 					<TextInput
-						style={styles.field_Pass}
+						style={styles.input_field}
 						ref={input => (this.emailInput = input)}
 						onChangeText={email => this.setState({ email })}
 						onSubmitEditing={() => this.passwordInput.focus()}
@@ -68,31 +126,40 @@ class Signin extends Component {
 					/>
 					<TextInput
 						ref={input => (this.passwordInput = input)}
-						style={styles.field_Pass}
+						style={styles.input_field}
 						onChangeText={password => this.setState({ password })}
-						// onSubmitEditing={() => this.passwordConfirmInput.focus()}
-						returnKeyType="next"
+						autoCapitalize="none"
+						autoCorrect={false}
+						enablesReturnKeyAutomatically={true}
 						secureTextEntry={true}
 						placeholder="Password"
 					/>
+					<TouchableOpacity
+						style={styles.button_send}
+						onPress={() => this.handleSignIn()}
+					>
+						<Text style={styles.button_text}> Login </Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={styles.button_forgot}
+						onPress={() => Actions.forgot()}
+					>
+						<Text style={styles.button_text_forgot}>
+							Forgot password?
+						</Text>
+					</TouchableOpacity>
 				</View>
-				<TouchableOpacity
-					style={styles.button_send}
-					onPress={() => this.handleSignIn()}
-				>
-					<Text style={styles.button_text}> Login </Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					style={styles.button_forgot}
-					onPress={() => Actions.forgot()}
-				>
-					<Text style={styles.button_text_forgot}>
-						{' '}
-						Forgot password ?{' '}
-					</Text>
-				</TouchableOpacity>
+				<View style={styles.button_signup}>
+					<Text>Not a member?{'   '}</Text>
+					<TouchableOpacity
+						// style={styles.button_forgot}
+						onPress={() => Actions.signup()}
+					>
+						<Text style={styles.signup_text}>Register</Text>
+					</TouchableOpacity>
+				</View>
 				{this.props.login.loading ? (
-					<ActivityIndicator size={'large'} />
+					<ActivityIndicator size={'large'} color="white" />
 				) : null}
 			</View>
 		);

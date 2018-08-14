@@ -18,7 +18,7 @@ class DeleteButtonIncident extends Component {
 	handleDelete() {
 		Alert.alert(
 			'',
-			'Are you sure you want to delete this incident',
+			'Are you sure you want to delete this incident?',
 			[
 				{
 					text: 'No',
@@ -52,7 +52,7 @@ class DeleteButtonIncident extends Component {
 						this.handleDelete();
 					}}
 				>
-					<Icon name="trash-o" size={23} />
+					<Icon name="trash-o" size={24} color={'white'} />
 				</TouchableOpacity>
 			);
 		} else {

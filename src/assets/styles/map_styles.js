@@ -11,6 +11,7 @@ const searchBarStyle = {
 		backgroundColor: 'white',
 		borderTopWidth: 0,
 		borderBottomWidth: 0,
+		elevation: 7,
 		width: width * 0.95,
 		height: height * 0.07
 	},
@@ -36,78 +37,46 @@ const styles = StyleSheet.create({
 	map: {
 		...StyleSheet.absoluteFillObject
 	},
-	repositionButton: {
-		width: width / 10,
-		height: width / 10,
-		backgroundColor: 'white',
-		borderRadius: 30,
-		justifyContent: 'center',
-		position: 'absolute',
-		left: width / 40,
-		bottom: height / 25
-	},
 	clearButton: {
 		backgroundColor: 'rgba(0,0,0,0)',
 		justifyContent: 'center',
 		paddingRight: width / 30
 	},
-	addIncidentButton: {
-		width: width / 10,
-		height: width / 10,
-		backgroundColor: 'white',
+	repositionButton: {
+		width: width / 11,
+		height: width / 11,
 		borderRadius: 30,
 		justifyContent: 'center',
 		position: 'absolute',
-		right: width / 40,
-		bottom: height / 30
+		backgroundColor: '#000',
+		left: width / 25,
+		bottom: height / 23
+	},
+	addIncidentButton: {
+		width: width / 7.5,
+		height: width / 7.5,
+		backgroundColor: '#4ebaaa',
+		justifyContent: 'center',
+		position: 'absolute',
+		right: width / 20,
+		bottom: height / 25,
+		elevation: 15,
+		borderRadius: 35
 	},
 	filterButton: {
-		width: width / 10,
-		height: width / 10,
-		backgroundColor: 'white',
+		width: width / 8.5,
+		height: width / 8.5,
+		backgroundColor: '#4ebaaa',
 		borderRadius: 30,
+		elevation: 6,
 		justifyContent: 'center',
 		position: 'absolute',
-		right: width / 40,
-		top: height / 10
+		right: width / 25,
+		top: height / 9
 	},
-	fabButton: {
+	fabButtonIcon: {
 		alignSelf: 'center',
-		color: '#000000'
-	},
-	modalField: {
-		padding: 7,
-		marginTop: height / 200,
-		backgroundColor: '#eeeeee',
-		height: height / 10,
-		flexDirection: 'row'
-	},
-	modalContainer: {
-		marginTop: height / 20,
-		marginBottom: height / 20
-	},
-	modalText: {
-		color: '#000',
-		marginLeft: width / 20,
-		justifyContent: 'center',
-		marginTop: height / 50
-	},
-	modalHeadText: {
-		fontSize: 20,
-		marginLeft: width / 20,
-		marginTop: height / 35
-	},
-	modalHeadContainer: {
-		flexDirection: 'row'
-	},
-	modalImage: {
-		height: 40,
-		width: 40,
-		marginLeft: width / 20
-	},
-	modalIcon: {
-		marginTop: height / 90,
-		marginLeft: width / 1.1
+		color: '#fff'
 	}
 });
 
