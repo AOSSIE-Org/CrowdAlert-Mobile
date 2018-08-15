@@ -27,12 +27,18 @@ class Forgot extends Component {
 		};
 	}
 
+	//Handles the Forgot button click
 	handleForget() {
 		if (this.validateEmail(this.state.email)) {
 			this.props.onForget(this.state.email);
 		}
 	}
 
+	/**
+	 * Validates the email if they are of the proper type.
+	 * @param  {String} inputEmail Input email from the user
+	 * @return {boolean} Returns bool depending on whether the email string passes or not
+	 */
 	validateEmail(inputEmail) {
 		if (inputEmail === '') {
 			Toast.show({
