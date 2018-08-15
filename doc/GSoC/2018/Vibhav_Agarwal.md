@@ -84,3 +84,7 @@ Most of the Merge Requests are a combined effort of Rishabh and mine.
 *   [iOS Dependencies added](https://gitlab.com/aossie/CrowdAlert-Mobile/merge_requests/18)
 *   [Various bug fixes and cleanup](https://gitlab.com/aossie/CrowdAlert-Mobile/merge_requests/21)
 *   [Documentation, Readme update and Introductory slides added](https://gitlab.com/aossie/CrowdAlert-Mobile/merge_requests/22)
+*   Other Minor MRs related to documentation changes, bug fixes etc:
+    *   [GSoC18 reports added](https://gitlab.com/aossie/CrowdAlert-Mobile/merge_requests/23)
+    *   [Documentation, minor bug fixes](https://gitlab.com/aossie/CrowdAlert-Mobile/merge_requests/24)
+    *   [Docker image shifted to AOSSIE a/c](https://gitlab.com/aossie/CrowdAlert-Mobile/merge_requests/25)
