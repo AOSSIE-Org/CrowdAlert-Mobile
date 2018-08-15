@@ -38,7 +38,7 @@ key_build:
 
 build_apk:
   stage: build
-  image: docker.io/vibhavagarwal5/react-native-ci:version1.2
+  image: docker.io/aossie/react-native-ci:version1.3
   dependencies:
   - key_build
   - install_dependencies
