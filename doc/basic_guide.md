@@ -13,6 +13,13 @@ $ brew install node
 $ brew install watchman
 ```
 
+**For Linux:**
+
+```
+$ sudo apt-get install nodejs
+$ sudo npm install npm --global
+```
+
 #### 2. React Native CLI
 
 Install React Native CLI globally.
