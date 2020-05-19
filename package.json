@@ -32,7 +32,7 @@
 		"lodash.debounce": "^4.0.8",
 		"native-base": "^2.5.2",
 		"prop-types": "^15.6.1",
-		"qs": "^5.2.0",
+		"qs": "^6.0.4",
 		"react": "16.0.0",
 		"react-native": "0.51.0",
 		"react-native-android-location-services-dialog-box": "^2.5.0",
